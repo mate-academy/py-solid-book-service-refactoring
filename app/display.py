@@ -1,6 +1,9 @@
-class BookDisplay():
+from main import Book
+
+
+class BookDisplay:
     @staticmethod
-    def display(book, display_type: str) -> None:
+    def display(book: Book, display_type: str) -> None:
         if display_type == "console":
             print(book.content)
         elif display_type == "reverse":
@@ -9,7 +12,7 @@ class BookDisplay():
             raise ValueError(f"Unknown display type: {display_type}")
 
     @staticmethod
-    def print_book(book, print_type: str) -> None:
+    def print_book(book: Book, print_type: str) -> None:
         if print_type == "console":
             print(f"Printing the book: {book.title}...")
             print(book.content)

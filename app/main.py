@@ -1,6 +1,11 @@
-from book import Book
-from display import BookDisplay
-from serialization import BookSerialization
+from app.display import BookDisplay
+from app.serialization import BookSerialization
+
+
+class Book:
+    def __init__(self, title: str, content: str) -> None:
+        self.title = title
+        self.content = content
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
@@ -13,7 +18,6 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             return BookSerialization.serialize(book, method_type)
 
 
-
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    main(sample_book, [("display", "reverse"), ("serialize", "xml")])

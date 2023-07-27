@@ -1,3 +1,5 @@
+import json
+import xml.etree.ElementTree as Etree
 from book.book import Book
 
 
@@ -8,13 +10,11 @@ class BookSerializer:
 
 class JSONBookSerializer(BookSerializer):
     def serialize(self, book: Book) -> str:
-        import json
         return json.dumps({"title": book.title, "content": book.content})
 
 
 class XMLBookSerializer(BookSerializer):
     def serialize(self, book: Book) -> str:
-        import xml.etree.ElementTree as Etree
         root = Etree.Element("book")
         title = Etree.SubElement(root, "title")
         title.text = book.title

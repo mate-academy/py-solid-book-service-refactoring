@@ -1,11 +1,7 @@
 from app.display import BookDisplay
 from app.serialization import BookSerialization
 
-
-class Book:
-    def __init__(self, title: str, content: str) -> None:
-        self.title = title
-        self.content = content
+from app.book import Book
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

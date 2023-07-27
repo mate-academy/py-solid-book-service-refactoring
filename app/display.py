@@ -1,4 +1,4 @@
-from main import Book
+from app.book import Book
 
 
 class BookDisplay:

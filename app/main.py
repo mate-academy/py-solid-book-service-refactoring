@@ -9,7 +9,9 @@ from serializers.serializers import JSONBookSerializer, XMLBookSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    printers = {"console": ConsoleBookPrinter(), "reverse": ReverseBookPrinter()}
+    printers = {
+        "console": ConsoleBookPrinter(), "reverse": ReverseBookPrinter()
+    }
     displays = {"console": DisplayConsole(), "reverse": ReversDisplayConsole()}
     serializers = {"json": JSONBookSerializer(), "xml": XMLBookSerializer()}
 

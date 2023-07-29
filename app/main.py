@@ -1,34 +1,47 @@
 from app.book import Book
-from app.utils.display import ConsoleDisplay, ReverseDisplay
-from app.utils.print import ConsolePrint, ReversePrint
-from app.utils.serialize import JsonSerialize, XmlSerialize
+from app.utils.handlers import (Display,
+                                Print,
+                                ConsoleDisplay,
+                                ReverseDisplay,
+                                ConsolePrint,
+                                ReversePrint
+                                )
+from app.utils.serializers import Serialize, JsonSerialize, XmlSerialize
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def main(book: Book, commands: list[tuple[str, str]]) -> str:
     for cmd, method_type in commands:
         if cmd == "display":
-            if method_type == "console":
-                ConsoleDisplay.display(book.content)
-            elif method_type == "reverse":
-                ReverseDisplay.display(book.content)
-            else:
-                raise ValueError(f"Unknown display type: {method_type}")
+            display_handler = get_handler_by_type(method_type, {
+                "console": ConsoleDisplay(),
+                "reverse": ReverseDisplay()
+            })
+            display_handler.display(book.content)
         elif cmd == "print":
-            if method_type == "console":
-                ConsolePrint.print(book.title, book.content)
-            elif method_type == "reverse":
-                ReversePrint.print(book.title, book.content)
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
+            print_handler = get_handler_by_type(method_type, {
+                "console": ConsolePrint(),
+                "reverse": ReversePrint()
+            })
+            print_handler.print(book.title, book.content)
         elif cmd == "serialize":
-            if method_type == "json":
-                return JsonSerialize.serialize(book.title, book.content)
-            elif method_type == "xml":
-                return XmlSerialize.serialize(book.title, book.content)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+            serialize_handler = get_handler_by_type(method_type, {
+                "json": JsonSerialize(),
+                "xml": XmlSerialize()
+            })
+            return serialize_handler.serialize(book.title, book.content)
         else:
             raise ValueError(f"Unknown command: {cmd}")
+
+
+def get_handler_by_type(
+        method_type: str,
+        handler_map: dict[str, Display | Print | Serialize]
+) -> Display | Print | Serialize:
+    if method_type in handler_map:
+        handler_instance = handler_map[method_type]
+        return handler_instance
+    else:
+        raise ValueError(f"Unknown type: {method_type}")
 
 
 if __name__ == "__main__":

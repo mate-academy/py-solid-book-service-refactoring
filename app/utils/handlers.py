@@ -32,7 +32,7 @@ class ConsolePrint(Print):
 class ReversePrint(Print):
     def print_book(self, title: str, content: str) -> None:
         print(f"Printing the book in reverse: {title}...")
-        print(content)
+        print(content[::-1])
 
 
 class Serialize(ABC):

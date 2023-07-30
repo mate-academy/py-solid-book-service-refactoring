@@ -1,10 +1,6 @@
 from app.book import Book
-from app.utils.handlers import (Display,
-                                Print,
-                                Serialize,
-                                ConsolePrint,
-                                ReversePrint
-                                )
+from app.utils.handlers import (Display, Print, Serialize,
+                                ConsolePrint, ReversePrint)
 from app.utils.display import ConsoleDisplay, ReverseDisplay
 from app.utils.serializers import JsonSerialize, XmlSerialize
 
@@ -16,19 +12,19 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
                 "console": ConsoleDisplay(),
                 "reverse": ReverseDisplay()
             })
-            display_handler.display(book.content)
+            book.display(display_handler)
         elif cmd == "print":
             print_handler = get_handler_by_type(method_type, {
                 "console": ConsolePrint(),
                 "reverse": ReversePrint()
             })
-            print_handler.print_book(book.title, book.content)
+            book.print_book(print_handler)
         elif cmd == "serialize":
             serialize_handler = get_handler_by_type(method_type, {
                 "json": JsonSerialize(),
                 "xml": XmlSerialize()
             })
-            return serialize_handler.serialize(book.title, book.content)
+            return book.serialize(serialize_handler)
         else:
             raise ValueError(f"Unknown command: {cmd}")
 

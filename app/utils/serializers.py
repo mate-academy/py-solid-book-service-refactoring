@@ -1,7 +1,6 @@
+from app.utils.handlers import Serialize
 import json
 import xml.etree.ElementTree as eT
-
-from app.utils.handlers import Serialize
 
 
 class JsonSerialize(Serialize):

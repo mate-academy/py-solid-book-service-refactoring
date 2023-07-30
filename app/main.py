@@ -1,15 +1,15 @@
 from app.book import Book
 from app.utils.handlers import (Display,
                                 Print,
-                                ConsoleDisplay,
-                                ReverseDisplay,
+                                Serialize,
                                 ConsolePrint,
                                 ReversePrint
                                 )
-from app.utils.serializers import Serialize, JsonSerialize, XmlSerialize
+from app.utils.display import ConsoleDisplay, ReverseDisplay
+from app.utils.serializers import JsonSerialize, XmlSerialize
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> str:
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
             display_handler = get_handler_by_type(method_type, {
@@ -22,7 +22,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> str:
                 "console": ConsolePrint(),
                 "reverse": ReversePrint()
             })
-            print_handler.print(book.title, book.content)
+            print_handler.print_book(book.title, book.content)
         elif cmd == "serialize":
             serialize_handler = get_handler_by_type(method_type, {
                 "json": JsonSerialize(),

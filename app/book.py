@@ -8,26 +8,23 @@ class Book:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
-        processor = BOOK_DISPLAY_PROCESSORS.get(display_type)
+    @staticmethod
+    def _get_processor(processors: dict, method_name: str) -> object:
+        if method_name in processors:
+            return processors[method_name]()
+        raise ValueError(f"Unknown method: {method_name}")
 
-        if processor:
-            processor().display(self.content)
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
+    def display(self, display_type: str) -> None:
+        self._get_processor(BOOK_DISPLAY_PROCESSORS, display_type).display(
+            self.content
+        )
 
     def print_book(self, print_type: str) -> None:
-        processor = BOOK_PRINT_PROCESSORS.get(print_type)
-
-        if processor:
-            processor().print_book(self.title, self.content)
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+        self._get_processor(BOOK_PRINT_PROCESSORS, print_type).print_book(
+            self.title, self.content
+        )
 
     def serialize(self, serialize_type: str) -> str:
-        processor = BOOK_SERIALIZE_PROCESSORS.get(serialize_type)
-
-        if processor:
-            return processor().serialize(self.title, self.content)
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+        return self._get_processor(
+            BOOK_SERIALIZE_PROCESSORS, serialize_type
+        ).serialize(self.title, self.content)

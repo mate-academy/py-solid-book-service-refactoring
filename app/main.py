@@ -1,43 +1,42 @@
 from app.book import Book
-from app.utils.handlers import (Display, Print, Serialize,
-                                ConsolePrint, ReversePrint)
+from app.utils.utils import get_handler_by_type
 from app.utils.display import ConsoleDisplay, ReverseDisplay
-from app.utils.serializers import JsonSerialize, XmlSerialize
+
+from enum import Enum
+
+
+class Command(Enum):
+    DISPLAY = "display"
+
+    @property
+    def handlers_dict(self) -> dict[str, callable]:
+        commands_info = {
+            Command.DISPLAY: {
+                "console": lambda: ConsoleDisplay(),
+                "reverse": lambda: ReverseDisplay()
+            }
+        }
+
+        return commands_info.get(self, {})
+
+    def get_book_method(self, book: Book) -> callable:
+        methods = {
+            Command.DISPLAY: book.display
+        }
+
+        return methods.get(self)
+
+    def invoke(self, book: Book, method_type: str) -> None:
+        method = self.get_book_method(book)
+        handler = get_handler_by_type(method_type, self.handlers_dict)
+
+        method(handler)
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        if cmd == "display":
-            display_handler = get_handler_by_type(method_type, {
-                "console": ConsoleDisplay(),
-                "reverse": ReverseDisplay()
-            })
-            book.display(display_handler)
-        elif cmd == "print":
-            print_handler = get_handler_by_type(method_type, {
-                "console": ConsolePrint(),
-                "reverse": ReversePrint()
-            })
-            book.print_book(print_handler)
-        elif cmd == "serialize":
-            serialize_handler = get_handler_by_type(method_type, {
-                "json": JsonSerialize(),
-                "xml": XmlSerialize()
-            })
-            return book.serialize(serialize_handler)
-        else:
-            raise ValueError(f"Unknown command: {cmd}")
-
-
-def get_handler_by_type(
-        method_type: str,
-        handler_map: dict[str, Display | Print | Serialize]
-) -> Display | Print | Serialize:
-    if method_type in handler_map:
-        handler_instance = handler_map[method_type]
-        return handler_instance
-    else:
-        raise ValueError(f"Unknown type: {method_type}")
+        command = Command(cmd)
+        return command.invoke(book, method_type)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ class SerializeBook(ABC):
 
 class JSONSerializer(SerializeBook):
     @staticmethod
-    def serialize(book: Book) -> json:
+    def serialize(book: Book) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
 

@@ -1,4 +1,4 @@
-from app.utils.handlers import Display, Print, Serialize
+from abc import ABC, abstractmethod
 
 
 class Book:
@@ -6,11 +6,46 @@ class Book:
         self.title = title
         self.content = content
 
-    def display(self, display_handler: Display) -> None:
-        display_handler.display(self.content)
 
-    def print_book(self, print_handler: Print) -> None:
-        print_handler.print(self.title, self.content)
+class DisplayBook(ABC):
+    display_method = ["console", "reverse"]
 
-    def serialize(self, serialize_handler: Serialize) -> str:
-        return serialize_handler.serialize(self.title, self.content)
+    @staticmethod
+    @abstractmethod
+    def display(book: Book) -> None:
+        pass
+
+
+class ConsoleDisplay(DisplayBook):
+    @staticmethod
+    def display(book: Book) -> None:
+        print(book.content)
+
+
+class ReverseDisplay(DisplayBook):
+    @staticmethod
+    def display(book: Book) -> None:
+        print(book.content[::-1])
+
+
+class PrintBook(ABC):
+    print_method = ["console", "reverse"]
+
+    @staticmethod
+    @abstractmethod
+    def print_book(book: Book) -> None:
+        pass
+
+
+class ConsolePrint(PrintBook):
+    @staticmethod
+    def print_book(book: Book) -> None:
+        print(f"Printing the book: {book.title}...")
+        print(book.content)
+
+
+class ReversePrint(PrintBook):
+    @staticmethod
+    def print_book(book: Book) -> None:
+        print(f"Printing the book in reverse: {book.title}...")
+        print(book.content[::-1])

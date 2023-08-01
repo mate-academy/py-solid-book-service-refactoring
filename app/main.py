@@ -1,42 +1,41 @@
-from app.book import Book
-from app.utils.utils import get_handler_by_type
-from app.utils.display import ConsoleDisplay, ReverseDisplay
-
-from enum import Enum
-
-
-class Command(Enum):
-    DISPLAY = "display"
-
-    @property
-    def handlers_dict(self) -> dict[str, callable]:
-        commands_info = {
-            Command.DISPLAY: {
-                "console": lambda: ConsoleDisplay(),
-                "reverse": lambda: ReverseDisplay()
-            }
-        }
-
-        return commands_info.get(self, {})
-
-    def get_book_method(self, book: Book) -> callable:
-        methods = {
-            Command.DISPLAY: book.display
-        }
-
-        return methods.get(self)
-
-    def invoke(self, book: Book, method_type: str) -> None:
-        method = self.get_book_method(book)
-        handler = get_handler_by_type(method_type, self.handlers_dict)
-
-        method(handler)
+from app.book import (
+    Book,
+    DisplayBook,
+    PrintBook,
+    ConsoleDisplay,
+    ReverseDisplay,
+    ConsolePrint,
+    ReversePrint,
+)
+from app.serializers import SerializeBook, JSONSerializer, XMLSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    method_types = (
+        DisplayBook.display_method
+        + PrintBook.print_method
+        + SerializeBook.serializer_type
+    )
+
     for cmd, method_type in commands:
-        command = Command(cmd)
-        return command.invoke(book, method_type)
+        if method_type in method_types:
+            if cmd == "display":
+                if method_type == "console":
+                    ConsoleDisplay.display(book)
+                else:
+                    ReverseDisplay.display(book)
+            elif cmd == "print":
+                if method_type == "console":
+                    ConsolePrint.print_book(book)
+                else:
+                    ReversePrint.print_book(book)
+            elif cmd == "serialize":
+                if method_type == "json":
+                    return JSONSerializer.serialize(book)
+                else:
+                    return XMLSerializer.serialize(book)
+        else:
+            raise ValueError(f"Unknown method type: {method_type}.")
 
 
 if __name__ == "__main__":

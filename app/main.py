@@ -36,7 +36,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
                     return BookSerializerXML.serialize(book)
 
         else:
-            raise ValueError(f"Unknown method type: {method_type}.")
+            raise ValueError(f"Unknown method entered: {method_type}.")
 
 
 if __name__ == "__main__":

@@ -20,20 +20,17 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             if cmd == "display":
                 if method_type == "console":
                     BookConsoleDisplayer.display(book)
-                else:
-                    BookReverseDisplayer.display(book)
+                BookReverseDisplayer.display(book)
 
             elif cmd == "print":
                 if method_type == "console":
                     BookConsolePrinter.print(book)
-                else:
-                    BookReversePrinter.print(book)
+                BookReversePrinter.print(book)
 
             elif cmd == "serialize":
                 if method_type == "json":
                     return BookSerializerJSON.serialize(book)
-                else:
-                    return BookSerializerXML.serialize(book)
+                return BookSerializerXML.serialize(book)
 
         else:
             raise ValueError(f"Unknown method entered: {method_type}.")

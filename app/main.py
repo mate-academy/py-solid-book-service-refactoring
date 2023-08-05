@@ -71,25 +71,20 @@ class BookSerializeXML(BookSerialize):
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     _book = None
     for cmd, method_type in commands:
-        match method_type:
-            case "console":
-                _book = BookConsole(book)
-            case "reverse":
-                _book = BookReverse(book)
-            case "xml":
-                if cmd == "serialize":
-                    return BookSerializeXML.serialize(book)
-            case "json":
-                if cmd == "serialize":
-                    return BookSerializeJSON.serialize(book)
-            case _:
-                return "No such method type"
-
-        match cmd:
-            case "display":
-                _book.display()
-            case "print":
-                _book.print_book()
+        if method_type == "console":
+            _book = BookConsole(book)
+        elif method_type == "reverse":
+            _book = BookReverse(book)
+        elif method_type == "xml" and cmd == "serialize":
+            return BookSerializeXML.serialize(book)
+        elif method_type == "json" and cmd == "serialize":
+            return BookSerializeJSON.serialize(book)
+        else:
+            return "No such method type"
+        if cmd == "display":
+            _book.display()
+        elif cmd == "print":
+            _book.print_book()
 
 
 if __name__ == "__main__":

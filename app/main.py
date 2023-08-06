@@ -8,29 +8,37 @@ from app.book_serialize_classes import BookSerializerJSON, BookSerializerXML
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    display_methods = ["console", "reverse"]
-    print_methods = ["console", "reverse"]
-    serialize_methods = ["json", "xml"]
-    all_method_types = (display_methods + print_methods + serialize_methods)
+    displays = {
+        "console": BookConsoleDisplayer,
+        "reverse": BookReverseDisplayer,
+    }
+    printers = {
+        "console": BookConsolePrinter,
+        "reverse": BookReversePrinter,
+    }
+    serializers = {
+        "json": BookSerializerJSON,
+        "xml": BookSerializerXML,
+    }
+
+    all_method_types = (
+        list(displays.keys())
+        + list(printers.keys())
+        + list(serializers.keys())
+    )
 
     for cmd, method_type in commands:
 
         if method_type in all_method_types:
 
             if cmd == "display":
-                if method_type == "console":
-                    BookConsoleDisplayer.display(book)
-                BookReverseDisplayer.display(book)
+                displays[method_type].display(book)
 
             elif cmd == "print":
-                if method_type == "console":
-                    BookConsolePrinter.print(book)
-                BookReversePrinter.print(book)
+                printers[method_type].print(book)
 
             elif cmd == "serialize":
-                if method_type == "json":
-                    return BookSerializerJSON.serialize(book)
-                return BookSerializerXML.serialize(book)
+                return serializers[method_type].serialize(book)
 
         else:
             raise ValueError(f"Unknown method entered: {method_type}.")

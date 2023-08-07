@@ -12,13 +12,13 @@ class BookPrinter(ABC):
 
 class BookConsolePrinter(BookPrinter):
     @staticmethod
-    def print(book: Book) -> str:
+    def print(book: Book) -> None:
         print(f"Printing the book: {book.title}...")
         print(book.content)
 
 
 class BookReversePrinter(BookPrinter):
     @staticmethod
-    def print(book: Book) -> str:
+    def print(book: Book) -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])

@@ -6,8 +6,6 @@ from app.book import Book
 
 
 class SerializeBook(ABC):
-    serializer_type = ["json", "xml"]
-
     @staticmethod
     @abstractmethod
     def serialize(book: Book) -> None:

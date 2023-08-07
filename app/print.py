@@ -4,8 +4,6 @@ from app.book import Book
 
 
 class PrintBook(ABC):
-    print_method = ["console", "reverse"]
-
     @staticmethod
     @abstractmethod
     def print_book(book: Book) -> None:

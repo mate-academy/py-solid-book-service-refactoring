@@ -1,5 +1,6 @@
 import json
 import xml.etree.ElementTree as Et
+from abc import ABC, abstractmethod
 
 
 class Book:
@@ -8,10 +9,14 @@ class Book:
         self.content = content
 
 
-class Display:
+class Display(ABC):
     def __init__(self, book: Book, display_type: str) -> None:
         self.display_type = display_type
         self.book = book
+
+    @abstractmethod
+    def display(self) -> None:
+        pass
 
 
 class DisplayConsole(Display):
@@ -29,10 +34,14 @@ class DisplayError(Display):
         raise ValueError(f"Unknown display type: {self.display_type}")
 
 
-class PrintBook:
+class PrintBook(ABC):
     def __init__(self, book: Book, print_type: str) -> None:
         self.print_type = print_type
         self.book = book
+
+    @abstractmethod
+    def print_book(self) -> None:
+        pass
 
 
 class PrintBookConsole(PrintBook):
@@ -52,10 +61,14 @@ class PrintBookError(PrintBook):
         raise ValueError(f"Unknown print type: {self.print_type}")
 
 
-class Serialize:
+class Serialize(ABC):
     def __init__(self, book: Book, serialize_type: str) -> None:
         self.serialize_type = serialize_type
         self.book = book
+
+    @abstractmethod
+    def serialize(self) -> str:
+        pass
 
 
 class SerializeJson(Serialize):
@@ -119,7 +132,7 @@ def serialize(book: Book, method_type: str) -> None | str:
             return serialize_error.serialize()
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None:
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
             display(book, method_type)
@@ -127,6 +140,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None:
             print_book(book, method_type)
         elif cmd == "serialize":
             return serialize(book, method_type)
+
 
 
 if __name__ == "__main__":

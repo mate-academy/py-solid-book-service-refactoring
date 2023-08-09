@@ -117,6 +117,10 @@ def perform_action(
     book: Book,
     method_type: str
 ) -> None | str:
+    if method_type not in ["console", "reverse", "json", "xml"]:
+        action = ACTION_TYPES[action_type][None](book, method_type)
+        return action.display()
+
     action = ACTION_TYPES[action_type][method_type](book, method_type)
     return action.display()
 
@@ -129,4 +133,4 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    print(main(sample_book, [("display", "123"), ("serialize", "xml")]))

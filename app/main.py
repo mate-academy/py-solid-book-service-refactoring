@@ -127,10 +127,10 @@ def perform_action(
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for action_type, method_type in commands:
-        if action_type in ["display", "print", "serialize"]:
+        if action_type in ACTION_TYPES:
             return perform_action(action_type, book, method_type)
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "123"), ("serialize", "xml")]))
+    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))

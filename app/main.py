@@ -117,7 +117,7 @@ def perform_action(
     book: Book,
     method_type: str
 ) -> None | str:
-    if method_type not in ["console", "reverse", "json", "xml"]:
+    if method_type not in ACTION_TYPES[action_type]:
         action = ACTION_TYPES[action_type][None](book, method_type)
         return action.display()
 

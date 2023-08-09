@@ -112,12 +112,16 @@ ACTION_TYPES = {
 }
 
 
-def perform_action(action_type: str, book: Book, method_type: str):
+def perform_action(
+    action_type: str,
+    book: Book,
+    method_type: str
+) -> None | str:
     action = ACTION_TYPES[action_type][method_type](book, method_type)
     return action.display()
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None:
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for action_type, method_type in commands:
         if action_type in ["display", "print", "serialize"]:
             return perform_action(action_type, book, method_type)

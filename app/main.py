@@ -97,17 +97,17 @@ ACTION_TYPES = {
     "display": {
         "console": DisplayConsole,
         "reverse": DisplayReverse,
-        None: DisplayError
+        "error": DisplayError
     },
     "print": {
         "console": PrintBookConsole,
         "reverse": PrintBookReverse,
-        None: PrintBookError
+        "error": PrintBookError
     },
     "serialize": {
         "json": SerializeJson,
         "xml": SerializeXml,
-        None: SerializeError
+        "error": SerializeError
     }
 }
 
@@ -117,12 +117,11 @@ def perform_action(
     book: Book,
     method_type: str
 ) -> None | str:
-    if method_type not in ACTION_TYPES[action_type]:
-        action = ACTION_TYPES[action_type][None](book, method_type)
-        return action.display()
+    action = ACTION_TYPES[action_type]
 
-    action = ACTION_TYPES[action_type][method_type](book, method_type)
-    return action.display()
+    if method_type not in action:
+        method_type = "error"
+    return action[method_type](book, method_type).display()
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

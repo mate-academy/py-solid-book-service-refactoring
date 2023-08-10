@@ -4,27 +4,22 @@ from app.book_serializer import BOOK_SERIALIZE_PROCESSORS
 
 
 class Book:
+    BOOK_PROCESSORS = {
+        "display": BOOK_DISPLAY_PROCESSORS,
+        "print": BOOK_PRINT_PROCESSORS,
+        "serialize": BOOK_SERIALIZE_PROCESSORS,
+    }
+
     def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
-    @staticmethod
-    def _get_processor(processors: dict, method_name: str) -> object:
-        if method_name in processors:
-            return processors[method_name]()
-        raise ValueError(f"Unknown method: {method_name}")
-
-    def display(self, display_type: str) -> None:
-        self._get_processor(BOOK_DISPLAY_PROCESSORS, display_type).display(
-            self.content
-        )
-
-    def print_book(self, print_type: str) -> None:
-        self._get_processor(BOOK_PRINT_PROCESSORS, print_type).print_book(
-            self.title, self.content
-        )
-
-    def serialize(self, serialize_type: str) -> str:
-        return self._get_processor(
-            BOOK_SERIALIZE_PROCESSORS, serialize_type
-        ).serialize(self.title, self.content)
+    def handle(self, command: str, method: str) -> None:
+        if command in self.BOOK_PROCESSORS:
+            if method in self.BOOK_PROCESSORS[command]:
+                handler = getattr(
+                    self.BOOK_PROCESSORS[command][method](), command
+                )
+                return handler(self.title, self.content)
+            raise ValueError(f"Unknown method: {method}")
+        raise ValueError(f"Unknown command: {command}")

@@ -2,13 +2,8 @@ from app.book import Book
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+    for command, method in commands:
+        return book.handle(command, method)
 
 
 if __name__ == "__main__":

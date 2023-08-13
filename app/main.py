@@ -23,6 +23,11 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
                 book = BookJSONSerializer(book.title, book.content)
             elif method_type == "xml":
                 book = BookXMLSerializer(book.title, book.content)
+            else:
+                raise ValueError(
+                    f"Unexpected serialization method: "
+                    f"{method_type}"
+                )
             return book.serialize()
 
 

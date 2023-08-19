@@ -11,7 +11,10 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         "reverse": DisplayReverse(),
     }
     print_manager_dict = {"console": PrintConsole(), "reverse": PrintReverse()}
-    serialization_manager_dict = {"json": SerializeJSON(), "xml": SerializeXML()}
+    serialization_manager_dict = {
+        "json": SerializeJSON(),
+        "xml": SerializeXML()
+    }
 
     serialized_data = ""
 

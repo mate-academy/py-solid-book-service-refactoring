@@ -10,11 +10,11 @@ class Book:
 
 class Info:
     @staticmethod
-    def console(book):
+    def console(book: Book) -> None:
         print(book.content)
 
     @staticmethod
-    def reverse(book):
+    def reverse(book: Book) -> None:
         print(book.content[::-1])
 
 

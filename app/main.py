@@ -8,13 +8,23 @@ class Book:
         self.content = content
 
 
+class Info:
+    @staticmethod
+    def console(book):
+        print(book.content)
+
+    @staticmethod
+    def reverse(book):
+        print(book.content[::-1])
+
+
 class Display:
     @staticmethod
     def display(book: Book, display_type: str) -> None:
         if display_type == "console":
-            print(book.content)
+            Info.console(book)
         elif display_type == "reverse":
-            print(book.content[::-1])
+            Info.reverse(book)
         else:
             raise ValueError(f"Unknown display type: {display_type}")
 
@@ -24,10 +34,10 @@ class Print:
     def print_book(book: Book, print_type: str) -> None:
         if print_type == "console":
             print(f"Printing the book: {book.title}...")
-            print(book.content)
+            Info.console(book)
         elif print_type == "reverse":
             print(f"Printing the book in reverse: {book.title}...")
-            print(book.content[::-1])
+            Info.reverse(book)
         else:
             raise ValueError(f"Unknown print type: {print_type}")
 

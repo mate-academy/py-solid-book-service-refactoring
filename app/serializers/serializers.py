@@ -1,6 +1,5 @@
 import json
 from xml.etree import ElementTree
-
 from abc import ABC, abstractmethod
 
 from app.entities.book import Book

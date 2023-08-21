@@ -25,7 +25,9 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         try:
             action = actions[cmd][method_type]
         except KeyError:
-            raise ValueError(f"Invalid command: {cmd} with method type: {method_type}")
+            raise ValueError(
+                f"Invalid command: {cmd} with method type: {method_type}"
+            )
 
         result = action(book)
 

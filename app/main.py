@@ -25,12 +25,12 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         try:
             action = actions[cmd][method_type]
         except KeyError:
-            raise KeyError(f"Invalid command: {cmd} with method type: {method_type}")
+            raise ValueError(f"Invalid command: {cmd} with method type: {method_type}")
+
+        result = action(book)
 
         if cmd == "serialize":
-            return action(book)
-
-        action(book)
+            return result
 
 
 if __name__ == "__main__":

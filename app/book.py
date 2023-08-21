@@ -18,6 +18,9 @@ class ViewBook(ABC):
 
 
 class Display(ViewBook):
+    def __init__(self, method_type: str) -> None:
+        self.method_type = method_type
+
     def console(self, book: Book) -> None:
         print(book.content)
 
@@ -26,6 +29,9 @@ class Display(ViewBook):
 
 
 class PrintBook(ViewBook):
+    def __init__(self, method_type: str) -> None:
+        self.method_type = method_type
+
     def console(self, book: Book) -> None:
         print(f"Printing the book: {book.title}...")
         print(book.content)
@@ -33,16 +39,3 @@ class PrintBook(ViewBook):
     def reverse(self, book: Book) -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])
-
-
-class ShowContent:
-    def __init__(self, view: ViewBook) -> None:
-        self.view = view
-
-    def show_content(self, book: Book, method_type: str) -> None:
-        if method_type == "console":
-            self.view.console(book)
-        elif method_type == "reverse":
-            self.view.reverse(book)
-        else:
-            raise ValueError(f"Unknown display type: {method_type}")

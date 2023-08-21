@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class Book(ABC):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -14,7 +14,7 @@ class BookAction(ABC):
 
 
 class DisplayBook(BookAction):
-    def __init__(self, display_type: str):
+    def __init__(self, display_type: str) -> None:
         self.display_type = display_type
 
     def action(self, book: Book) -> None:
@@ -27,7 +27,7 @@ class DisplayBook(BookAction):
 
 
 class PrintBook(BookAction):
-    def __init__(self, print_type: str):
+    def __init__(self, print_type: str) -> None:
         self.print_type = print_type
 
     def action(self, book: Book) -> None:

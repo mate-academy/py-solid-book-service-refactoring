@@ -4,29 +4,37 @@ from app.print_book import ConsolePrint, ReverserPrint
 from app.serializers import JSONSerializer, XMLSerializer
 
 
+actions = {
+    "display": {
+        "console": ConsoleDisplay,
+        "reverse": ReverseDisplay,
+    },
+    "print": {
+        "console": ConsolePrint,
+        "reverse": ReverserPrint,
+    },
+    "serialize": {
+        "json": JSONSerializer,
+        "xml": XMLSerializer,
+    },
+}
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                ConsoleDisplay.display(book)
-            elif method_type == "reverse":
-                ReverseDisplay.display(book)
+        if cmd in actions and method_type in actions[cmd]:
+            action_class = actions[cmd][method_type]
+
+            if cmd == "serialize":
+                return action_class.serialize(book)
             else:
-                raise ValueError(f"Unknown display type: {method_type}")
-        elif cmd == "print":
-            if method_type == "console":
-                ConsolePrint.print_book(book)
-            elif method_type == "reverse":
-                ReverserPrint.print_book(book)
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
-        elif cmd == "serialize":
-            if method_type == "json":
-                return JSONSerializer.serialize(book)
-            elif method_type == "xml":
-                return XMLSerializer.serialize(book)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+                (
+                    action_class.display(book)
+                    if cmd == "display"
+                    else action_class.print_book(book)
+                )
+        else:
+            raise ValueError(f"Unknown combination: {cmd} - {method_type}")
 
 
 if __name__ == "__main__":

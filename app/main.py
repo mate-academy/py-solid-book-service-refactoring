@@ -6,35 +6,31 @@ from app.serializers import JSONSerializer, XMLSerializer
 
 actions = {
     "display": {
-        "console": ConsoleDisplay,
-        "reverse": ReverseDisplay,
+        "console": ConsoleDisplay.display,
+        "reverse": ReverseDisplay.display,
     },
     "print": {
-        "console": ConsolePrint,
-        "reverse": ReverserPrint,
+        "console": ConsolePrint.print_book,
+        "reverse": ReverserPrint.print_book,
     },
     "serialize": {
-        "json": JSONSerializer,
-        "xml": XMLSerializer,
+        "json": JSONSerializer.serialize,
+        "xml": XMLSerializer.serialize,
     },
 }
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        if cmd in actions and method_type in actions[cmd]:
-            action_class = actions[cmd][method_type]
+        try:
+            action = actions[cmd][method_type]
+        except KeyError:
+            raise KeyError(f"Invalid command: {cmd} with method type: {method_type}")
 
-            if cmd == "serialize":
-                return action_class.serialize(book)
-            else:
-                (
-                    action_class.display(book)
-                    if cmd == "display"
-                    else action_class.print_book(book)
-                )
-        else:
-            raise ValueError(f"Unknown combination: {cmd} - {method_type}")
+        if cmd == "serialize":
+            return action(book)
+
+        action(book)
 
 
 if __name__ == "__main__":

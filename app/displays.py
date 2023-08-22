@@ -6,7 +6,7 @@ from app.book import Book
 class BookDisplay(ABC):
     @staticmethod
     @abstractmethod
-    def display(book: Book):
+    def display(book: Book) -> None:
         pass
 
 

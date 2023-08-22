@@ -1,10 +1,12 @@
 import json
 import xml.etree.ElementTree as ET
+from abc import abstractmethod
 
 from app.book import Book
 
 
 class Serializer:
+    @abstractmethod
     def perform_serialize(self, book: Book) -> None:
         pass
 

@@ -1,7 +1,10 @@
+from abc import abstractmethod
+
 from app.book import Book
 
 
 class Printer:
+    @abstractmethod
     def perform_print(self, book: Book) -> None:
         pass
 

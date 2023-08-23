@@ -1,10 +1,14 @@
 from app.book import Book
-from app.managers import BookManager
+from app.managers import BookCommandManager
+from app.validators import BookTypeValidator, CommandsValidator
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    book_manager = BookManager(book, commands)
-    return book_manager.performer_actions()
+
+    BookTypeValidator.type_checker(book=book)
+    CommandsValidator.commands_checker(commands=commands)
+
+    return BookCommandManager.perform_actions(book=book, commands=commands)
 
 
 if __name__ == "__main__":

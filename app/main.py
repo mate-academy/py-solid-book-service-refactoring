@@ -29,11 +29,9 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
             serialization_manager = serialization_manager.get(method_type)
             if serialization_manager:
-                result = serialization_manager.serialize(
+                return serialization_manager.serialize(
                     book.title, book.content
                 )
-
-    return result
 
 
 if __name__ == "__main__":

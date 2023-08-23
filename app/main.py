@@ -3,8 +3,8 @@ from app.managers import BookManager
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    return_str = BookManager(book, commands)
-    return return_str.performer_actions()
+    book_manager = BookManager(book, commands)
+    return book_manager.performer_actions()
 
 
 if __name__ == "__main__":

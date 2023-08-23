@@ -12,8 +12,6 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     print_manager = {"console": PrintConsole(), "reverse": PrintReverse()}
     serialization_manager = {"json": SerializeJSON(), "xml": SerializeXML()}
 
-    result = ""
-
     for cmd, method_type in commands:
         if cmd == "display":
 

@@ -1,14 +1,19 @@
-from app.book import Book, Info
+from abc import ABC, abstractmethod
 
 
-class Print:
-    @staticmethod
-    def print_book(book: Book, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {book.title}...")
-            Info.console(book)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {book.title}...")
-            Info.reverse(book)
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+class Print(ABC):
+    @abstractmethod
+    def print(self, title: str, content: str) -> None:
+        pass
+
+
+class PrintConsole(Print):
+    def print(self, title: str, content: str) -> None:
+        print(f"Printing the {title}...")
+        print(content)
+
+
+class PrintReverse(Print):
+    def print(self, title: str, content: str) -> None:
+        print(f"Printing the {title} in reverse...")
+        print(content[::-1])

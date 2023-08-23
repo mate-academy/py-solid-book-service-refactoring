@@ -1,20 +1,24 @@
 import json
-import xml.etree.ElementTree as ETree
+from xml.etree import ElementTree
+from abc import ABC, abstractmethod
 
-from app.book import Book
+
+class Serialization(ABC):
+    @abstractmethod
+    def serialize(self, title: str, content: str) -> str:
+        pass
 
 
-class Serialization:
-    @staticmethod
-    def serialize(book: Book, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": book.title, "content": book.content})
-        elif serialize_type == "xml":
-            root = ETree.Element("book")
-            title_element = ETree.SubElement(root, "title")
-            title_element.text = book.title
-            content_element = ETree.SubElement(root, "content")
-            content_element.text = book.content
-            return ETree.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+class SerializeJSON(Serialization):
+    def serialize(self, title: str, content: str) -> str:
+        return json.dumps({"title": title, "content": content})
+
+
+class SerializeXML(Serialization):
+    def serialize(self, title: str, content: str) -> str:
+        root = ElementTree.Element("book")
+        title_elem = ElementTree.SubElement(root, "title")
+        title_elem.text = title
+        content_elem = ElementTree.SubElement(root, "content")
+        content_elem.text = content
+        return ElementTree.tostring(root, encoding="unicode")

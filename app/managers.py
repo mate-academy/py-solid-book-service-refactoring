@@ -4,7 +4,7 @@ from app.print import PrintBook
 from app.serializer import SerializerBook
 
 
-COMMANDS_LIST = ["display.py", "print", "serialize"]
+COMMANDS_LIST = ["display", "print", "serialize"]
 METHODS_LIST = ["json", "xml", "console", "reverse"]
 
 
@@ -15,13 +15,15 @@ class BookManager:
         self.performer_actions()
 
     @classmethod
-    def type_checker(cls, book) -> Book:
+    def type_checker(cls, book: Book) -> Book:
         if type(book) is not Book:
             raise TypeError("Wrong type")
         return book
 
     @classmethod
-    def commands_checker(cls, commands: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    def commands_checker(
+            cls, commands: list[tuple[str, str]]
+    ) -> list[tuple[str, str]]:
         for cmd, method_type in commands:
             if cmd not in COMMANDS_LIST:
                 raise ValueError(f"Unknown command: {cmd}")
@@ -31,7 +33,7 @@ class BookManager:
 
     def performer_actions(self) -> None | str:
         for cmd, method_type in self.commands:
-            if cmd == "display.py":
+            if cmd == "display":
                 display_book = DisplayBook(self.book, method_type)
                 display_book.display()
             elif cmd == "print":

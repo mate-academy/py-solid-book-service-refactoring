@@ -23,12 +23,12 @@ def book() -> Book:
 
 
 def test_display_console(book) -> None:
-    output = get_stdout(main, book, [("display.py", "console")])
+    output = get_stdout(main, book, [("display", "console")])
     assert "This is some sample content." in output
 
 
 def test_display_reverse(book) -> None:
-    output = get_stdout(main, book, [("display.py", "reverse")])
+    output = get_stdout(main, book, [("display", "reverse")])
     assert "tnetnoc elpmas emos si sihT" in output
 
 

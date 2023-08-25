@@ -38,12 +38,14 @@ class ReverseDisplay(Display):
 class DisplayCorrectType:
     @staticmethod
     def get_type(display_type: str) -> Display:
-        if display_type == "console":
-            return ConsoleDisplay()
-        elif display_type == "reverse":
-            return ReverseDisplay()
-        else:
+        displays = {
+            "console": ConsoleDisplay,
+            "reverse": ReverseDisplay
+        }
+        display = displays.get(display_type)
+        if display is None:
             raise ValueError(f"Unknown display type: {display_type}")
+        return display()
 
 
 class Print(ABC):
@@ -67,12 +69,14 @@ class ReversePrint(Print):
 class PrintCorrectType:
     @staticmethod
     def get_type(print_type: str) -> Print:
-        if print_type == "console":
-            return ConsolePrint()
-        elif print_type == "reverse":
-            return ReversePrint()
-        else:
+        printers = {
+            "console": ConsolePrint,
+            "reverse": ReversePrint
+        }
+        printer = printers.get(print_type)
+        if printer is None:
             raise ValueError(f"Unknown print type: {print_type}")
+        return printer()
 
 
 class Serialize(ABC):
@@ -99,9 +103,11 @@ class XmlSerialize(Serialize):
 class SerializeCorrectType:
     @staticmethod
     def get_type(serialize_type: str) -> Serialize:
-        if serialize_type == "json":
-            return JsonSerialize()
-        elif serialize_type == "xml":
-            return XmlSerialize()
-        else:
+        serializers = {
+            "json": JsonSerialize,
+            "xml": XmlSerialize,
+        }
+        serializer = serializers.get(serialize_type)
+        if serializer is None:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
+        return serializer()

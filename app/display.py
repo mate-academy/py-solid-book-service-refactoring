@@ -11,4 +11,3 @@ class ConsoleDisplay(Display):
 class ReverseDisplay(Display):
     def display(self, content: str) -> None:
         print(content[::-1])
-        

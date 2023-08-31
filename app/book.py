@@ -1,5 +1,7 @@
+# book.py
 import json
 from xml.etree import ElementTree
+from abc import ABC, abstractmethod
 
 
 class Book:
@@ -14,62 +16,54 @@ class Book:
         return self.title
 
 
-class Formatter:
+class Formatter(ABC):
     def __init__(self, book: Book) -> None:
         self.book = book
-        self.commands = {"display": self.display, "print": self.print_book}
 
-    def check_command(self, command: str) -> bool:
-        return command in self.commands
-
-    def display(self) -> None:
-        print(self.book.content)
-
-    def print_book(self) -> None:
-        print(f"Printing the book: {self.book.title}...")
-        print(self.book.content)
-
+    @abstractmethod
     def response_on_command(self, command: str) -> None:
-        if self.check_command(command=command):
-            return self.commands[command]()
+        pass
 
 
 class ConsoleFormatter(Formatter):
-    pass
+    def response_on_command(self, command: str) -> None:
+        if command == "display":
+            print(self.book.content)
+        elif command == "print":
+            print(f"Printing the book: {self.book.title}...")
+            print(self.book.content)
 
 
 class ReverseFormatter(Formatter):
-    def display(self) -> None:
-        print(self.book.content[::-1])
-
-    def print_book(self) -> None:
-        print(f"Printing the book in reverse: {self.book.title}...")
-        print(self.book.content[::-1])
+    def response_on_command(self, command: str) -> None:
+        if command == "display":
+            print(self.book.content[::-1])
+        elif command == "print":
+            print(f"Printing the book in reverse: {self.book.title}...")
+            print(self.book.content[::-1])
 
 
 class BookFormatter:
     def __init__(self, book: Book) -> None:
         self.book = book
-        self.commands = {
-            "console": ConsoleFormatter,
-            "reverse": ReverseFormatter
+        self.formatters = {
+            "console": ConsoleFormatter(self.book),
+            "reverse": ReverseFormatter(self.book)
         }
 
-    def check_command(self, command: str) -> bool:
-        return command in self.commands
-
-    def formate(self, command: str, action: str) -> str:
-        if self.check_command(command=command):
-            return self.commands[
-                command
-            ](self.book).response_on_command(action)
-        raise ValueError("Wrong command")
+    def formate(self, command: str, action: str) -> None:
+        if command in self.formatters:
+            formatter = self.formatters[command]
+            formatter.response_on_command(action)
+        else:
+            raise ValueError("Wrong command")
 
 
-class Serializer:
+class Serializer(ABC):
     def __init__(self, book: Book) -> None:
         self.book = book
 
+    @abstractmethod
     def serialize(self) -> str:
         pass
 
@@ -95,15 +89,14 @@ class XMLSerializer(Serializer):
 class BookSerializer:
     def __init__(self, book: Book) -> None:
         self.book = book
-        self.commands = {
-            "json": JSONSerializer,
-            "xml": XMLSerializer
+        self.serializers = {
+            "json": JSONSerializer(self.book),
+            "xml": XMLSerializer(self.book)
         }
 
-    def check_command(self, command: str) -> bool:
-        return command in self.commands
-
-    def serialize_from_commands(self, command: str) -> None:
-        if self.check_command(command):
-            return self.commands[command](self.book).serialize()
-        raise ValueError("Wrong Command")
+    def serialize_from_commands(self, command: str) -> str:
+        if command in self.serializers:
+            serializer = self.serializers[command]
+            return serializer.serialize()
+        else:
+            raise ValueError("Wrong Command")

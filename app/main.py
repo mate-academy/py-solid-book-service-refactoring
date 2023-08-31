@@ -4,19 +4,19 @@ from app.book_printer import ConsolePrinter, ReversePrinter
 from app.book_serializer import JSONSerializer, XMLSerializer
 
 
-display_interfaces = {
-    "console": ConsoleDisplay(),
-    "reverse": ReverseDisplay(),
-}
-
-printer_interfaces = {
-    "console": ConsolePrinter(),
-    "reverse": ReversePrinter(),
-}
-
-serializer_interfaces = {
-    "json": JSONSerializer(),
-    "xml": XMLSerializer(),
+actions = {
+    "display": {
+        "console": ConsoleDisplay,
+        "reverse": ReverseDisplay,
+    },
+    "print": {
+        "console": ConsolePrinter,
+        "reverse": ReversePrinter,
+    },
+    "serialize": {
+        "json": JSONSerializer,
+        "xml": XMLSerializer,
+    },
 }
 
 
@@ -26,11 +26,11 @@ def main(
 ) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            display_interfaces.get(method_type).display(book)
+            actions[cmd].get(method_type)().display(book)
         elif cmd == "print":
-            printer_interfaces.get(method_type).print_book(book)
+            actions[cmd].get(method_type)().print_book(book)
         elif cmd == "serialize":
-            return serializer_interfaces.get(method_type).serialize(book)
+            return actions[cmd].get(method_type)().serialize(book)
 
 
 if __name__ == "__main__":

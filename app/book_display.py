@@ -13,10 +13,10 @@ class BookDisplay(ABC):
 class ConsoleDisplay(BookDisplay):
 
     def display(self, book: Book) -> None:
-        print(book.get_content())
+        print(book.content)
 
 
 class ReverseDisplay(BookDisplay):
 
     def display(self, book: Book) -> None:
-        print(book.get_content()[::-1])
+        print(book.content[::-1])

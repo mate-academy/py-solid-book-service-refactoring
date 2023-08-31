@@ -13,12 +13,12 @@ class BookPrinter(ABC):
 class ConsolePrinter(BookPrinter):
 
     def print_book(self, book: Book) -> None:
-        print(f"Printing the book: {book.get_title()}...")
-        print(book.get_content())
+        print(f"Printing the book: {book.title}...")
+        print(book.content)
 
 
 class ReversePrinter(BookPrinter):
 
     def print_book(self, book: Book) -> None:
-        print(f"Printing the book in reverse: {book.get_title()}...")
-        print(book.get_content()[::-1])
+        print(f"Printing the book in reverse: {book.title}...")
+        print(book.content[::-1])

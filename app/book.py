@@ -1,4 +1,3 @@
-# book.py
 import json
 from xml.etree import ElementTree
 from abc import ABC, abstractmethod

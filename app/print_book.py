@@ -20,4 +20,3 @@ class PrintBook:
             cls.print_book_reverse(book)
         else:
             raise ValueError(f"Unknown print type: {method_type}")
-

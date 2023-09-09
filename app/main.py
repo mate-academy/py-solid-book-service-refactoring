@@ -27,8 +27,6 @@ def dispatch_command(cmd: str, method_type: str, book: Book) -> None | str:
         print_content(method_type, book)
     elif cmd == "serialize":
         return serialize_content(method_type, book)
-    else:
-        raise NotImplementedError(f"Command {cmd} is not implemented")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
@@ -41,9 +39,8 @@ if __name__ == "__main__":
     print(
         main(
             sample_book, [
-                # ("print", "console"),
-                # ("serialize", "xml"),
-                ("display", "console"),
+                ("print", "console"),
+                ("serialize", "xml"),
             ]
         )
     )

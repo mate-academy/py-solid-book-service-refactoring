@@ -62,5 +62,3 @@ class SerializerFactory(SerializerConstructor):
             return JsonSerializer(self.object_to_serialize)
         elif self.serialize_type == "xml":
             return XmlSerializer(self.object_to_serialize)
-        else:
-            raise ValueError(f"Unknown serialize type: {self.serialize_type}")

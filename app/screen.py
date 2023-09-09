@@ -30,7 +30,7 @@ class SimpleScreen(Screen):
         print(self.object_to_display.content[::-1])
 
     @classmethod
-    def get_necessary_display_function(cls, function_key):
+    def get_necessary_display_function(cls, function_key: str) -> callable:
         return cls.__dict__[function_key]
 
     def display(self) -> None:

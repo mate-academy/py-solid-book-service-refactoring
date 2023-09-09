@@ -29,7 +29,14 @@ class SimpleScreen(Screen):
     def __display_in_reverse(self) -> None:
         print(self.object_to_display.content[::-1])
 
+    @classmethod
+    def get_necessary_display_function(cls, function_key):
+        return cls.__dict__[function_key]
+
     def display(self) -> None:
         function_key = SimpleScreen.DISPLAY_TYPES.get(self.display_type)
-        function = SimpleScreen.__dict__[function_key]
-        function(self)
+        function = self.get_necessary_display_function(function_key)
+        if function:
+            function(self)
+        else:
+            raise ValueError(f"Unknown display type: {self.display_type}")

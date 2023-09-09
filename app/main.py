@@ -41,8 +41,9 @@ if __name__ == "__main__":
     print(
         main(
             sample_book, [
-                ("print", "console"),
-                ("serialize", "xml")
+                # ("print", "console"),
+                # ("serialize", "xml"),
+                ("display", "console"),
             ]
         )
     )

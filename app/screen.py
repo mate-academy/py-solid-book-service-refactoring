@@ -18,6 +18,11 @@ class Screen(ABC):
 
 
 class SimpleScreen(Screen):
+    DISPLAY_TYPES = {
+        "console": "_SimpleScreen__display_in_console",
+        "reverse": "_SimpleScreen__display_in_reverse",
+    }
+
     def __display_in_console(self) -> None:
         print(self.object_to_display.content)
 
@@ -25,9 +30,6 @@ class SimpleScreen(Screen):
         print(self.object_to_display.content[::-1])
 
     def display(self) -> None:
-        if self.display_type == "console":
-            self.__display_in_console()
-        elif self.display_type == "reverse":
-            self.__display_in_reverse()
-        else:
-            raise ValueError(f"Unknown display type: {self.display_type}")
+        function_key = SimpleScreen.DISPLAY_TYPES.get(self.display_type)
+        function = SimpleScreen.__dict__[function_key]
+        function(self)

@@ -1,10 +1,10 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as EleT
 from abc import abstractmethod
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -48,9 +48,9 @@ class BookConsoleXml(Book):
         print(self.content)
 
     def serialize(self) -> str:
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+        root = EleT.Element("book")
+        title = EleT.SubElement(root, "title")
         title.text = self.title
-        content = ET.SubElement(root, "content")
+        content = EleT.SubElement(root, "content")
         content.text = self.content
-        return ET.tostring(root, encoding="unicode")
+        return EleT.tostring(root, encoding="unicode")

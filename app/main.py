@@ -1,4 +1,5 @@
-from app.books import BookReverseJson, BookConsoleXml, Book
+from app.books import BookReverse, BookConsole, Book
+from app.serializers import SerializerToJson, SerializerToXml
 
 CMD = {
     "display": "display",
@@ -7,18 +8,18 @@ CMD = {
 }
 
 METHOD = {
-    "reverse": BookReverseJson,
-    "console": BookConsoleXml,
-    "json": BookReverseJson,
-    "xml": BookConsoleXml,
+    "reverse": BookReverse,
+    "console": BookConsole,
+    "json": SerializerToJson,
+    "xml": SerializerToXml,
 }
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        obj = METHOD[method_type](**book.data)
+        obj = METHOD[method_type]()
         cmd = CMD[cmd]
-        return getattr(obj, cmd)()
+        return getattr(obj, cmd)(book)
 
 
 if __name__ == "__main__":

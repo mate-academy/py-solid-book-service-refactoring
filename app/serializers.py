@@ -29,7 +29,6 @@ class SerializerFactory:
     def get_serializer(serialize_type: str) -> Serializer:
         if serialize_type == "json":
             return JsonSerializer()
-        elif serialize_type == "xml":
+        if serialize_type == "xml":
             return XmlSerializer()
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+        raise ValueError(f"Unknown serialize type: {serialize_type}")

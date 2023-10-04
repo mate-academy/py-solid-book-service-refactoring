@@ -18,7 +18,7 @@ ACTIONS = {
 }
 
 
-def get_acceptable_methods():
+def get_acceptable_methods() -> set:
     methods = set()
     for value in ACTIONS.values():
         for key in value:

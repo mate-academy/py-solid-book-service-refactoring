@@ -3,7 +3,7 @@ from app.book import Book
 
 class Print(Book):
 
-    def do_action(self):
+    def do_action(self) -> None:
         raise NotImplementedError("Must override this method")
 
 
@@ -16,6 +16,6 @@ class PrintConsole(Print):
 
 class PrintReverse(Print):
 
-    def do_action(self):
+    def do_action(self) -> None:
         print(f"Printing the book in reverse: {self.title}...")
         self.print_content_reverse()

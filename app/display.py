@@ -3,7 +3,7 @@ from app.book import Book
 
 class Display(Book):
 
-    def do_action(self):
+    def do_action(self) -> None:
         raise NotImplementedError("Must override this method")
 
 

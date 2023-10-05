@@ -1,17 +1,25 @@
+from abc import ABC, abstractmethod
+
 from app.book import Book
 
 
-class Display(Book):
-
+class Display(ABC):
+    @abstractmethod
     def do_action(self) -> None:
-        raise NotImplementedError("Must override this method")
+        pass
 
 
 class DisplayConsole(Display):
+    def __init__(self, book: Book) -> None:
+        self.content = book.content
+
     def do_action(self) -> None:
-        self.print_content()
+        print(self.content)
 
 
 class DisplayReverse(Display):
+    def __init__(self, book: Book) -> None:
+        self.content = book.content
+
     def do_action(self) -> None:
-        self.print_content_reverse()
+        print(self.content[::-1])

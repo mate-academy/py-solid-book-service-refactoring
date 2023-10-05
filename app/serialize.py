@@ -1,20 +1,30 @@
+from abc import ABC, abstractmethod
+
 from app.book import Book
 import json
 import xml.etree.ElementTree as EleTr
 
 
-class Serialize(Book):
-
+class Serialize(ABC):
+    @abstractmethod
     def do_action(self) -> None:
         raise NotImplementedError("Must override this method")
 
 
 class SerializeJSON(Serialize):
+    def __init__(self, book: Book) -> None:
+        self.content = book.content
+        self.title = book.title
+
     def do_action(self) -> str:
         return json.dumps({"title": self.title, "content": self.content})
 
 
 class SerializeXML(Serialize):
+    def __init__(self, book: Book) -> None:
+        self.content = book.content
+        self.title = book.title
+
     def do_action(self) -> EleTr:
         root = EleTr.Element("book")
         title = EleTr.SubElement(root, "title")

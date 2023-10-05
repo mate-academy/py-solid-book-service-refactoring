@@ -20,9 +20,9 @@ ACTIONS = {
 
 def get_acceptable_methods() -> set:
     methods = set()
-    for value in ACTIONS.values():
-        for key in value:
-            methods.add(key)
+    for action_methods in ACTIONS.values():
+        for method in action_methods:
+            methods.add(method)
     return methods
 
 

@@ -1,21 +1,29 @@
+from abc import ABC, abstractmethod
+
 from app.book import Book
 
 
-class Print(Book):
-
+class Print(ABC):
+    @abstractmethod
     def do_action(self) -> None:
-        raise NotImplementedError("Must override this method")
+        pass
 
 
 class PrintConsole(Print):
+    def __init__(self, book: Book) -> None:
+        self.content = book.content
+        self.title = book.title
 
     def do_action(self) -> None:
         print(f"Printing the book: {self.title}...")
-        self.print_content()
+        print(self.content)
 
 
 class PrintReverse(Print):
+    def __init__(self, book: Book) -> None:
+        self.content = book.content
+        self.title = book.title
 
     def do_action(self) -> None:
         print(f"Printing the book in reverse: {self.title}...")
-        self.print_content_reverse()
+        print(self.content[::-1])

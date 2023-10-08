@@ -5,25 +5,19 @@ from .serialize import BookSerialize
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    method_mapping = {
+        ("display", "console"): BookDisplay().console,
+        ("display", "reverse"): BookDisplay().reverse,
+        ("print", "console"): BookPrint().console,
+        ("print", "reverse"): BookPrint().reverse,
+        ("serialize", "json"): BookSerialize().json,
+        ("serialize", "xml"): BookSerialize().xml,
+    }
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            display = BookDisplay()
-            if method_type == "console":
-                display.console(book)
-            if method_type == "reverse":
-                display.reverse(book)
-        elif cmd == "print":
-            print_b = BookPrint()
-            if method_type == "console":
-                print_b.console(book)
-            if method_type == "reverse":
-                print_b.reverse(book)
-        elif cmd == "serialize":
-            serializer = BookSerialize()
-            if method_type == "json":
-                return serializer.json(book)
-            if method_type == "xml":
-                return serializer.xml(book)
+        if (cmd, method_type) in method_mapping:
+            method = method_mapping[(cmd, method_type)]
+            return method(book) if cmd == "serialize" else method(book)
 
 
 if __name__ == "__main__":

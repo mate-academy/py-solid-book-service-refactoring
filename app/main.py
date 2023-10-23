@@ -1,5 +1,5 @@
 import json
-import xml.etree.ElementTree as et
+import xml.etree.ElementTree as ElementTree
 
 
 class Book:
@@ -52,12 +52,12 @@ class JSONSerialization(SerializationStrategy):
 
 class XMLSerialization(SerializationStrategy):
     def serialize(self, book: Book) -> str:
-        root = et.Element("book")
-        title = et.SubElement(root, "title")
+        root = ElementTree.Element("book")
+        title = ElementTree.SubElement(root, "title")
         title.text = book.title
-        content = et.SubElement(root, "content")
+        content = ElementTree.SubElement(root, "content")
         content.text = book.content
-        return et.tostring(root, encoding="unicode")
+        return ElementTree.tostring(root, encoding="unicode")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

@@ -13,6 +13,16 @@ class DisplayStrategy:
         raise NotImplementedError
 
 
+class PrintStrategy:
+    def print_book(self, book: Book) -> None:
+        raise NotImplementedError
+
+
+class SerializationStrategy:
+    def serialize(self, book: Book) -> str:
+        raise NotImplementedError
+
+
 class ConsoleDisplay(DisplayStrategy):
     def display(self, book: Book) -> None:
         print(book.content)
@@ -21,11 +31,6 @@ class ConsoleDisplay(DisplayStrategy):
 class ReverseDisplay(DisplayStrategy):
     def display(self, book: Book) -> None:
         print(book.content[::-1])
-
-
-class PrintStrategy:
-    def print_book(self, book: Book) -> None:
-        raise NotImplementedError
 
 
 class ConsolePrint(PrintStrategy):
@@ -38,11 +43,6 @@ class ReversePrint(PrintStrategy):
     def print_book(self, book: Book) -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])
-
-
-class SerializationStrategy:
-    def serialize(self, book: Book) -> str:
-        raise NotImplementedError
 
 
 class JSONSerialization(SerializationStrategy):
@@ -60,23 +60,30 @@ class XMLSerialization(SerializationStrategy):
         return ElementTree.tostring(root, encoding="unicode")
 
 
+COMMANDS_MAP = {
+    ("display", "console"): ConsoleDisplay(),
+    ("display", "reverse"): ReverseDisplay(),
+    ("print", "console"): ConsolePrint(),
+    ("print", "reverse"): ReversePrint(),
+    ("serialize", "json"): JSONSerialization(),
+    ("serialize", "xml"): XMLSerialization()
+}
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
+        strategy = COMMANDS_MAP.get((cmd, method_type))
+        if not strategy:
+            raise ValueError(
+                f"Unknown command or method type: {cmd}, {method_type}"
+            )
+
         if cmd == "display":
-            if method_type == "console":
-                ConsoleDisplay().display(book)
-            elif method_type == "reverse":
-                ReverseDisplay().display(book)
+            strategy.display(book)
         elif cmd == "print":
-            if method_type == "console":
-                ConsolePrint().print_book(book)
-            elif method_type == "reverse":
-                ReversePrint().print_book(book)
+            strategy.print_book(book)
         elif cmd == "serialize":
-            if method_type == "json":
-                return JSONSerialization().serialize(book)
-            elif method_type == "xml":
-                return XMLSerialization().serialize(book)
+            return strategy.serialize(book)
 
 
 if __name__ == "__main__":

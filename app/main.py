@@ -15,7 +15,9 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         try:
             action = book_handlers.get(command).get(method)
         except AttributeError:
-            raise ValueError(f"Unsupported command: '{command}', with method: '{method}'")
+            raise ValueError(
+                f"Unsupported command: '{command}', with method: '{method}'"
+            )
 
         if command == "serialize":
             return action.exec(book)

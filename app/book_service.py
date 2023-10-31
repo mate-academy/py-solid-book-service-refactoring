@@ -21,12 +21,12 @@ SERIALIZER_STRATEGIES = {
 
 class BookService:
     def __init__(
-            self,
-            book: Book,
-            display_strategy: DisplayStrategy = None,
-            print_strategy: PrintStrategy = None,
-            serializer_strategy: SerializerStrategy = None,
-    ):
+        self,
+        book: Book,
+        display_strategy: DisplayStrategy = None,
+        print_strategy: PrintStrategy = None,
+        serializer_strategy: SerializerStrategy = None,
+    ) -> None:
         self.book = book
         self.display_strategy = display_strategy
         self.print_strategy = print_strategy
@@ -45,18 +45,24 @@ class BookService:
                 raise ValueError(f"Unknown serialize type: {method_type}")
 
     @classmethod
-    def create_book_service(cls, book: Book, cmd: str, method_type: str) -> "BookService":
+    def create_book_service(
+        cls, book: Book, cmd: str, method_type: str
+    ) -> "BookService":
         if cmd == "display":
             return cls(book, display_strategy=DISPLAY_STRATEGIES[method_type])
         elif cmd == "print":
             return cls(book, print_strategy=PRINT_STRATEGIES[method_type])
         elif cmd == "serialize":
-            return cls(book, serializer_strategy=SERIALIZER_STRATEGIES[method_type])
+            return cls(
+                book, serializer_strategy=SERIALIZER_STRATEGIES[method_type]
+            )
 
-    def operate(self, operation: str):
+    def operate(self, operation: str) -> None:
         if operation == "display":
             self.display_strategy.display(self.book.content)
         elif operation == "print":
             self.print_strategy.print(self.book.title, self.book.content)
         elif operation == "serialize":
-            return self.serializer_strategy.serialize(self.book.title, self.book.content)
+            return self.serializer_strategy.serialize(
+                self.book.title, self.book.content
+            )

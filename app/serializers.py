@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # noqa
 
 
 class SerializerStrategy(ABC):

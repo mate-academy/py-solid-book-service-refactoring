@@ -6,13 +6,13 @@ from app.serialize import Serialize, JSONSerialize, XMLSerialize
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     handlers = {
-        'display': {
-            'console': ConsoleDisplay(), 'reverse': ReverseConsoleDisplay()
+        "display": {
+            "console": ConsoleDisplay(), "reverse": ReverseConsoleDisplay()
         },
-        'print': {
-            'console': ConsolePrintBook(), 'reverse': ReversePrintBook()
+        "print": {
+            "console": ConsolePrintBook(), "reverse": ReversePrintBook()
         },
-        'serialize': {'json': JSONSerialize(), 'xml': XMLSerialize()}
+        "serialize": {"json": JSONSerialize(), "xml": XMLSerialize()}
     }
 
     for cmd, method_type in commands:

@@ -5,12 +5,12 @@ from app.serializers import XmlSerializer, JsonSerializer
 
 
 class BaseCommand(ABC):
-    def __init__(self, method_type: str, book: Book):
+    def __init__(self, method_type: str, book: Book) -> None:
         self.method_type = method_type
         self.book = book
 
     @abstractmethod
-    def execute(self):
+    def execute(self) -> None:
         pass
 
 
@@ -25,7 +25,7 @@ class PrintCommand(BaseCommand):
 
 
 class SerializeCommand(BaseCommand):
-    def execute(self):
+    def execute(self) -> str:
         if self.method_type == "xml":
             serializer = XmlSerializer(self.book.title, self.book.content)
             return serializer.serialize()

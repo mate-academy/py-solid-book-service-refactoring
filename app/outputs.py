@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 
 
 class BaseOutput(ABC):
-    def __init__(self, content: str):
+    def __init__(self, content: str) -> None:
         self.content = content
 
     @abstractmethod
-    def output(self, display_type):
+    def output(self, display_type: str) -> None:
         pass
 
 
@@ -21,7 +21,7 @@ class Displayer(BaseOutput):
 
 
 class Printer(Displayer):
-    def __init__(self, content: str, title: str):
+    def __init__(self, content: str, title: str) -> None:
         super().__init__(content)
         self.title = title
 

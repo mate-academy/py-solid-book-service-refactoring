@@ -2,7 +2,7 @@ from app.outputs import Displayer, Printer
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
         self.displayer = Displayer(content)

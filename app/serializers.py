@@ -1,15 +1,15 @@
 import json
 from abc import ABC, abstractmethod
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 
 
 class BaseSerializer(ABC):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
     @abstractmethod
-    def serialize(self):
+    def serialize(self) -> None:
         pass
 
 
@@ -20,9 +20,9 @@ class JsonSerializer(BaseSerializer):
 
 class XmlSerializer(BaseSerializer):
     def serialize(self) -> str:
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+        root = ElementTree.Element("book")
+        title = ElementTree.SubElement(root, "title")
         title.text = self.title
-        content = ET.SubElement(root, "content")
+        content = ElementTree.SubElement(root, "content")
         content.text = self.content
-        return ET.tostring(root, encoding="unicode")
+        return ElementTree.tostring(root, encoding="unicode")

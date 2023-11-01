@@ -47,6 +47,7 @@ class XMLSerializer(Serializer):
 
 
 def main(book: Book, actions: list) -> None or str:
+
     actions_dict = {
         "display": {"console": ConsoleDisplay, "reverse": ReverseDisplay},
         "print": {
@@ -55,6 +56,7 @@ def main(book: Book, actions: list) -> None or str:
         },
         "serialize": {"json": JSONSerializer, "xml": XMLSerializer},
     }
+
     for action, method in actions:
         if action == "display":
             actions_dict[action][method]().display(book)

@@ -1,54 +1,77 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElT
+from abc import ABC, abstractmethod
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+class Display(ABC):
+    @abstractmethod
+    def display(self, book: Book) -> None:
+        pass
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+class ConsoleDisplay(Display):
+    def display(self, book: Book) -> None:
+        print(book.content)
+
+
+class ReverseDisplay(Display):
+    def display(self, book: Book) -> None:
+        print(book.content[::-1])
+
+
+class Serializer(ABC):
+    @abstractmethod
+    def serialize(self, book: Book) -> str:
+        pass
+
+
+class JSONSerializer(Serializer):
+    def serialize(self, book: Book) -> str:
+        return json.dumps({"title": book.title, "content": book.content})
+
+
+class XMLSerializer(Serializer):
+    def serialize(self, book: Book) -> str:
+        root = ElT.Element("book")
+        title = ElT.SubElement(root, "title")
+        title.text = book.title
+        content = ElT.SubElement(root, "content")
+        content.text = book.content
+        return ElT.tostring(root, encoding="unicode")
+
+
+def main(book: Book, actions: list) -> None or str:
+    actions_dict = {
+        "display": {"console": ConsoleDisplay, "reverse": ReverseDisplay},
+        "print": {
+            "console": (book.title, book.content),
+            "reverse": (book.title, book.content[::-1])
+        },
+        "serialize": {"json": JSONSerializer, "xml": XMLSerializer},
+    }
+    for action, method in actions:
+        if action == "display":
+            actions_dict[action][method]().display(book)
+        if action == "print":
+            print(actions_dict[action][method])
+        if action == "serialize":
+            return actions_dict[action][method]().serialize(book)
 
 
 if __name__ == "__main__":
-    sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    book = Book("Sample Book", "This is some sample content.")
+    actions = [
+        ("display", "console"),
+        ("display", "reverse"),
+        ("print", "console"),
+        ("print", "reverse"),
+        ("serialize", "json"),
+        ("serialize", "xml"),
+    ]
+    main(book, actions)

@@ -12,7 +12,7 @@ class CommandManager:
         "xml": BookXMLSerializer()
     }
 
-    def __init__(self, cmd: str, method_type: str):
+    def __init__(self, cmd: str, method_type: str) -> None:
         self.cmd_name = cmd
         self.cmd = cmd if cmd != "print" else "print_book"
         self.method_type = method_type

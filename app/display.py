@@ -2,6 +2,7 @@ import abc
 
 from app.book import Book
 
+
 class Display(abc.ABC):
     @staticmethod
     @abc.abstractmethod

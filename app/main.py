@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import json
-import xml.etree.ElementTree as ET
-
 from app.book import Book
 from app.display import DisplayConsole, DisplayReverse
 from app.print_book import PrintConsole, PrintReverse
@@ -33,7 +30,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             elif method_type == "xml":
                 return SerializerXML.serialize(book)
             else:
-                raise ValueError(f"Unknown serialize type: {serialize_type}")
+                raise ValueError(f"Unknown serialize type: {method_type}")
 
 
 if __name__ == "__main__":

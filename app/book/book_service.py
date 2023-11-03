@@ -1,7 +1,15 @@
-from app.datautils.displays import DisplayStrategy, ConsoleDisplay, ReverseDisplay
+from app.datautils.displays import (
+    DisplayStrategy,
+    ConsoleDisplay,
+    ReverseDisplay,
+)
 from app.book.book import Book
 from app.datautils.prints import PrintStrategy, ConsolePrint, ReversePrint
-from app.datautils.serializers import SerializerStrategy, JsonSerializer, XmlSerializer
+from app.datautils.serializers import (
+    SerializerStrategy,
+    JsonSerializer,
+    XmlSerializer,
+)
 
 DISPLAY_STRATEGIES = {
     "console": ConsoleDisplay,
@@ -32,38 +40,32 @@ class BookService:
         self.print_strategy = print_strategy
         self.serializer_strategy = serializer_strategy
 
-    @staticmethod
-    def check_types(cmd: str, method_type: str) -> None:
-        if cmd == "display":
-            if method_type not in DISPLAY_STRATEGIES:
-                raise ValueError(f"Unknown display type: {method_type}")
-        elif cmd == "print":
-            if method_type not in PRINT_STRATEGIES:
-                raise ValueError(f"Unknown print type: {method_type}")
-        elif cmd == "serialize":
-            if method_type not in SERIALIZER_STRATEGIES:
-                raise ValueError(f"Unknown serialize type: {method_type}")
-
     @classmethod
     def create_book_service(
         cls, book: Book, cmd: str, method_type: str
     ) -> "BookService":
         if cmd == "display":
+            if method_type not in DISPLAY_STRATEGIES:
+                raise ValueError(f"Unknown display type: {method_type}")
             display_strategy = DISPLAY_STRATEGIES[method_type](book.content)
             return cls(book, display_strategy=display_strategy)
         elif cmd == "print":
+            if method_type not in PRINT_STRATEGIES:
+                raise ValueError(f"Unknown print type: {method_type}")
             return cls(book, print_strategy=PRINT_STRATEGIES[method_type])
         elif cmd == "serialize":
+            if method_type not in SERIALIZER_STRATEGIES:
+                raise ValueError(f"Unknown serialize type: {method_type}")
             return cls(
                 book, serializer_strategy=SERIALIZER_STRATEGIES[method_type]
             )
 
-    def operate(self, operation: str) -> str:
-        if operation == "display":
+    def operate(self) -> str:
+        if self.display_strategy:
             self.display_strategy.display()
-        elif operation == "print":
+        elif self.print_strategy:
             self.print_strategy.print(self.book.title, self.book.content)
-        elif operation == "serialize":
+        elif self.serializer_strategy:
             return self.serializer_strategy.serialize(
                 self.book.title, self.book.content
             )

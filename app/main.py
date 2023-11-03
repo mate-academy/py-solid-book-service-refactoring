@@ -1,5 +1,5 @@
-from app.book_service import BookService
-from app.book import Book
+from app.book.book_service import BookService
+from app.book.book import Book
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> str:

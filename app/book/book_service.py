@@ -1,11 +1,11 @@
-from app.displays import DisplayStrategy, ConsoleDisplay, ReverseDisplay
-from app.book import Book
-from app.prints import PrintStrategy, ConsolePrint, ReversePrint
-from app.serializers import SerializerStrategy, JsonSerializer, XmlSerializer
+from app.datautils.displays import DisplayStrategy, ConsoleDisplay, ReverseDisplay
+from app.book.book import Book
+from app.datautils.prints import PrintStrategy, ConsolePrint, ReversePrint
+from app.datautils.serializers import SerializerStrategy, JsonSerializer, XmlSerializer
 
 DISPLAY_STRATEGIES = {
-    "console": ConsoleDisplay(),
-    "reverse": ReverseDisplay(),
+    "console": ConsoleDisplay,
+    "reverse": ReverseDisplay,
 }
 
 PRINT_STRATEGIES = {
@@ -49,7 +49,8 @@ class BookService:
         cls, book: Book, cmd: str, method_type: str
     ) -> "BookService":
         if cmd == "display":
-            return cls(book, display_strategy=DISPLAY_STRATEGIES[method_type])
+            display_strategy = DISPLAY_STRATEGIES[method_type](book.content)
+            return cls(book, display_strategy=display_strategy)
         elif cmd == "print":
             return cls(book, print_strategy=PRINT_STRATEGIES[method_type])
         elif cmd == "serialize":
@@ -57,9 +58,9 @@ class BookService:
                 book, serializer_strategy=SERIALIZER_STRATEGIES[method_type]
             )
 
-    def operate(self, operation: str) -> None:
+    def operate(self, operation: str) -> str:
         if operation == "display":
-            self.display_strategy.display(self.book.content)
+            self.display_strategy.display()
         elif operation == "print":
             self.print_strategy.print(self.book.title, self.book.content)
         elif operation == "serialize":

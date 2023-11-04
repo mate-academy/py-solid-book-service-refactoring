@@ -5,28 +5,28 @@ from app.serializers import JSONBookSerializer, XMLBookSerializer
 
 
 def serialize_book(book: Book, method_type: str) -> str:
-    if method_type == "json":
-        return JSONBookSerializer(book).data
-    elif method_type == "xml":
-        return XMLBookSerializer(book).data
+    mappings = {"json": JSONBookSerializer, "xml": XMLBookSerializer}
+    serializer = mappings.get(method_type)
+    if serializer:
+        return serializer(book).data
     else:
         raise ValueError(f"Unknown serialization type: {method_type}")
 
 
 def print_book(book: Book, method_type: str) -> None:
-    if method_type == "console":
-        ConsolePrinter.print(book)
-    elif method_type == "reverse":
-        ReversePrinter.print(book)
+    mappings = {"console": ConsolePrinter, "reverse": ReversePrinter}
+    printer = mappings.get(method_type)
+    if printer:
+        printer(book).print()
     else:
         raise ValueError(f"Unknown print type: {method_type}")
 
 
 def display_book(book: Book, method_type: str) -> None:
-    if method_type == "console":
-        ConsoleDisplay.display(book)
-    elif method_type == "reverse":
-        ReverseDisplay.display(book)
+    mappings = {"console": ConsoleDisplay, "reverse": ReverseDisplay}
+    displayer = mappings.get(method_type)
+    if displayer:
+        displayer(book).display()
     else:
         raise ValueError(f"Unknown display type: {method_type}")
 

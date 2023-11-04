@@ -3,19 +3,19 @@ from app.book import Book
 
 
 class BookDisplay(ABC):
-    @staticmethod
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
-    def display(book: Book) -> None:
+    def display(self) -> None:
         ...
 
 
 class ConsoleDisplay(BookDisplay):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content)
+    def display(self) -> None:
+        print(self.book.content)
 
 
 class ReverseDisplay(BookDisplay):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content[::-1])
+    def display(self) -> None:
+        print(self.book.content[::-1])

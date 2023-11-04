@@ -3,21 +3,21 @@ from app.book import Book
 
 
 class BookPrinter(ABC):
-    @staticmethod
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
-    def print(book: Book) -> None:
+    def print(self) -> None:
         ...
 
 
 class ConsolePrinter(BookPrinter):
-    @staticmethod
-    def print(book: Book) -> None:
-        print(f"Printing the book: {book.title}...")
-        print(book.content)
+    def print(self) -> None:
+        print(f"Printing the book: {self.book.title}...")
+        print(self.book.content)
 
 
 class ReversePrinter(BookPrinter):
-    @staticmethod
-    def print(book: Book) -> None:
-        print(f"Printing the book in reverse: {book.title}...")
-        print(book.content[::-1])
+    def print(self) -> None:
+        print(f"Printing the book in reverse: {self.book.title}...")
+        print(self.book.content[::-1])

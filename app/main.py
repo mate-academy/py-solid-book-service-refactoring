@@ -3,15 +3,29 @@ from app.book_print import PrintBook
 from app.book_serializer import SerializerFormat
 
 
+def run_display(book: Book, method_type: str):
+    book.display(method_type)
+
+
+def run_print(book: Book, method_type: str):
+    PrintBook(book).print(method_type)
+
+
+def run_serialize(book: Book, method_type: str):
+    serializer = SerializerFormat.create_serializer(method_type, book)
+    return serializer.serialize()
+
+
+actions = {
+    "display": run_display,
+    "print": run_print,
+    "serialize": run_serialize,
+}
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            PrintBook(book).print(method_type)
-        elif cmd == "serialize":
-            serializer = SerializerFormat.create_serializer(method_type, book)
-            return serializer.serialize()
+        return actions[cmd](book, method_type)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,23 @@
+from abc import abstractmethod, ABC
+
 from app.book import Book
 
 
-class PrintBook:
+class Print(ABC):
+    @abstractmethod
+    def print_console(self) -> None:
+        pass
+
+    @abstractmethod
+    def print_reverse(self) -> None:
+        pass
+
+    @abstractmethod
+    def print(self, method_type: str) -> None:
+        pass
+
+
+class PrintBook(Print):
     def __init__(self, book: Book) -> None:
         self.book = book
 

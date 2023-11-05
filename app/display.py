@@ -4,18 +4,18 @@ from app.book import Book
 
 
 class Display(ABC):
-    @staticmethod
-    def display(book: Book) -> None:
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
+    def display(self: Book) -> None:
         pass
 
 
 class ConsoleDisplay(Display):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content)
+    def display(self: Book) -> None:
+        print(self.content)
 
 
 class ReverseDisplay(Display):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content[::-1])
+    def display(self: Book) -> None:
+        print(self.content[::-1])

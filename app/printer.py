@@ -4,21 +4,20 @@ from app.book import Book
 
 
 class Printer(ABC):
+    def __init__(self, book: Book) -> None:
+        self.book = book
 
-    @staticmethod
-    def print(book: Book) -> None:
+    def print(self: Book) -> None:
         pass
 
 
 class ConsolePrinter(Printer):
-    @staticmethod
-    def print(book: Book) -> None:
-        print(f"Printing the book: {book.title}...")
-        print(book.content)
+    def print(self: Book) -> None:
+        print(f"Printing the book: {self.title}...")
+        print(self.content)
 
 
 class ReversePrinter(Printer):
-    @staticmethod
-    def print(book: Book) -> None:
-        print(f"Printing the book in reverse: {book.title}...")
-        print(book.content[::-1])
+    def print(self: Book) -> None:
+        print(f"Printing the book in reverse: {self.title}...")
+        print(self.content[::-1])

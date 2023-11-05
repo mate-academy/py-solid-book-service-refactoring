@@ -17,7 +17,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         "serialize": {
             "json": JsonSerializer.serialize,
             "xml": XmlSerializer.serialize,
-        }
+        },
     }
 
     for cmd, method_type in commands:

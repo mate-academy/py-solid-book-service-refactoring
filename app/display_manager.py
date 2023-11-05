@@ -10,7 +10,6 @@ class DisplayBook(ABC):
 
 
 class DisplayBookConsole(DisplayBook):
-
     def __init__(self, book: Book) -> None:
         self.content = book.content
         self.method_type = "console"
@@ -20,7 +19,6 @@ class DisplayBookConsole(DisplayBook):
 
 
 class DisplayBookReverse(DisplayBook):
-
     def __init__(self, book: Book) -> None:
         self.content = book.content
         self.method_type = "reverse"

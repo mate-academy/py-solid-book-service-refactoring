@@ -7,18 +7,19 @@ from app.book import Book
 
 class Serialize(ABC):
     @abstractmethod
-    def serialize_book(self,):
+    def serialize_book(
+        self,
+    ):
         pass
 
 
 class SerializeJson(Serialize):
-
     def __init__(self, book: Book) -> None:
         self.method_type = "json"
         self.title = book.title
         self.content = book.content
 
-    def serialize_book(self)-> str:
+    def serialize_book(self) -> str:
         return json.dumps({"title": self.title, "content": self.content})
 
 

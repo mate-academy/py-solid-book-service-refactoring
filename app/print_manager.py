@@ -10,7 +10,6 @@ class PrintBook(ABC):
 
 
 class PrintBookConsole(PrintBook):
-
     def __init__(self, book: Book) -> None:
         self.content = book.content
         self.method_type = "console"
@@ -22,7 +21,6 @@ class PrintBookConsole(PrintBook):
 
 
 class PrintBookReverse(PrintBook):
-
     def __init__(self, book: Book) -> None:
         self.content = book.content
         self.method_type = "reverse"

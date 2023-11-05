@@ -16,7 +16,16 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     }
 
     for cmd, method_type in commands:
-        handler = handlers.get(cmd).get(method_type)
+        handler_dict = handlers.get(cmd)
+        if handler_dict is None:
+            raise ValueError(f"Command '{cmd}' is not valid.")
+
+        handler = handler_dict.get(method_type)
+        if handler is None:
+            raise ValueError(
+                f"Method type '{method_type}' not valid for command '{cmd}'."
+            )
+
         if isinstance(handler, Serialize):
             return handler.serialize(book.title, book.content)
         elif isinstance(handler, PrintBook):

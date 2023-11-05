@@ -14,21 +14,27 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
     result = ""
 
+    command_functions = {
+        "display": lambda method_type: display_manager.get(
+            method_type
+        ).display(book.content)
+        if display_manager.get(method_type)
+        else None,
+        "print": lambda method_type: print_manager.get(method_type).print(
+            book.title, book.content
+        )
+        if print_manager.get(method_type)
+        else None,
+        "serialize": lambda method_type: serialization_manager.get(
+            method_type
+        ).serialize(book.title, book.content)
+        if serialization_manager.get(method_type)
+        else None,
+    }
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            display_manager = display_manager.get(method_type)
-            if display_manager:
-                display_manager.display(book.content)
-        elif cmd == "print":
-            print_manager = print_manager.get(method_type)
-            if print_manager:
-                print_manager.print(book.title, book.content)
-        elif cmd == "serialize":
-            serialization_manager = serialization_manager.get(method_type)
-            if serialization_manager:
-                result = serialization_manager.serialize(
-                    book.title, book.content
-                )
+        if cmd in command_functions:
+            result = command_functions[cmd](method_type) or result
 
     return result
 

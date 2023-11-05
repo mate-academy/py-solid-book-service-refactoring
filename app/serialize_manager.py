@@ -9,7 +9,7 @@ class Serialize(ABC):
     @abstractmethod
     def serialize_book(
         self,
-    ):
+    ) -> None:
         pass
 
 

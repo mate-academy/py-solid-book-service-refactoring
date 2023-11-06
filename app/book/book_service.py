@@ -17,8 +17,8 @@ DISPLAY_STRATEGIES = {
 }
 
 PRINT_STRATEGIES = {
-    "console": ConsolePrint(),
-    "reverse": ReversePrint(),
+    "console": ConsolePrint,
+    "reverse": ReversePrint,
 }
 
 SERIALIZER_STRATEGIES = {
@@ -52,7 +52,8 @@ class BookService:
         elif cmd == "print":
             if method_type not in PRINT_STRATEGIES:
                 raise ValueError(f"Unknown print type: {method_type}")
-            return cls(book, print_strategy=PRINT_STRATEGIES[method_type])
+            print_strategy = PRINT_STRATEGIES[method_type](book.title, book.content)
+            return cls(book, print_strategy=print_strategy)
         elif cmd == "serialize":
             if method_type not in SERIALIZER_STRATEGIES:
                 raise ValueError(f"Unknown serialize type: {method_type}")
@@ -64,7 +65,7 @@ class BookService:
         if self.display_strategy:
             self.display_strategy.display()
         elif self.print_strategy:
-            self.print_strategy.print(self.book.title, self.book.content)
+            self.print_strategy.print()
         elif self.serializer_strategy:
             return self.serializer_strategy.serialize(
                 self.book.title, self.book.content

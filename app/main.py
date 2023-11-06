@@ -5,11 +5,7 @@ from app.book.book import Book
 def main(book: Book, commands: list[tuple[str, str]]) -> str:
     for cmd, method_type in commands:
         book_service = BookService.create_book_service(book, cmd, method_type)
-        if cmd == "serialize":
-            return book_service.operate()
-        else:
-            book_service.operate()
-    return ""
+        return book_service.operate()
 
 
 if __name__ == "__main__":

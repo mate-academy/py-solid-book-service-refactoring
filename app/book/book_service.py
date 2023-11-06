@@ -22,8 +22,8 @@ PRINT_STRATEGIES = {
 }
 
 SERIALIZER_STRATEGIES = {
-    "json": JsonSerializer(),
-    "xml": XmlSerializer(),
+    "json": JsonSerializer,
+    "xml": XmlSerializer,
 }
 
 
@@ -57,8 +57,11 @@ class BookService:
         elif cmd == "serialize":
             if method_type not in SERIALIZER_STRATEGIES:
                 raise ValueError(f"Unknown serialize type: {method_type}")
+            serializer_strategy = SERIALIZER_STRATEGIES[method_type](
+                book.title, book.content
+            )
             return cls(
-                book, serializer_strategy=SERIALIZER_STRATEGIES[method_type]
+                book, serializer_strategy=serializer_strategy
             )
 
     def operate(self) -> str:
@@ -67,6 +70,4 @@ class BookService:
         elif self.print_strategy:
             self.print_strategy.print()
         elif self.serializer_strategy:
-            return self.serializer_strategy.serialize(
-                self.book.title, self.book.content
-            )
+            return self.serializer_strategy.serialize()

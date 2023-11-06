@@ -7,30 +7,40 @@ from app.serialize import SerializerXML, SerializerJSON
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    display_methods = {
+        "console": DisplayConsole.display,
+        "reverse": DisplayReverse.display,
+    }
+
+    print_methods = {
+        "console": PrintConsole.print_book,
+        "reverse": PrintReverse.print_book,
+    }
+
+    serialize_methods = {
+        "json": SerializerJSON.serialize,
+        "xml": SerializerXML.serialize,
+    }
+
+    command_mappings = {
+        "display": display_methods,
+        "print": print_methods,
+        "serialize": serialize_methods,
+    }
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                DisplayConsole.display(book)
-            elif method_type == "reverse":
-                DisplayReverse.display(book)
+        method_mapping = command_mappings.get(cmd)
+        if method_mapping:
+            method = method_mapping.get(method_type)
+            if method:
+                if cmd == "serialize":
+                    return method(book)
+                else:
+                    method(book)
             else:
-                raise ValueError(f"Unknown display type: {method_type}")
-
-        elif cmd == "print":
-            if method_type == "console":
-                PrintConsole.print_book(book)
-            elif method_type == "reverse":
-                PrintReverse.print_book(book)
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
-
-        elif cmd == "serialize":
-            if method_type == "json":
-                return SerializerJSON.serialize(book)
-            elif method_type == "xml":
-                return SerializerXML.serialize(book)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+                raise ValueError(f"Unknown {cmd} type: {method_type}")
+        else:
+            raise ValueError(f"Unknown command: {cmd}")
 
 
 if __name__ == "__main__":

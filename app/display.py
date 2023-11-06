@@ -1,22 +1,20 @@
 import abc
 
-from app.book import Book
-
 
 class Display(abc.ABC):
-    @staticmethod
+    def __init__(self, content: str) -> None:
+        self.content = content
+
     @abc.abstractmethod
-    def display(book: Book) -> None:
+    def display(self) -> None:
         ...
 
 
 class DisplayConsole(Display):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content)
+    def display(self) -> None:
+        print(self.content)
 
 
 class DisplayReverse(Display):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content[::-1])
+    def display(self) -> None:
+        print(self.content[::-1])

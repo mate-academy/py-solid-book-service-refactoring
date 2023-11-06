@@ -3,29 +3,29 @@ import abc
 import json
 from xml.etree import ElementTree
 
-from app.book import Book
-
 
 class Serializer(abc.ABC):
-    @staticmethod
+    def __init__(self, content: str, title: str) -> None:
+        self.content = content
+        self.title = title
+
     @abc.abstractmethod
-    def serialize(book: Book) -> str:
+    def serialize(self) -> str:
         ...
 
 
 class SerializerJSON(Serializer):
-    @staticmethod
-    def serialize(book: Book) -> str:
-        return json.dumps({"title": book.title, "content": book.content})
+
+    def serialize(self) -> str:
+        return json.dumps({"title": self.title, "content": self.content})
 
 
 class SerializerXML(Serializer):
-    @staticmethod
-    def serialize(book: Book) -> str:
+    def serialize(self) -> str:
         root = ElementTree.Element("book")
         title = ElementTree.SubElement(root, "title")
-        title.text = book.title
+        title.text = self.title
         content = ElementTree.SubElement(root, "content")
-        content.text = book.content
+        content.text = self.content
 
         return ElementTree.tostring(root, encoding="unicode")

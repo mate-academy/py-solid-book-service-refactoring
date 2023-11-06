@@ -52,7 +52,9 @@ class BookService:
         elif cmd == "print":
             if method_type not in PRINT_STRATEGIES:
                 raise ValueError(f"Unknown print type: {method_type}")
-            print_strategy = PRINT_STRATEGIES[method_type](book.title, book.content)
+            print_strategy = PRINT_STRATEGIES[method_type](
+                book.title, book.content
+            )
             return cls(book, print_strategy=print_strategy)
         elif cmd == "serialize":
             if method_type not in SERIALIZER_STRATEGIES:
@@ -60,9 +62,7 @@ class BookService:
             serializer_strategy = SERIALIZER_STRATEGIES[method_type](
                 book.title, book.content
             )
-            return cls(
-                book, serializer_strategy=serializer_strategy
-            )
+            return cls(book, serializer_strategy=serializer_strategy)
 
     def operate(self) -> str:
         if self.display_strategy:

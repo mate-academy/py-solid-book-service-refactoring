@@ -4,16 +4,19 @@ from app.book import Book
 
 
 class DisplayBook(ABC):
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
-    def display(self, book: Book) -> None:
+    def display(self) -> None:
         pass
 
 
 class ConsoleDisplayBook(DisplayBook):
-    def display(self, book: Book) -> None:
-        print(book.content)
+    def display(self) -> None:
+        print(self.book.content)
 
 
 class ReverseDisplayBook(DisplayBook):
-    def display(self, book: Book) -> None:
-        print(book.content[::-1])
+    def display(self) -> None:
+        print(self.book.content[::-1])

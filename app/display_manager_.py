@@ -3,47 +3,41 @@ from abc import ABC, abstractmethod
 from app.book import Book
 
 
-class PrintBook(ABC):
+class DisplayBook(ABC):
     method_type = None
 
     def __init__(self, book: Book) -> None:
         self.content = book.content
 
     @abstractmethod
-    def print_book(self) -> None:
+    def display_book(self) -> None:
         pass
 
 
-class PrintBookConsole(PrintBook):
+class DisplayBookConsole(DisplayBook):
     method_type = "console"
 
     def __init__(self, book: Book, ) -> None:
         super().__init__(book=book,)
-        self.message = f"Printing the book: {book.title}..."
 
-    def print_book(self) -> None:
-        print(self.message)
+    def display_book(self) -> None:
         print(self.content)
 
 
-class PrintBookReverse(PrintBook):
+class DisplayBookReverse(DisplayBook):
     method_type = "reverse"
 
     def __init__(self, book: Book, ) -> None:
         super().__init__(book=book, )
-        self.message = f"Printing the book in reverse: {book.title}..."
 
-    def print_book(self) -> None:
-        print(self.message)
+    def display_book(self) -> None:
         print(self.content[::-1])
 
 
-def print_manager(method: str, book: Book):
-    for subclass in PrintBook.__subclasses__():
-        print(subclass.method_type)
+def display_manager(method: str, book: Book):
+    for subclass in DisplayBook.__subclasses__():
         if subclass.method_type == method:
             selected_class = subclass(book=book,)
             if selected_class is None:
-                raise ValueError(f"Unknown print type: {method}")
-            return selected_class.print_book()
-
+                raise ValueError(f"Unknown display type: {method}")
+            return selected_class.display_book()

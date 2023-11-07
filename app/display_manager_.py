@@ -34,10 +34,10 @@ class DisplayBookReverse(DisplayBook):
         print(self.content[::-1])
 
 
-def display_manager(method: str, book: Book):
+def display_manager(method: str, book: Book) -> None:
     for subclass in DisplayBook.__subclasses__():
         if subclass.method_type == method:
             selected_class = subclass(book=book,)
             if selected_class is None:
                 raise ValueError(f"Unknown display type: {method}")
-            return selected_class.display_book()
+            selected_class.display_book()

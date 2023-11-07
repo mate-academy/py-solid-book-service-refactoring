@@ -45,11 +45,10 @@ class SerializeXML(SerializeBook):
         return ElemTree.tostring(root, encoding="unicode")
 
 
-def serialize_manager(method: str, book: Book):
+def serialize_manager(method: str, book: Book) -> None | str:
     for subclass in SerializeBook.__subclasses__():
         if subclass.method_type == method:
             selected_class = subclass(book=book,)
             if selected_class is None:
                 raise ValueError(f"Unknown serialize type: {method}")
             return selected_class.serialize_book()
-

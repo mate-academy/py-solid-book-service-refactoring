@@ -3,7 +3,9 @@ from app.display_manager_ import display_manager
 from app.print_manager import print_manager
 from app.serialize_manager_ import serialize_manager
 
-actions = {"print": print_manager, "display": display_manager, "serialize": serialize_manager}
+actions = {"print": print_manager,
+           "display": display_manager,
+           "serialize": serialize_manager}
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

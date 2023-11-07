@@ -38,12 +38,11 @@ class PrintBookReverse(PrintBook):
         print(self.content[::-1])
 
 
-def print_manager(method: str, book: Book):
+def print_manager(method: str, book: Book) -> None:
     for subclass in PrintBook.__subclasses__():
         print(subclass.method_type)
         if subclass.method_type == method:
             selected_class = subclass(book=book,)
             if selected_class is None:
                 raise ValueError(f"Unknown print type: {method}")
-            return selected_class.print_book()
-
+            selected_class.print_book()

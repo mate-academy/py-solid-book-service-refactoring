@@ -4,19 +4,22 @@ from app.book import Book
 
 
 class DisplayProcessor(ABC):
-    @staticmethod
     @abstractmethod
-    def display(book: Book) -> None:
+    def display(self) -> None:
         pass
 
 
 class DisplayConsoleProcessor(DisplayProcessor):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content)
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
+    def display(self) -> None:
+        print(self.book.content)
 
 
 class DisplayReverseProcessor(DisplayProcessor):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content[::-1])
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
+    def display(self) -> None:
+        print(self.book.content[::-1])

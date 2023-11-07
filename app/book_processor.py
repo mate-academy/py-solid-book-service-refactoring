@@ -28,23 +28,17 @@ class BookProcessor:
         self.book = book
         self.command = command
         self.method_type = method_type
-        self.validate_input()
-
-    def validate_input(self) -> None:
-        if self.command == "display":
-            if self.method_type not in DISPLAY_PROCESSORS.keys():
-                raise ValueError(f"Unknown display type: {self.method_type}")
-        elif self.command == "print":
-            if self.method_type not in PRINT_PROCESSORS.keys():
-                raise ValueError(f"Unknown print type: {self.method_type}")
-        elif self.command == "serialize":
-            if self.method_type not in SERIALIZE_PROCESSORS.keys():
-                raise ValueError(f"Unknown serialize type: {self.method_type}")
 
     def run_command(self) -> None:
         if self.command == "display":
-            DISPLAY_PROCESSORS[self.method_type].display(self.book)
+            if self.method_type not in DISPLAY_PROCESSORS.keys():
+                raise ValueError(f"Unknown display type: {self.method_type}")
+            DISPLAY_PROCESSORS[self.method_type](self.book).display()
         elif self.command == "print":
-            PRINT_PROCESSORS[self.method_type].print(self.book)
+            if self.method_type not in PRINT_PROCESSORS.keys():
+                raise ValueError(f"Unknown print type: {self.method_type}")
+            PRINT_PROCESSORS[self.method_type](self.book).print()
         elif self.command == "serialize":
-            return SERIALIZE_PROCESSORS[self.method_type].serialize(self.book)
+            if self.method_type not in SERIALIZE_PROCESSORS.keys():
+                raise ValueError(f"Unknown serialize type: {self.method_type}")
+            return SERIALIZE_PROCESSORS[self.method_type](self.book).serialize()

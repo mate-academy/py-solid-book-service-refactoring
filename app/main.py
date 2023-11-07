@@ -23,6 +23,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd in command_map and method_type in command_map[cmd]:
             return command_map[cmd][method_type](book)
+        raise ValueError("Unknown command type!")
 
 
 if __name__ == "__main__":

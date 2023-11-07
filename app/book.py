@@ -3,20 +3,26 @@ class Book:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
+
+class Display:
+    @staticmethod
+    def display(book, display_type: str) -> None:
         if display_type == "console":
-            print(self.content)
+            print(book.content)
         elif display_type == "reverse":
-            print(self.content[::-1])
+            print(book.content[::-1])
         else:
             raise ValueError(f"Unknown display type: {display_type}")
 
-    def print_book(self, print_type: str) -> None:
+
+class Printer:
+    @staticmethod
+    def print_book(book, print_type: str) -> None:
         if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
+            print(f"Printing the book: {book.title}...")
+            print(book.content)
         elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
+            print(f"Printing the book in reverse: {book.title}...")
+            print(book.content[::-1])
         else:
             raise ValueError(f"Unknown print type: {print_type}")

@@ -20,8 +20,8 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             )
 
         if command == "serialize":
-            return action.exec(book)
-        action.exec(book)
+            return action(book).exec()
+        action(book).exec()
 
 
 if __name__ == "__main__":

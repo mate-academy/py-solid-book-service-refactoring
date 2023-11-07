@@ -4,25 +4,25 @@ from app.book import Book
 
 
 class Display(ABC):
-    @staticmethod
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
-    def exec(book: Book) -> None:
+    def exec(self) -> None:
         pass
 
 
 class DisplayConsole(Display):
-    @staticmethod
-    def exec(book: Book) -> None:
-        print(book.content)
+    def exec(self) -> None:
+        print(self.book.content)
 
 
 class DisplayReverse(Display):
-    @staticmethod
-    def exec(book: Book) -> None:
-        print(book.content[::-1])
+    def exec(self) -> None:
+        print(self.book.content[::-1])
 
 
 display_handlers = {
-    "reverse": DisplayReverse(),
-    "console": DisplayConsole()
+    "reverse": DisplayReverse,
+    "console": DisplayConsole
 }

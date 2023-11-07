@@ -6,30 +6,32 @@ from app.book import Book
 
 
 class Serialize(ABC):
-    @staticmethod
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
-    def exec(book: Book) -> str:
+    def exec(self) -> str:
         pass
 
 
 class SerializeJson(Serialize):
-    @staticmethod
-    def exec(book: Book) -> str:
-        return json.dumps({"title": book.title, "content": book.content})
+    def exec(self) -> str:
+        return json.dumps(
+            {"title": self.book.title, "content": self.book.content}
+        )
 
 
 class SerializeXml(Serialize):
-    @staticmethod
-    def exec(book: Book) -> str:
+    def exec(self) -> str:
         root = ElementTree.Element("book")
         title = ElementTree.SubElement(root, "title")
-        title.text = book.title
+        title.text = self.book.title
         content = ElementTree.SubElement(root, "content")
-        content.text = book.content
+        content.text = self.book.content
         return ElementTree.tostring(root, encoding="unicode")
 
 
 serialize_handlers = {
-    "json": SerializeJson(),
-    "xml": SerializeXml()
+    "json": SerializeJson,
+    "xml": SerializeXml
 }

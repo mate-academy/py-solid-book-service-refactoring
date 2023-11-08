@@ -7,22 +7,20 @@ from app.serializer import SerializeJson, SerializeXml
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    command_mapping = {
+        ("display", "console"): DisplayConsole(book).display,
+        ("display", "reverse"): DisplayReverse(book).display,
+        ("print", "console"): PrintConsole(book).print_book,
+        ("print", "reverse"): PrintReverse(book).print_book,
+        ("serialize", "json"): SerializeJson(book).serialize,
+        ("serialize", "xml"): SerializeXml(book).serialize,
+    }
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                DisplayConsole.display(book)
-            elif method_type == "reverse":
-                DisplayReverse.display(book)
-        elif cmd == "print":
-            if method_type == "console":
-                PrintConsole.print_book(book)
-            elif method_type == "reverse":
-                PrintReverse.print_book(book)
-        elif cmd == "serialize":
-            if method_type == "json":
-                return SerializeJson.serialize(book)
-            elif method_type == "xml":
-                return SerializeXml.serialize(book)
+        if (cmd, method_type) in command_mapping:
+            return command_mapping[(cmd, method_type)]()
+        else:
+            raise ValueError(f"Unknown cmd {cmd} or method_type {method_type}")
 
 
 if __name__ == "__main__":

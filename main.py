@@ -21,7 +21,7 @@ def main(book: Book, actions: list) -> None or str:
     }
 
     for action, method in actions:
-        actions_dict[action][method](book)
+        return actions_dict[action][method](book)
 
 
 if __name__ == "__main__":

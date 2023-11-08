@@ -1,26 +1,27 @@
 from app.books import Book
 from app.displays import ConsoleDisplay, ReverseDisplay
-from app.serializers import JSONSerializer, XMLSerializer
+from app.prints import ConsolePrinter, ReversePrinter
+from app.serializers import JsonSerializer, XmlSerializer
 
 
 def main(book: Book, actions: list) -> None or str:
-
     actions_dict = {
-        "display": {"console": ConsoleDisplay, "reverse": ReverseDisplay},
-        "print": {
-            "console": (book.title, book.content),
-            "reverse": (book.title, book.content[::-1])
+        "display": {
+            "console": ConsoleDisplay.display,
+            "reverse": ReverseDisplay.display,
         },
-        "serialize": {"json": JSONSerializer, "xml": XMLSerializer},
+        "print": {
+            "console": ConsolePrinter.print_book,
+            "reverse": ReversePrinter.print_book,
+        },
+        "serialize": {
+            "json": JsonSerializer.serialize,
+            "xml": XmlSerializer.serialize,
+        },
     }
 
     for action, method in actions:
-        if action == "display":
-            actions_dict[action][method]().display(book)
-        if action == "print":
-            print(actions_dict[action][method])
-        if action == "serialize":
-            return actions_dict[action][method]().serialize(book)
+        actions_dict[action][method](book)
 
 
 if __name__ == "__main__":

@@ -1,26 +1,29 @@
 import json
-import xml.etree.ElementTree as ElT
 from abc import ABC, abstractmethod
+from xml.etree import ElementTree
 
 from app.books import Book
 
 
 class Serializer(ABC):
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
-    def serialize(self, book: Book) -> str:
+    def serialize(self) -> None:
         pass
 
 
-class JSONSerializer(Serializer):
-    def serialize(self, book: Book) -> str:
-        return json.dumps({"title": book.title, "content": book.content})
+class JsonSerializer(Serializer):
+    def serialize(self: Book) -> str:
+        return json.dumps({"title": self.title, "content": self.content})
 
 
-class XMLSerializer(Serializer):
-    def serialize(self, book: Book) -> str:
-        root = ElT.Element("book")
-        title = ElT.SubElement(root, "title")
-        title.text = book.title
-        content = ElT.SubElement(root, "content")
-        content.text = book.content
-        return ElT.tostring(root, encoding="unicode")
+class XmlSerializer(Serializer):
+    def serialize(self: Book) -> str:
+        root = ElementTree.Element("book")
+        title = ElementTree.SubElement(root, "title")
+        title.text = self.title
+        content = ElementTree.SubElement(root, "content")
+        content.text = self.content
+        return ElementTree.tostring(root, encoding="unicode")

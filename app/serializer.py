@@ -6,7 +6,7 @@ from app.book import Book
 
 
 class SerializeBook(abc.ABC):
-    def __init__(self, book: Book):
+    def __init__(self, book: Book) -> None:
         self.book = book
 
     @abc.abstractmethod
@@ -17,7 +17,9 @@ class SerializeBook(abc.ABC):
 class SerializeJson(SerializeBook):
 
     def serialize(self) -> str:
-        return json.dumps({"title": self.book.title, "content": self.book.content})
+        return json.dumps(
+            {"title": self.book.title, "content": self.book.content}
+        )
 
 
 class SerializeXml(SerializeBook):

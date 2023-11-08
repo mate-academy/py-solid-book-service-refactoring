@@ -33,10 +33,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         if method_mapping:
             method = method_mapping.get(method_type)
             if method:
-                if cmd == "serialize":
-                    return method(book)
-                else:
-                    method(book)
+                return method(book)
             else:
                 raise ValueError(f"Unknown {cmd} type: {method_type}")
         else:

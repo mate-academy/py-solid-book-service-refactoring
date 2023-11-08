@@ -36,9 +36,9 @@ class XmlSerializer(Serializer):
 
 
 def serialize_book(book: Book, method_type: str) -> str:
-    if method_type == "json":
-        return JsonSerializer(book).serialize
-    elif method_type == "xml":
-        return XmlSerializer(book).serialize
+    mappings = {"json": JsonSerializer, "xml": XmlSerializer}
+    serializer = mappings.get(method_type)
+    if serializer:
+        return serializer(book).serialize
     else:
         raise ValueError(f"Unknown serialization type: {method_type}")

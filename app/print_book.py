@@ -4,30 +4,32 @@ from app.book import Book
 
 
 class PrintBook(ABC):
-    @staticmethod
+    def __init__(self, book: Book):
+        self.book = book
+
     @abstractmethod
-    def print_book(book: Book) -> None:
+    def print_book(self) -> None:
         pass
 
 
 class ConsolePrint(PrintBook):
-    @staticmethod
-    def print_book(book: Book) -> None:
-        print(f"Printing the book: {book.title}...")
-        print(book.content)
+
+    def print_book(self) -> None:
+        print(f"Printing the book: {self.book.title}...")
+        print(self.book.content)
 
 
 class ReversePrint(PrintBook):
-    @staticmethod
-    def print_book(book: Book) -> None:
-        print(f"Printing the book in reverse: {book.title}...")
-        print(book.content[::-1])
+
+    def print_book(self) -> None:
+        print(f"Printing the book in reverse: {self.book.title}...")
+        print(self.book.content[::-1])
 
 
 def print_book(book: Book, method_type: str) -> None:
-    if method_type == "console":
-        ConsolePrint.print_book(book)
-    elif method_type == "reverse":
-        ReversePrint.print_book(book)
+    mappings = {"console": ConsolePrint, "reverse": ReversePrint}
+    printer = mappings.get(method_type)
+    if printer:
+        printer(book).print_book()
     else:
         raise ValueError(f"Unknown print type: {method_type}")

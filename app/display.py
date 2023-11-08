@@ -4,28 +4,30 @@ from app.book import Book
 
 
 class DisplayBook(ABC):
-    @staticmethod
+    def __init__(self, book: Book):
+        self.book = book
+
     @abstractmethod
-    def display(book: Book) -> None:
+    def display(self) -> None:
         pass
 
 
 class ConsoleDisplay(DisplayBook):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content)
+
+    def display(self) -> None:
+        print(self.book.content)
 
 
 class ReverseDisplay(DisplayBook):
-    @staticmethod
-    def display(book: Book) -> None:
-        print(book.content[::-1])
+
+    def display(self) -> None:
+        print(self.book.content[::-1])
 
 
 def display_book(book: Book, method_type: str) -> None:
-    if method_type == "console":
-        ConsoleDisplay.display(book)
-    elif method_type == "reverse":
-        ReverseDisplay.display(book)
+    mappings = {"console": ConsoleDisplay, "reverse": ReverseDisplay}
+    displayer = mappings.get(method_type)
+    if displayer:
+        displayer(book).display()
     else:
         raise ValueError(f"Unknown display type: {method_type}")

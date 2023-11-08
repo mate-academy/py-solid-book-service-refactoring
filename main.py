@@ -21,17 +21,11 @@ def main(book: Book, actions: list) -> None or str:
     }
 
     for action, method in actions:
-        return actions_dict[action][method](book)
+        if action in actions_dict and method in actions_dict[action]:
+            return actions_dict[action][method](book)
+        raise ValueError(f"Unknown {action} type: {method}")
 
 
 if __name__ == "__main__":
     book = Book("Sample Book", "This is some sample content.")
-    actions = [
-        ("display", "console"),
-        ("display", "reverse"),
-        ("print", "console"),
-        ("print", "reverse"),
-        ("serialize", "json"),
-        ("serialize", "xml"),
-    ]
-    main(book, actions)
+    main(book, [("display", "reverse")])

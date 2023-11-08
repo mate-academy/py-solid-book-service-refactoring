@@ -1,29 +1,54 @@
-from app.book import Book
-from app.serializer import BookJSONSerializer, BookXMLSerializer
-from app.book import Display, Printer
+from app.book import Book, Display, Print
+from app.serializer import SerializeToJSON, SerializeToXML
+
+
+class DisplayConsole(Display):
+    def display_book(self, book: Book) -> None:
+        print(book.content)
+
+
+class DisplayReverse(Display):
+    def display_book(self, book: Book) -> None:
+        print(book.content[::-1])
+
+
+class PrintConsole(Print):
+    def print_book(self, book: Book) -> None:
+        print(f"Printing the book: {book.title}...")
+        print(book.content)
+
+
+class PrintReverse(Print):
+    def print_book(self, book: Book) -> None:
+        print(f"Printing the book in reverse: {book.title}...")
+        print(book.content[::-1])
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    serializer_types = {
-        "json": BookJSONSerializer(),
-        "xml": BookXMLSerializer()
+    displays = {
+        "console": DisplayConsole(),
+        "reverse": DisplayReverse()
     }
-
+    printers = {
+        "console": PrintConsole(),
+        "reverse": PrintReverse()
+    }
+    serializers = {
+        "json": SerializeToJSON(),
+        "xml": SerializeToXML()
+    }
     for cmd, method_type in commands:
         if cmd == "display":
-            Display.display(book, method_type)
+            display = displays.get(method_type)
+            return display.display_book(book)
         elif cmd == "print":
-            Printer.print_book(book, method_type)
+            printer = printers.get(method_type)
+            return printer.print_book(book)
         elif cmd == "serialize":
-            serializer = serializer_types.get(method_type)
-            if serializer:
-                return serializer.serialize(book)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
-        else:
-            raise ValueError(f"Unknown command: {cmd}")
+            serializer = serializers.get(method_type)
+            return serializer.serialize_book(book)
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "json")]))
+    print(main(sample_book, [("display", "reverse"), ("serialize", "XML")]))

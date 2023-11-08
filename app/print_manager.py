@@ -7,7 +7,7 @@ class PrintBook(ABC):
     method_type = None
 
     def __init__(self, book: Book) -> None:
-        self.content = book.content
+        pass
 
     @abstractmethod
     def print_book(self) -> None:
@@ -17,9 +17,10 @@ class PrintBook(ABC):
 class PrintBookConsole(PrintBook):
     method_type = "console"
 
-    def __init__(self, book: Book, ) -> None:
-        super().__init__(book=book,)
+    def __init__(self, book: Book) -> None:
+        super().__init__(book=book)
         self.message = f"Printing the book: {book.title}..."
+        self.content = book.content
 
     def print_book(self) -> None:
         print(self.message)
@@ -32,6 +33,7 @@ class PrintBookReverse(PrintBook):
     def __init__(self, book: Book, ) -> None:
         super().__init__(book=book, )
         self.message = f"Printing the book in reverse: {book.title}..."
+        self.content = book.content
 
     def print_book(self) -> None:
         print(self.message)
@@ -42,7 +44,7 @@ def print_manager(method: str, book: Book) -> None:
     for subclass in PrintBook.__subclasses__():
         print(subclass.method_type)
         if subclass.method_type == method:
-            selected_class = subclass(book=book,)
+            selected_class = subclass(book=book)
             if selected_class is None:
                 raise ValueError(f"Unknown print type: {method}")
             selected_class.print_book()

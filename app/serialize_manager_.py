@@ -9,7 +9,7 @@ class SerializeBook(ABC):
     method_type = None
 
     def __init__(self, book: Book) -> None:
-        self.content = book.content
+        pass
 
     @abstractmethod
     def serialize_book(self) -> None:
@@ -48,7 +48,7 @@ class SerializeXML(SerializeBook):
 def serialize_manager(method: str, book: Book) -> None | str:
     for subclass in SerializeBook.__subclasses__():
         if subclass.method_type == method:
-            selected_class = subclass(book=book,)
+            selected_class = subclass(book=book)
             if selected_class is None:
                 raise ValueError(f"Unknown serialize type: {method}")
             return selected_class.serialize_book()

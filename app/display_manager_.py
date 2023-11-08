@@ -17,18 +17,12 @@ class DisplayBook(ABC):
 class DisplayBookConsole(DisplayBook):
     method_type = "console"
 
-    def __init__(self, book: Book, ) -> None:
-        super().__init__(book=book,)
-
     def display_book(self) -> None:
         print(self.content)
 
 
 class DisplayBookReverse(DisplayBook):
     method_type = "reverse"
-
-    def __init__(self, book: Book, ) -> None:
-        super().__init__(book=book, )
 
     def display_book(self) -> None:
         print(self.content[::-1])
@@ -37,7 +31,7 @@ class DisplayBookReverse(DisplayBook):
 def display_manager(method: str, book: Book) -> None:
     for subclass in DisplayBook.__subclasses__():
         if subclass.method_type == method:
-            selected_class = subclass(book=book,)
+            selected_class = subclass(book=book)
             if selected_class is None:
                 raise ValueError(f"Unknown display type: {method}")
             selected_class.display_book()

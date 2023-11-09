@@ -34,8 +34,8 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             method = method_mapping.get(method_type)
             if method:
                 return method(book)
-            else:
-                raise ValueError(f"Unknown {cmd} type: {method_type}")
+
+            raise ValueError(f"Unknown {cmd} type: {method_type}")
         else:
             raise ValueError(f"Unknown command: {cmd}")
 

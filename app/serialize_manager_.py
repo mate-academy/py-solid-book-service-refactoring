@@ -9,7 +9,7 @@ class SerializeBook(ABC):
     method_type = None
 
     def __init__(self, book: Book) -> None:
-        pass
+        self.book = book
 
     @abstractmethod
     def serialize_book(self) -> None:
@@ -19,29 +19,19 @@ class SerializeBook(ABC):
 class SerializeJson(SerializeBook):
     method_type = "json"
 
-    def __init__(self, book: Book, ) -> None:
-        super().__init__(book=book,)
-        self.title = book.title
-        self.content = book.content
-
     def serialize_book(self) -> str:
-        return json.dumps({"title": self.title, "content": self.content})
+        return json.dumps({"title": self.book.title, "content": self.book.content})
 
 
 class SerializeXML(SerializeBook):
     method_type = "xml"
 
-    def __init__(self, book: Book, ) -> None:
-        super().__init__(book=book, )
-        self.title = book.title
-        self.content = book.content
-
     def serialize_book(self) -> str:
         root = ElemTree.Element("book")
         title = ElemTree.SubElement(root, "title")
-        title.text = self.title
+        title.text = self.book.title
         content = ElemTree.SubElement(root, "content")
-        content.text = self.content
+        content.text = self.book.content
         return ElemTree.tostring(root, encoding="unicode")
 
 

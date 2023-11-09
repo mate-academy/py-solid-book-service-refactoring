@@ -7,7 +7,7 @@ class PrintBook(ABC):
     method_type = None
 
     def __init__(self, book: Book) -> None:
-        pass
+        self.book = book
 
     @abstractmethod
     def print_book(self) -> None:
@@ -17,27 +17,17 @@ class PrintBook(ABC):
 class PrintBookConsole(PrintBook):
     method_type = "console"
 
-    def __init__(self, book: Book) -> None:
-        super().__init__(book=book)
-        self.message = f"Printing the book: {book.title}..."
-        self.content = book.content
-
     def print_book(self) -> None:
-        print(self.message)
-        print(self.content)
+        print(f"Printing the book: {self.book.title}...")
+        print(self.book.content)
 
 
 class PrintBookReverse(PrintBook):
     method_type = "reverse"
 
-    def __init__(self, book: Book, ) -> None:
-        super().__init__(book=book, )
-        self.message = f"Printing the book in reverse: {book.title}..."
-        self.content = book.content
-
     def print_book(self) -> None:
-        print(self.message)
-        print(self.content[::-1])
+        print(f"Printing the book in reverse: {self.book.title}...")
+        print(self.book.content[::-1])
 
 
 def print_manager(method: str, book: Book) -> None:

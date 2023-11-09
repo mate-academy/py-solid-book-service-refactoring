@@ -7,7 +7,7 @@ class DisplayBook(ABC):
     method_type = None
 
     def __init__(self, book: Book) -> None:
-        self.content = book.content
+        self.book = book
 
     @abstractmethod
     def display_book(self) -> None:
@@ -18,14 +18,14 @@ class DisplayBookConsole(DisplayBook):
     method_type = "console"
 
     def display_book(self) -> None:
-        print(self.content)
+        print(self.book.content)
 
 
 class DisplayBookReverse(DisplayBook):
     method_type = "reverse"
 
     def display_book(self) -> None:
-        print(self.content[::-1])
+        print(self.book.content[::-1])
 
 
 def display_manager(method: str, book: Book) -> None:

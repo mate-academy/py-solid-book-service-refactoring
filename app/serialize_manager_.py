@@ -20,7 +20,10 @@ class SerializeJson(SerializeBook):
     method_type = "json"
 
     def serialize_book(self) -> str:
-        return json.dumps({"title": self.book.title, "content": self.book.content})
+        return json.dumps(
+            {"title": self.book.title,
+             "content": self.book.content}
+        )
 
 
 class SerializeXML(SerializeBook):

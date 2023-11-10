@@ -9,10 +9,15 @@ actions = {"print": print_manager,
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    data = ""
     for cmd, method_type in commands:
         if cmd in actions:
             action = actions.get(cmd)
-            return action(method=method_type, book=book)
+            action(method=method_type, book=book)
+        if cmd == "serialize":
+            action = actions.get(cmd)
+            data = action(method=method_type, book=book)
+    return data
 
 
 if __name__ == "__main__":

@@ -1,17 +1,19 @@
 from app.book import Book
 from app.display import ReverseDisplay, ConsoleDisplay
 from app.serializers import JsonSerializer, XmlSerializer
+from app.print import ConsolePrint, ReversePrint
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    displays = {
-        "reverse": ReverseDisplay,
-        "console": ConsoleDisplay,
-    }
-
     methods = {
-        "display": displays,
-        "print": displays,
+        "display": {
+            "reverse": ReverseDisplay,
+            "console": ConsoleDisplay,
+        },
+        "print": {
+            "console": ConsolePrint,
+            "reverse": ReversePrint
+        },
         "serialize": {
             "json": JsonSerializer,
             "xml": XmlSerializer,

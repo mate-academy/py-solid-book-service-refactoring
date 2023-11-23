@@ -5,26 +5,29 @@ from app.book_serialize import BookSerialize
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    results = ""
     for cmd, method_type in commands:
         if cmd == "display":
-            display_book = BookDisplay(book)
-            if hasattr(display_book, method_type):
-                getattr(display_book, method_type)()
-            else:
-                raise ValueError("Unknown display type.")
+            processor = BookDisplay(book)
         elif cmd == "print":
-            print_book = BookPrint(book)
-            if hasattr(print_book, method_type):
-                getattr(print_book, method_type)()
-            else:
-                raise ValueError("Unknown print type.")
+            processor = BookPrint(book)
         elif cmd == "serialize":
-            serialize_book = BookSerialize(book)
-            if hasattr(serialize_book, "to_" + method_type):
-                print(getattr(serialize_book, "to_" + method_type)())
-                return getattr(serialize_book, "to_" + method_type)()
+            processor = BookSerialize(book)
+        else:
+            raise ValueError("Unknown command type.")
+
+        if hasattr(processor, method_type):
+            method = getattr(processor, method_type)
+            if cmd == "serialize":
+                result = method()
+                print(result)
+                results += result
             else:
-                raise ValueError("Unknown serialize type.")
+                method()
+        else:
+            raise ValueError(f"Unknown {cmd} type.")
+
+    return results
 
 
 if __name__ == "__main__":

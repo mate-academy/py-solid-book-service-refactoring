@@ -4,7 +4,7 @@ from app.book import Book
 
 
 class Display(ABC):
-    def __init__(self, book: Book):
+    def __init__(self, book: Book) -> None:
         self.book = book
 
     @abstractmethod

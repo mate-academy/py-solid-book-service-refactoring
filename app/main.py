@@ -4,7 +4,7 @@ from app.book_display import BookDisplay
 from app.book_serialize import BookSerialize
 
 
-def process_command(book, cmd, method_type):
+def process_command(book: Book, cmd: str, method_type: str) -> str:
     results = ""
     if cmd == "display":
         processor = BookDisplay(book)

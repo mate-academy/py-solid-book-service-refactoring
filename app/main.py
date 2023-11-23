@@ -4,30 +4,33 @@ from app.book_display import BookDisplay
 from app.book_serialize import BookSerialize
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def process_command(book, cmd, method_type):
     results = ""
-    for cmd, method_type in commands:
-        if cmd == "display":
-            processor = BookDisplay(book)
-        elif cmd == "print":
-            processor = BookPrint(book)
-        elif cmd == "serialize":
-            processor = BookSerialize(book)
-        else:
-            raise ValueError("Unknown command type.")
+    if cmd == "display":
+        processor = BookDisplay(book)
+    elif cmd == "print":
+        processor = BookPrint(book)
+    elif cmd == "serialize":
+        processor = BookSerialize(book)
+    else:
+        raise ValueError("Unknown command type.")
 
-        if hasattr(processor, method_type):
-            method = getattr(processor, method_type)
-            if cmd == "serialize":
-                result = method()
-                print(result)
-                results += result
-            else:
-                method()
+    if hasattr(processor, method_type):
+        method = getattr(processor, method_type)
+        if cmd == "serialize":
+            result = method()
+            print(result)
+            results += result
         else:
-            raise ValueError(f"Unknown {cmd} type.")
-
+            method()
+    else:
+        raise ValueError(f"Unknown {cmd} type.")
     return results
+
+
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    for cmd, method_type in commands:
+        return process_command(book, cmd, method_type)
 
 
 if __name__ == "__main__":

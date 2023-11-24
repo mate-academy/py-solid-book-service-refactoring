@@ -3,34 +3,28 @@ from app.display_book import DisplayBookInConsole, DisplayBookInReverse
 from app.print_book import PrintBookInConsole, PrintBookInReverse
 from app.serialize_book import SerializeBookToJson, SerializeBookToXml
 
+COMMANDS_DICTIONARY = {
+    "display": {
+        "console": DisplayBookInConsole.display,
+        "reverse": DisplayBookInReverse.display,
+    },
+    "print": {
+        "console": PrintBookInConsole.print,
+        "reverse": PrintBookInReverse.print,
+    },
+    "serialize": {
+        "json": SerializeBookToJson.serialize,
+        "xml": SerializeBookToXml.serialize,
+    },
+}
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
+def main(book: Book, commands: list[tuple[str, str]]) -> str:
     for cmd, method_type in commands:
-
-        if cmd == "display":
-            if method_type == "console":
-                DisplayBookInConsole(book)
-            elif method_type == "reverse":
-                DisplayBookInReverse(book)
-            else:
-                raise ValueError(f"Unknown display type: {method_type}")
-
-        elif cmd == "print":
-            if method_type == "console":
-                PrintBookInConsole(book)
-            elif method_type == "reverse":
-                PrintBookInReverse(book)
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
-
-        elif cmd == "serialize":
-            if method_type == "json":
-                return SerializeBookToJson().serialize(book)
-            elif method_type == "xml":
-                return SerializeBookToXml().serialize(book)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+        try:
+            return COMMANDS_DICTIONARY[cmd][method_type](book)
+        except KeyError:
+            print(f"Unknown command or method type: {cmd} or {method_type}")
 
 
 if __name__ == "__main__":

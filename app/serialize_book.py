@@ -5,18 +5,21 @@ from app.book import Book
 
 
 class SerializeBook(ABC):
+    @staticmethod
     @abstractmethod
-    def serialize(self, book: Book) -> None:
+    def serialize(book: Book) -> None:
         pass
 
 
 class SerializeBookToJson(SerializeBook):
-    def serialize(self, book: Book) -> str:
+    @staticmethod
+    def serialize(book: Book) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
 
 class SerializeBookToXml(SerializeBook):
-    def serialize(self, book: Book) -> str:
+    @staticmethod
+    def serialize(book: Book) -> str:
         root = ElementTree.Element("book")
         title = ElementTree.SubElement(root, "title")
         title.text = book.title

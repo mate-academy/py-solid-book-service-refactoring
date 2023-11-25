@@ -6,14 +6,16 @@ from app.book_serialize import BookSerialize
 
 def process_command(book: Book, cmd: str, method_type: str) -> str:
     results = ""
-    if cmd == "display":
-        processor = BookDisplay(book)
-    elif cmd == "print":
-        processor = BookPrint(book)
-    elif cmd == "serialize":
-        processor = BookSerialize(book)
-    else:
+    processors = {
+        "display": BookDisplay,
+        "print": BookPrint,
+        "serialize": BookSerialize,
+    }
+
+    if cmd not in processors:
         raise ValueError("Unknown command type.")
+
+    processor = processors[cmd](book)
 
     if hasattr(processor, method_type):
         method = getattr(processor, method_type)

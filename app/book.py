@@ -1,4 +1,4 @@
-class Book:
+class BasicBook:
     def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
@@ -11,6 +11,8 @@ class Book:
         else:
             raise ValueError(f"Unknown display type: {display_type}")
 
+
+class Book(BasicBook):
     def print_book(self, print_type: str) -> None:
         if print_type == "console":
             print(f"Printing the book: {self.title}...")

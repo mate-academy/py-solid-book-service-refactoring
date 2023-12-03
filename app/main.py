@@ -1,5 +1,8 @@
-from app.serializer import Serializer
+from app.serializer import JsonSerializer, XmlSerializer
 from app.book import Book
+
+
+serialize_type = {"json": JsonSerializer, "xml": XmlSerializer}
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
@@ -9,7 +12,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         elif cmd == "print":
             book.print_book(method_type)
         elif cmd == "serialize":
-            return Serializer(book).serialize(method_type)
+            return serialize_type.get(method_type)(book).serialize()
 
 
 if __name__ == "__main__":

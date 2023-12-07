@@ -1,5 +1,5 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ETree
 from abc import ABC, abstractmethod
 
 from . import BookABC
@@ -13,15 +13,17 @@ class Serializer(ABC):
 
 
 class SerializeToJSON(Serializer):
+    @staticmethod
     def serialize(book: BookABC) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
 
 class SerializeToXML(Serializer):
+    @staticmethod
     def serialize(book: BookABC) -> str:
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+        root = ETree.Element("book")
+        title = ETree.SubElement(root, "title")
         title.text = book.title
-        content = ET.SubElement(root, "content")
+        content = ETree.SubElement(root, "content")
         content.text = book.content
-        return ET.tostring(root, encoding="unicode")
+        return ETree.tostring(root, encoding="unicode")

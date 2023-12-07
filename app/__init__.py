@@ -1,4 +1,4 @@
-from .book import BookABC
+from .book import BookABC  # noqa: F401
 from .display import DisplayInReverse, DisplayToConsole
 from .printer import PrinterInReverse, PrinterToConsole
 from .serializer import SerializeToJSON, SerializeToXML

@@ -11,10 +11,12 @@ class Display(ABC):
 
 
 class DisplayToConsole(Display):
+    @staticmethod
     def display(book: BookABC) -> None:
         print(book.content)
 
 
 class DisplayInReverse(Display):
+    @staticmethod
     def display(book: BookABC) -> None:
         print(book.content[::-1])

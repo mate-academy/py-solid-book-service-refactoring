@@ -14,9 +14,9 @@ class Display(ABC):
 
 class DisplayConsole(Display):
     def display(self) -> None:
-        print(self.book.contend)
+        print(self.book.content)
 
 
 class DisplayReverse(Display):
     def display(self) -> None:
-        print(self.book.contend[::-1])
+        print(self.book.content[::-1])

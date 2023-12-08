@@ -17,7 +17,7 @@ class Serializer(ABC):
 class JsonSerializer(Serializer):
     def serialize(self) -> str:
         return json.dumps(
-            {"title": self.book.title, "content": self.book.contend}
+            {"title": self.book.title, "content": self.book.content}
         )
 
 
@@ -27,5 +27,5 @@ class XmlSerializer(Serializer):
         title = ElemTree.SubElement(root, "title")
         title.text = self.book.title
         content = ElemTree.SubElement(root, "content")
-        content.text = self.book.contend
+        content.text = self.book.content
         return ElemTree.tostring(root, encoding="unicode")

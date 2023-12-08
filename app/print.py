@@ -15,10 +15,10 @@ class Print(ABC):
 class PrintConsole(Print):
     def print(self) -> None:
         print(f"Printing the book: {self.book.title}...")
-        print(self.book.contend)
+        print(self.book.content)
 
 
 class PrintReverse(Print):
     def print(self) -> None:
         print(f"Printing the book in reverse: {self.book.title}...")
-        print(self.book.contend[::-1])
+        print(self.book.content[::-1])

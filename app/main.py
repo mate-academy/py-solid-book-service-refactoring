@@ -8,17 +8,20 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
             (
-                DisplayReverse(book).display() if method_type == "reverse"
+                DisplayReverse(book).display()
+                if method_type == "reverse"
                 else DisplayConsole(book).display()
             )
         elif cmd == "print":
             (
-                PrintReverse(book).print() if method_type == "reverse"
+                PrintReverse(book).print()
+                if method_type == "reverse"
                 else PrintConsole(book).print()
             )
         elif cmd == "serialize":
             return (
-                JsonSerializer(book).serialize() if method_type == "json"
+                JsonSerializer(book).serialize()
+                if method_type == "json"
                 else XmlSerializer(book).serialize()
             )
 

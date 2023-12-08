@@ -55,4 +55,6 @@ def test_serialize_json(book) -> None:
 def test_serialize_xml(book) -> None:
     serialized_book = main(book, [("serialize", "xml")])
     assert "<title>Sample Book</title>" in serialized_book
-    assert "<content>This is some sample content.</content>" in serialized_book
+    assert (
+        "<content>This is some sample content.</content>" in serialized_book
+    )

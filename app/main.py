@@ -1,13 +1,22 @@
-from app.book import Book, BookDisplay, BookPrinter
+from app.book import BookDisplay, BookPrinter, Book
 from app.serializers import BookSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    display_strategy = BookDisplay()
+    print_strategy = BookPrinter()
+
     for cmd, method_type in commands:
         if cmd == "display":
-            BookDisplay.display(book, method_type)
+            if hasattr(display_strategy, "display"):
+                display_strategy.display(book, method_type)
+            else:
+                raise AttributeError("Display method not supported.")
         elif cmd == "print":
-            BookPrinter.print_book(book, method_type)
+            if hasattr(print_strategy, "print_book"):
+                print_strategy.print_book(book, method_type)
+            else:
+                raise AttributeError("Print method not supported.")
         elif cmd == "serialize":
             return BookSerializer.serialize(book, method_type)
 

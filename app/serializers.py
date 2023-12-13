@@ -15,5 +15,4 @@ class BookSerializer:
             content = ET.SubElement(root, "content")
             content.text = book.content
             return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+        raise ValueError(f"Unknown serialize type: {serialize_type}")

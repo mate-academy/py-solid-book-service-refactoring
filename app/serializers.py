@@ -7,21 +7,26 @@ from app.book import Book
 
 
 class Serializer(ABC):
-    def __init__(self, book: Book):
+    def __init__(self, book: Book) -> None:
         self.book = book
 
     @abstractmethod
-    def serialize(self, message: str):
+    def serialize(self, message: str) -> str:
         pass
 
 
 class JsonSerializer(Serializer):
-    def serialize(self, message: str):
-        return json.dumps({"title": self.book.title, "content": self.book.content})
+    def serialize(self, message: str) -> str:
+        return json.dumps(
+            {
+                "title": self.book.title,
+                "content": self.book.content
+            }
+        )
 
 
 class XmlSerializer(Serializer):
-    def serialize(self, message: str):
+    def serialize(self, message: str) -> str:
         root = ET.Element("book")
         title = ET.SubElement(root, "title")
         title.text = self.book.title

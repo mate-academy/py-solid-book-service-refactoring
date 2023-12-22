@@ -1,5 +1,6 @@
+from typing import Any
+
 from .display import DisplayConsole, DisplayReverse
-from .main import Book
 from .print import PrintConsole, PrintReverse
 from .serializer import SerializeJson, SerializeXml
 
@@ -42,7 +43,7 @@ class PrintManager:
 class SerializeManager:
     serialize_managers = {}
 
-    def __init__(self, book: Book) -> None:
+    def __init__(self, book: Any) -> None:
         self.book = book
 
         self.serialize_managers["json"] = SerializeJson()

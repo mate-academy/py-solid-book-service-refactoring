@@ -7,12 +7,12 @@ from app.serializer import JsonSerializer, XmlSerializer
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            if cmd == "console":
+            if method_type == "console":
                 displayer = ConsoleDisplay(book)
-            elif cmd == "reverse":
+            elif method_type == "reverse":
                 displayer = ReverseDisplay(book)
             else:
-                raise ValueError("Unknown display type ...")
+                raise ValueError("Unknown display type")
             displayer.display_book()
 
         elif cmd == "print":
@@ -21,17 +21,20 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             elif method_type == "reverse":
                 prints = ReversePrint(book)
             else:
-                raise ValueError("Unknown print type ...")
+                raise ValueError("Unknown print type")
             prints.print_book()
 
         elif cmd == "serialize":
-            if method_type == "json":
-                serializer = JsonSerializer(book)
-            elif method_type == "xml":
-                serializer = XmlSerializer(book)
+            serializers = {
+                "json": JsonSerializer,
+                "xml": XmlSerializer,
+                }
+            serializer_class = serializers.get(method_type)
+            if serializer_class:
+                serializer = serializer_class(book)
+                return serializer.serialize_book()
             else:
-                raise ValueError("Unknown serialize type")
-            return serializer.serialize_book()
+                raise ValueError(f"Unknown serialize type: {method_type}")
 
 
 if __name__ == "__main__":

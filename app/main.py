@@ -5,29 +5,26 @@ from app.display_manage import ConsoleDisplay, ReverseDisplay
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    actions = {
+        "display": {
+            "console": ConsoleDisplay.display,
+            "reverse": ReverseDisplay.display
+        },
+        "print": {
+            "console": ConsolePrint.print_book,
+            "reverse": ReversePrint.print_book
+        },
+        "serialize": {
+            "json": JsonBookSerialize.serialize_book,
+            "xml": XmlBookSerialize.serialize_book
+        }
+    }
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "reverse":
-                ReverseDisplay.display(book)
-            elif method_type == "console":
-                ConsoleDisplay.display(book)
-            else:
-                raise ValueError(f"Unknown display type: {method_type}")
-        if cmd == "print":
-            if method_type == "reverse":
-                ReversePrint.print_book(book)
-            elif method_type == "console":
-                ConsolePrint.print_book(book)
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
-
-        elif cmd == "serialize":
-            if method_type == "json":
-                return JsonBookSerialize.serialize_book(book)
-            elif method_type == "xml":
-                return XmlBookSerialize.serialize_book(book)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+        if cmd in actions and method_type in actions[cmd]:
+            method = actions[cmd][method_type]
+            return method(book)
+        else:
+            raise ValueError(f"Unknown command or method type")
 
 
 if __name__ == "__main__":

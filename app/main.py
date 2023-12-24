@@ -12,7 +12,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             elif method_type == "reverse":
                 displayer = ReverseDisplay(book)
             else:
-                raise ValueError("Unknown display type")
+                raise ValueError(f"Unknown display type {method_type}")
             displayer.display_book()
 
         elif cmd == "print":
@@ -21,14 +21,14 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             elif method_type == "reverse":
                 prints = ReversePrint(book)
             else:
-                raise ValueError("Unknown print type")
+                raise ValueError(f"Unknown print type {method_type}")
             prints.print_book()
 
         elif cmd == "serialize":
             serializers = {
                 "json": JsonSerializer,
                 "xml": XmlSerializer,
-                }
+            }
             serializer_class = serializers.get(method_type)
             if serializer_class:
                 serializer = serializer_class(book)

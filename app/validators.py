@@ -13,7 +13,7 @@ class CommandValidatorMixin:
         if command not in AVAILABLE_COMMANDS:
             raise ValueError(f"Unknown command: {command}. "
                              "Choose correct command from the list: "
-                             "[display, print, serialize]")
+                             f"{AVAILABLE_COMMANDS}")
 
 
 class TypeValidator(ABC):

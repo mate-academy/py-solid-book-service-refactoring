@@ -20,7 +20,9 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             return serializer.serialize(book)
 
         else:
-            raise ValueError(f"Unknown command: {cmd}")
+            raise ValueError(f"Unknown command: {cmd}. "
+                             "Choose correct command from the list: "
+                             "[display, print, serialize]")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 from xml.etree import ElementTree
 import json
 
@@ -7,7 +7,7 @@ from app.book import Book
 
 class Serializer(ABC):
     @staticmethod
-    @abstractclassmethod
+    @abstractmethod
     def serialize(book: Book) -> None:
         pass
 

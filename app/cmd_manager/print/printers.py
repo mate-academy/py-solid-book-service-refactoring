@@ -1,11 +1,11 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 
 from app.book import Book
 
 
 class Printer(ABC):
     @staticmethod
-    @abstractclassmethod
+    @abstractmethod
     def print_book(book: Book) -> None:
         pass
 

@@ -1,4 +1,4 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 
 
 AVAILABLE_PRINT_TYPES = ("console", "reverse",)
@@ -8,7 +8,7 @@ AVAILABLE_SERIALIZE_TYPES = ("json", "xml",)
 
 class TypeValidator(ABC):
     @staticmethod
-    @abstractclassmethod
+    @abstractmethod
     def validate_type(method_type: str) -> None:
         pass
 

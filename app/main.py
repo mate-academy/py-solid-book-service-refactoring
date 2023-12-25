@@ -17,8 +17,10 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
         elif cmd == "serialize":
             serializer = SerializeManager().set_serializer(method_type)
-
             return serializer.serialize(book)
+
+        else:
+            raise ValueError(f"Unknown command: {cmd}")
 
 
 if __name__ == "__main__":

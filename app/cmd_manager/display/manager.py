@@ -1,4 +1,5 @@
-from app.cmd_manager.display.displayers import (ConsoleDisplayer, Displayer,
+from app.cmd_manager.display.displayers import (ConsoleDisplayer,
+                                                Displayer,
                                                 ReverseDisplayer)
 from app.validators import DisplayTypeValidatorMixin
 

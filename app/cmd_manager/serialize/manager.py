@@ -1,4 +1,5 @@
-from app.cmd_manager.serialize.serializers import (JsonSerializer, Serializer,
+from app.cmd_manager.serialize.serializers import (JsonSerializer,
+                                                   Serializer,
                                                    XmlSerializer)
 from app.validators import SerializeTypeValidatorMixin
 

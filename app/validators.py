@@ -1,8 +1,19 @@
 from abc import ABC, abstractmethod
 
+AVAILABLE_COMMANDS = ("print", "display", "serialize")
+
 AVAILABLE_PRINT_TYPES = ("console", "reverse",)
 AVAILABLE_DISPLAY_TYPES = ("console", "reverse",)
 AVAILABLE_SERIALIZE_TYPES = ("json", "xml",)
+
+
+class CommandValidatorMixin:
+    @staticmethod
+    def validate_command(command: str) -> None:
+        if command not in AVAILABLE_COMMANDS:
+            raise ValueError(f"Unknown command: {command}. "
+                             "Choose correct command from the list: "
+                             "[display, print, serialize]")
 
 
 class TypeValidator(ABC):

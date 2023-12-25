@@ -1,28 +1,10 @@
 from app.book import Book
-from app.cmd_manager.display.manager import DisplayManager
-from app.cmd_manager.print.manager import PrintManager
-from app.cmd_manager.serialize.manager import SerializeManager
+from app.cmd_manager.cmd_manager import CommandManager
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-
-        if cmd == "display":
-            displayer = DisplayManager().set_displayer(method_type)
-            displayer.display(book)
-
-        elif cmd == "print":
-            printer = PrintManager().set_printer(method_type)
-            printer.print_book(book)
-
-        elif cmd == "serialize":
-            serializer = SerializeManager().set_serializer(method_type)
-            return serializer.serialize(book)
-
-        else:
-            raise ValueError(f"Unknown command: {cmd}. "
-                             "Choose correct command from the list: "
-                             "[display, print, serialize]")
+        return CommandManager(cmd, method_type, book).execute_command()
 
 
 if __name__ == "__main__":

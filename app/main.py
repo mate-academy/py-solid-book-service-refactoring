@@ -4,37 +4,55 @@ from app.printing import ConsolePrint, ReversePrint
 from app.serializer import JsonSerializer, XmlSerializer
 
 
+def create_display(book, method_type):
+    displayers = {
+        "console": ConsoleDisplay,
+        "reverse": ReverseDisplay,
+    }
+    displayer_class = displayers.get(method_type)
+    if displayer_class:
+        return displayer_class(book)
+    else:
+        raise ValueError(f"Unknown display type {method_type}")
+
+
+def create_print(book, method_type):
+    printers = {
+        "console": ConsolePrint,
+        "reverse": ReversePrint,
+    }
+    printer_class = printers.get(method_type)
+    if printer_class:
+        return printer_class(book)
+    else:
+        raise ValueError(f"Unknown print type {method_type}")
+
+
+def create_serializer(book, method_type):
+    serializers = {
+        "json": JsonSerializer,
+        "xml": XmlSerializer,
+    }
+    serializer_class = serializers.get(method_type)
+    if serializer_class:
+        return serializer_class(book)
+    else:
+        raise ValueError(f"Unknown serialize type: {method_type}")
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            if method_type == "console":
-                displayer = ConsoleDisplay(book)
-            elif method_type == "reverse":
-                displayer = ReverseDisplay(book)
-            else:
-                raise ValueError(f"Unknown display type {method_type}")
+            displayer = create_display(book, method_type)
             displayer.display_book()
 
         elif cmd == "print":
-            if method_type == "console":
-                prints = ConsolePrint(book)
-            elif method_type == "reverse":
-                prints = ReversePrint(book)
-            else:
-                raise ValueError(f"Unknown print type {method_type}")
-            prints.print_book()
+            printer = create_print(book, method_type)
+            printer.print_book()
 
         elif cmd == "serialize":
-            serializers = {
-                "json": JsonSerializer,
-                "xml": XmlSerializer,
-            }
-            serializer_class = serializers.get(method_type)
-            if serializer_class:
-                serializer = serializer_class(book)
-                return serializer.serialize_book()
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+            serializer = create_serializer(book, method_type)
+            return serializer.serialize_book()
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from app.printing import ConsolePrint, ReversePrint
 from app.serializer import JsonSerializer, XmlSerializer
 
 
-def create_display(book, method_type):
+def create_display(book: Book, method_type: str):
     displayers = {
         "console": ConsoleDisplay,
         "reverse": ReverseDisplay,
@@ -16,7 +16,7 @@ def create_display(book, method_type):
         raise ValueError(f"Unknown display type {method_type}")
 
 
-def create_print(book, method_type):
+def create_print(book: Book, method_type: str):
     printers = {
         "console": ConsolePrint,
         "reverse": ReversePrint,
@@ -28,7 +28,7 @@ def create_print(book, method_type):
         raise ValueError(f"Unknown print type {method_type}")
 
 
-def create_serializer(book, method_type):
+def create_serializer(book: Book, method_type: str):
     serializers = {
         "json": JsonSerializer,
         "xml": XmlSerializer,

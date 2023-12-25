@@ -1,7 +1,6 @@
+from app.cmd_manager.serialize.serializers import (JsonSerializer, Serializer,
+                                                   XmlSerializer)
 from app.validators import SerializeTypeValidatorMixin
-from app.cmd_manager.serialize.serializers import (
-    Serializer, JsonSerializer, XmlSerializer
-)
 
 
 class SerializeManager(SerializeTypeValidatorMixin):

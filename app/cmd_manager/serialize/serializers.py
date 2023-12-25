@@ -1,6 +1,6 @@
+import json
 from abc import ABC, abstractmethod
 from xml.etree import ElementTree
-import json
 
 from app.book import Book
 

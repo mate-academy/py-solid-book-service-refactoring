@@ -1,9 +1,9 @@
-from io import StringIO
 import sys
+from io import StringIO
 
 import pytest
 
-from app.main import main, Book
+from app.main import Book, main
 
 
 def get_stdout(func, *args, **kwargs) -> str:

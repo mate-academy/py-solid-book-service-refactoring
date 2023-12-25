@@ -1,7 +1,6 @@
+from app.cmd_manager.print.printers import (ConsolePrinter, Printer,
+                                            ReversePrinter)
 from app.validators import PrintTypeValidatorMixin
-from app.cmd_manager.print.printers import (
-    Printer, ConsolePrinter, ReversePrinter
-)
 
 
 class PrintManager(PrintTypeValidatorMixin):

@@ -1,7 +1,6 @@
+from app.cmd_manager.display.displayers import (ConsoleDisplayer, Displayer,
+                                                ReverseDisplayer)
 from app.validators import DisplayTypeValidatorMixin
-from app.cmd_manager.display.displayers import (
-    Displayer, ConsoleDisplayer, ReverseDisplayer
-)
 
 
 class DisplayManager(DisplayTypeValidatorMixin):

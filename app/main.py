@@ -4,7 +4,7 @@ from app.cmd_manager.cmd_manager import CommandManager
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        return CommandManager(cmd, method_type, book).execute_command()
+        return CommandManager(cmd, method_type).execute_command(book)
 
 
 if __name__ == "__main__":

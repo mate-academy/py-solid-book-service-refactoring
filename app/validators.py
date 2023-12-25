@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 
-AVAILABLE_COMMANDS = ("print", "display", "serialize")
+AVAILABLE_COMMANDS = ["print", "display", "serialize"]
 
-AVAILABLE_PRINT_TYPES = ("console", "reverse",)
-AVAILABLE_DISPLAY_TYPES = ("console", "reverse",)
-AVAILABLE_SERIALIZE_TYPES = ("json", "xml",)
+AVAILABLE_PRINT_TYPES = ["console", "reverse",]
+AVAILABLE_DISPLAY_TYPES = ["console", "reverse",]
+AVAILABLE_SERIALIZE_TYPES = ["json", "xml",]
 
 
 class CommandValidatorMixin:

@@ -3,7 +3,8 @@ import sys
 
 import pytest
 
-from app.main import main, Book
+from app.main import main
+from book.book import Book
 
 
 def get_stdout(func, *args, **kwargs) -> str:

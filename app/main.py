@@ -25,7 +25,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             return method(book)
         else:
             raise ValueError(f"Unknown command or method type: "
-                             f"Command({cmd}), Method({method_type})")
+                             "Command({cmd}), Method({method_type})")
 
 
 if __name__ == "__main__":

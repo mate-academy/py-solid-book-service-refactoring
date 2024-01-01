@@ -1,24 +1,42 @@
+from __future__ import annotations
+
 import json
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from xml.etree import ElementTree
 
 from app.book_model import Book
 
 
-class BookSerializer(ABC):
+class BaseSerializer(ABC):
     @staticmethod
     @abstractmethod
-    def serialize(book: Book) -> str:
+    def serialize(instance: type) -> str:
         pass
 
 
-class JSONSerializer(BookSerializer):
+class BaseJSONSerializer(BaseSerializer):
+    @staticmethod
+    @abstractmethod
+    def serialize(instance: type) -> str:
+        pass
+
+
+class BaseXMLSerializer(BaseSerializer):
+    @staticmethod
+    @abstractmethod
+    def serialize(instance: type) -> str:
+        pass
+
+
+# noinspection PyRedeclaration
+class BookJSONSerializer(BaseJSONSerializer):
     @staticmethod
     def serialize(book: Book) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
 
-class XMLSerializer(BookSerializer):
+# noinspection PyRedeclaration
+class BookXMLSerializer(BaseXMLSerializer):
     @staticmethod
     def serialize(book: Book) -> str:
         root = ElementTree.Element("book")

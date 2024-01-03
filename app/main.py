@@ -8,24 +8,26 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     action = {
         "display": {
             "console": ConsoleDisplay.display,
-            "reverse": ReverseDisplay.display
+            "reverse": ReverseDisplay.display,
         },
         "print": {
             "console": ConsolePrint.print,
-            "reverse": ReversePrint.print
+            "reverse": ReversePrint.print,
         },
         "serialize": {
             "json": JsonSerialize.serialize,
-            "xml": XmlSerialize.serialize
-        }
+            "xml": XmlSerialize.serialize,
+        },
     }
     for cmd, method_type in commands:
         if cmd in action and method_type in action[cmd]:
             method = action[cmd][method_type]
             return method(book)
         else:
-            raise ValueError("Unknown command or method type: "
-                             f"Command({cmd}), Method({method_type})")
+            raise ValueError(
+                "Unknown command or method type: "
+                f"Command({cmd}), Method({method_type})"
+            )
 
 
 if __name__ == "__main__":

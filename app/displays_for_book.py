@@ -15,4 +15,3 @@ class ConsoleDisplay(DisplayStrategy):
 class ReverseDisplay(DisplayStrategy):
     def display(self, content: str) -> None:
         print(content[::-1])
-        

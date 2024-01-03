@@ -21,4 +21,3 @@ class ReversePrint(Print):
     def print(book: Book) -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])
-

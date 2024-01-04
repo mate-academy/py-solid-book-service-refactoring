@@ -15,14 +15,12 @@ class SerializeStrategy(ABC):
 
 class JsonSerialize(SerializeStrategy):
     @staticmethod
-
     def serialize(book: Book) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
 
 class XmlSerialize(SerializeStrategy):
     @staticmethod
-
     def serialize(book: Book) -> str:
         root = ElementTree.Element("book")
         title_element = ElementTree.SubElement(root, "title")

@@ -1,19 +1,26 @@
 from abc import ABC, abstractmethod
 
+from app.book_class import Book
+
 
 class PrintStrategy(ABC):
+    @staticmethod
+
     @abstractmethod
-    def print(self, title: str, content: str) -> None:
+    def print(book: Book) -> None:
         pass
 
 
 class ConsolePrint(PrintStrategy):
-    def print(self, title: str, content: str) -> None:
-        print(f"Printing the book: {title}...")
-        print(content)
+    @staticmethod
+    def print(book: Book) -> None:
+        print(f"Printing the book: {book.title}...")
+        print(book.content)
 
 
 class ReversePrint(PrintStrategy):
-    def print(self, title: str, content: str) -> None:
-        print(f"Printing the book in reverse: {title}...")
-        print(content[::-1])
+    @staticmethod
+
+    def print(book: Book) -> None:
+        print(f"Printing the book in reverse: {book.title}...")
+        print(book.content[::-1])

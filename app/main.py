@@ -3,30 +3,32 @@ import xml.etree.ElementTree as ElementTree
 from abc import ABC, abstractmethod
 
 
-class ReverseAuth:
-    @staticmethod
-    def is_console(method_type: str) -> bool:
+class AuthorizationService(ABC):
+    @abstractmethod
+    def authorize(self, method_type: str) -> bool:
+        pass
+
+
+class ReverseAuth(AuthorizationService):
+    def authorize(self, method_type: str) -> bool:
         if method_type == "reverse":
             return True
 
 
-class ConsoleAuth:
-    @staticmethod
-    def is_console(method_type: str) -> bool:
+class ConsoleAuth(AuthorizationService):
+    def authorize(self, method_type: str) -> bool:
         if method_type == "console":
             return True
 
 
-class JsonAuth:
-    @staticmethod
-    def is_json(serialize_type: str) -> bool:
+class JsonAuth(AuthorizationService):
+    def authorize(self, serialize_type: str) -> bool:
         if serialize_type == "json":
             return True
 
 
-class XmlAuth:
-    @staticmethod
-    def is_console(serialize_type: str) -> bool:
+class XmlAuth(AuthorizationService):
+    def authorize(self, serialize_type: str) -> bool:
         if serialize_type == "xml":
             return True
 
@@ -44,22 +46,30 @@ class BookDisplay(ABC):
 
 
 class DisplayConsoleProcessor(BookDisplay):
-    def __init__(self, display_type: str, authorizer: ConsoleAuth) -> None:
+    def __init__(
+            self,
+            display_type: str,
+            authorizer: AuthorizationService
+    ) -> None:
         self.display_type = display_type
         self.authorizer = authorizer
 
     def display(self, book: Book) -> None:
-        if self.authorizer:
+        if self.authorizer.authorize(self.display_type):
             print(book.content)
 
 
 class DisplayReverseProcessor(BookDisplay):
-    def __init__(self, display_type: str, authorizer: ReverseAuth) -> None:
+    def __init__(
+            self,
+            display_type: str,
+            authorizer: AuthorizationService
+    ) -> None:
         self.display_type = display_type
         self.authorizer = authorizer
 
     def display(self, book: Book) -> None:
-        if self.authorizer:
+        if self.authorizer.authorize(self.display_type):
             print(book.content[::-1])
 
 
@@ -70,23 +80,31 @@ class BookPrinter(ABC):
 
 
 class PrinterConsoleProcessor(BookPrinter):
-    def __init__(self, print_type: str, authorizer: ConsoleAuth) -> None:
+    def __init__(
+            self,
+            print_type: str,
+            authorizer: AuthorizationService
+    ) -> None:
         self.print_type = print_type
         self.authorizer = authorizer
 
     def print_book(self, book: Book) -> None:
-        if self.authorizer:
+        if self.authorizer.authorize(self.print_type):
             print(f"Printing the book: {book.title}...")
             print(book.content)
 
 
 class PrinterReverseProcessor(BookPrinter):
-    def __init__(self, print_type: str, authorizer: ReverseAuth) -> None:
+    def __init__(
+            self,
+            print_type: str,
+            authorizer: AuthorizationService
+    ) -> None:
         self.print_type = print_type
         self.authorizer = authorizer
 
     def print_book(self, book: Book) -> None:
-        if self.authorizer:
+        if self.authorizer.authorize(self.print_type):
             print(f"Printing the book in reverse: {book.title}...")
             print(book.content[::-1])
 
@@ -98,22 +116,30 @@ class BookSerializer(ABC):
 
 
 class SerializerJson(BookSerializer):
-    def __init__(self, serialize_type: str, authorizer: JsonAuth) -> None:
+    def __init__(
+            self,
+            serialize_type: str,
+            authorizer: AuthorizationService
+    ) -> None:
         self.serialize_type = serialize_type
         self.authorizer = authorizer
 
     def serialize(self, book: Book) -> str:
-        if self.authorizer:
+        if self.authorizer.authorize(self.serialize_type):
             return json.dumps({"title": book.title, "content": book.content})
 
 
 class SerializerXML(BookSerializer):
-    def __init__(self, serialize_type: str, authorizer: XmlAuth) -> None:
+    def __init__(
+            self,
+            serialize_type: str,
+            authorizer: AuthorizationService
+    ) -> None:
         self.serialize_type = serialize_type
         self.authorizer = authorizer
 
     def serialize(self, book: Book) -> str:
-        if self.authorizer:
+        if self.authorizer.authorize(self.serialize_type):
             root = ElementTree.Element("book")
             title = ElementTree.SubElement(root, "title")
             title.text = book.title

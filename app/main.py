@@ -3,6 +3,34 @@ import xml.etree.ElementTree as ElementTree
 from abc import ABC, abstractmethod
 
 
+class ReverseAuth:
+    @staticmethod
+    def is_console(method_type: str) -> bool:
+        if method_type == "reverse":
+            return True
+
+
+class ConsoleAuth:
+    @staticmethod
+    def is_console(method_type: str) -> bool:
+        if method_type == "console":
+            return True
+
+
+class JsonAuth:
+    @staticmethod
+    def is_json(serialize_type: str) -> bool:
+        if serialize_type == "json":
+            return True
+
+
+class XmlAuth:
+    @staticmethod
+    def is_console(serialize_type: str) -> bool:
+        if serialize_type == "xml":
+            return True
+
+
 class Book:
     def __init__(self, title: str, content: str) -> None:
         self.title = title
@@ -16,20 +44,22 @@ class BookDisplay(ABC):
 
 
 class DisplayConsoleProcessor(BookDisplay):
-    def __init__(self, display_type: str) -> None:
+    def __init__(self, display_type: str, authorizer: ConsoleAuth) -> None:
         self.display_type = display_type
+        self.authorizer = authorizer
 
     def display(self, book: Book) -> None:
-        if self.display_type == "console":
+        if self.authorizer:
             print(book.content)
 
 
 class DisplayReverseProcessor(BookDisplay):
-    def __init__(self, display_type: str) -> None:
+    def __init__(self, display_type: str, authorizer: ReverseAuth) -> None:
         self.display_type = display_type
+        self.authorizer = authorizer
 
     def display(self, book: Book) -> None:
-        if self.display_type == "reverse":
+        if self.authorizer:
             print(book.content[::-1])
 
 
@@ -40,21 +70,23 @@ class BookPrinter(ABC):
 
 
 class PrinterConsoleProcessor(BookPrinter):
-    def __init__(self, print_type: str) -> None:
+    def __init__(self, print_type: str, authorizer: ConsoleAuth) -> None:
         self.print_type = print_type
+        self.authorizer = authorizer
 
     def print_book(self, book: Book) -> None:
-        if self.print_type == "console":
+        if self.authorizer:
             print(f"Printing the book: {book.title}...")
             print(book.content)
 
 
 class PrinterReverseProcessor(BookPrinter):
-    def __init__(self, print_type: str) -> None:
+    def __init__(self, print_type: str, authorizer: ReverseAuth) -> None:
         self.print_type = print_type
+        self.authorizer = authorizer
 
     def print_book(self, book: Book) -> None:
-        if self.print_type == "reverse":
+        if self.authorizer:
             print(f"Printing the book in reverse: {book.title}...")
             print(book.content[::-1])
 
@@ -66,20 +98,22 @@ class BookSerializer(ABC):
 
 
 class SerializerJson(BookSerializer):
-    def __init__(self, serialize_type: str) -> None:
+    def __init__(self, serialize_type: str, authorizer: JsonAuth) -> None:
         self.serialize_type = serialize_type
+        self.authorizer = authorizer
 
     def serialize(self, book: Book) -> str:
-        if self.serialize_type == "json":
+        if self.authorizer:
             return json.dumps({"title": book.title, "content": book.content})
 
 
 class SerializerXML(BookSerializer):
-    def __init__(self, serialize_type: str) -> None:
+    def __init__(self, serialize_type: str, authorizer: XmlAuth) -> None:
         self.serialize_type = serialize_type
+        self.authorizer = authorizer
 
     def serialize(self, book: Book) -> str:
-        if self.serialize_type == "xml":
+        if self.authorizer:
             root = ElementTree.Element("book")
             title = ElementTree.SubElement(root, "title")
             title.text = book.title
@@ -90,19 +124,23 @@ class SerializerXML(BookSerializer):
 
 # class SerializerHandler(SerializerJson, SerializerXML)
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    console_auth = ConsoleAuth()
+    reverse_auth = ReverseAuth()
+    json_auth = JsonAuth()
+    xml_auth = XmlAuth()
     display_processors = {
-        "console": DisplayConsoleProcessor("console"),
-        "reverse": DisplayReverseProcessor("reverse"),
+        "console": DisplayConsoleProcessor("console", console_auth),
+        "reverse": DisplayReverseProcessor("reverse", reverse_auth),
     }
 
     printer_processors = {
-        "console": PrinterConsoleProcessor("console"),
-        "reverse": PrinterReverseProcessor("reverse"),
+        "console": PrinterConsoleProcessor("console", console_auth),
+        "reverse": PrinterReverseProcessor("reverse", reverse_auth),
     }
 
     serializer_processors = {
-        "json": SerializerJson("json"),
-        "xml": SerializerXML("xml"),
+        "json": SerializerJson("json", json_auth),
+        "xml": SerializerXML("xml", xml_auth),
     }
 
     for cmd, method_type in commands:

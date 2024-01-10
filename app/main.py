@@ -148,7 +148,6 @@ class SerializerXML(BookSerializer):
             return ElementTree.tostring(root, encoding="unicode")
 
 
-# class SerializerHandler(SerializerJson, SerializerXML)
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     console_auth = ConsoleAuth()
     reverse_auth = ReverseAuth()

@@ -23,7 +23,7 @@ class XMLSerializeBook(SerializeBook):
     def serialize(self) -> str:
         root = ElementTree.Element("book")
         title = ElementTree.SubElement(root, "title")
-        title.text = title
+        title.text = self.title
         content = ElementTree.SubElement(root, "content")
-        content.text = content
+        content.text = self.content
         return ElementTree.tostring(root, encoding="unicode")

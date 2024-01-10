@@ -1,7 +1,7 @@
 from app.display import ConsoleDisplayBook, ReverseDisplayBook
 from app.printer import ConsolePrinterBook, ReversePrinterBook
 from app.serializer import JSONSerializeBook, XMLSerializeBook
-from book import Book
+from app.book import Book
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
@@ -30,5 +30,4 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    # print(main(sample_book, [("print", "reverse"), ("serialize", "xml")]))
-    print(main(sample_book, [("serialize", "json")]))
+    print(main(sample_book, [("print", "reverse"), ("serialize", "xml")]))

@@ -13,7 +13,7 @@ class PrintService(ABC):
 
 
 class ConsolePrintService(PrintService):
-    def __init__(self, book: Book):
+    def __init__(self, book: Book) -> None:
         super().__init__(book)
 
     def print(self) -> None:

@@ -4,6 +4,9 @@ from app.books import Book
 
 
 class DisplayService(ABC):
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
     def display(self) -> None:
         pass
@@ -11,7 +14,7 @@ class DisplayService(ABC):
 
 class ConsoleDisplayService(DisplayService):
     def __init__(self, book: Book) -> None:
-        self.book = book
+        super().__init__(book)
 
     def display(self) -> None:
         print(self.book.content)
@@ -19,7 +22,7 @@ class ConsoleDisplayService(DisplayService):
 
 class ReverseDisplayService(DisplayService):
     def __init__(self, book: Book) -> None:
-        self.book = book
+        super().__init__(book)
 
     def display(self) -> None:
         print(self.book.content[::-1])

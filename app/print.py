@@ -4,6 +4,9 @@ from app.books import Book
 
 
 class PrintService(ABC):
+    def __init__(self, book: Book) -> None:
+        self.book = book
+
     @abstractmethod
     def print(self) -> None:
         pass
@@ -11,7 +14,7 @@ class PrintService(ABC):
 
 class ConsolePrintService(PrintService):
     def __init__(self, book: Book):
-        self.book = book
+        super().__init__(book)
 
     def print(self) -> None:
         print(f"Printing the book: {self.book.title}...")
@@ -20,7 +23,7 @@ class ConsolePrintService(PrintService):
 
 class ReversePrintService(PrintService):
     def __init__(self, book: Book) -> None:
-        self.book = book
+        super().__init__(book)
 
     def print(self) -> None:
         print(f"Printing the book in reverse: {self.book.title}...")

@@ -5,33 +5,26 @@ from app.serializer import JsonSerializer, XmlSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    dispatcher = {
+        "display": {
+            "console": ConsoleDisplayService.display,
+            "reverse": ReverseDisplayService.display
+        },
+        "print": {
+            "console": ConsolePrintService.print,
+            "reverse": ReversePrintService.print
+        },
+        "serialize": {
+            "json": JsonSerializer.serialize,
+            "xml": XmlSerializer.serialize
+        }
+    }
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                display_book = ConsoleDisplayService(book)
-            elif method_type == "reverse":
-                display_book = ReverseDisplayService(book)
-            else:
-                raise ValueError("Unknown display type")
-            display_book.display()
-
-        elif cmd == "print":
-            if method_type == "console":
-                print_book = ConsolePrintService(book)
-            elif method_type == "reverse":
-                print_book = ReversePrintService(book)
-            else:
-                raise ValueError("Unknown print type")
-            print_book.print()
-
-        elif cmd == "serialize":
-            if method_type == "json":
-                serializer_book = JsonSerializer(book)
-            elif method_type == "xml":
-                serializer_book = XmlSerializer(book)
-            else:
-                raise ValueError("Unknown serializer type")
-            return serializer_book.serialize()
+        if cmd in dispatcher:
+            if method_type in dispatcher[cmd]:
+                return dispatcher[cmd][method_type](book)
+            raise ValueError(f"Unknown command {cmd} type {method_type}")
+        raise ValueError(f"Unknown command {cmd}")
 
 
 if __name__ == "__main__":

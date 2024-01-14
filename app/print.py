@@ -17,8 +17,8 @@ class ConsolePrintService(PrintService):
         super().__init__(book)
 
     def print(self) -> None:
-        print(f"Printing the book: {self.book.title}...")
-        print(self.book.content)
+        print(f"Printing the book: {self.title}...")
+        print(self.content)
 
 
 class ReversePrintService(PrintService):
@@ -26,5 +26,5 @@ class ReversePrintService(PrintService):
         super().__init__(book)
 
     def print(self) -> None:
-        print(f"Printing the book in reverse: {self.book.title}...")
-        print(self.book.content[::-1])
+        print(f"Printing the book in reverse: {self.title}...")
+        print(self.content[::-1])

@@ -17,7 +17,7 @@ class ConsoleDisplayService(DisplayService):
         super().__init__(book)
 
     def display(self) -> None:
-        print(self.book.content)
+        print(self.content)
 
 
 class ReverseDisplayService(DisplayService):
@@ -25,4 +25,4 @@ class ReverseDisplayService(DisplayService):
         super().__init__(book)
 
     def display(self) -> None:
-        print(self.book.content[::-1])
+        print(self.content[::-1])

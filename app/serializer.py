@@ -20,7 +20,7 @@ class JsonSerializer(Serializer):
 
     def serialize(self) -> json:
         return json.dumps(
-            {"title": self.book.title, "content": self.book.content}
+            {"title": self.title, "content": self.content}
         )
 
 
@@ -31,7 +31,7 @@ class XmlSerializer(Serializer):
     def serialize(self) -> str:
         root = Et.Element("book")
         title = Et.SubElement(root, "title")
-        title.text = self.book.title
+        title.text = self.title
         content = Et.SubElement(root, "content")
-        content.text = self.book.content
+        content.text = self.content
         return Et.tostring(root, encoding="unicode")

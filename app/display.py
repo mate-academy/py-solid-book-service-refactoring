@@ -4,25 +4,20 @@ from app.books import Book
 
 
 class DisplayService(ABC):
-    def __init__(self, book: Book) -> None:
-        self.book = book
 
+    @staticmethod
     @abstractmethod
-    def display(self) -> None:
+    def display(book: Book) -> None:
         pass
 
 
 class ConsoleDisplayService(DisplayService):
-    def __init__(self, book: Book) -> None:
-        super().__init__(book)
-
-    def display(self) -> None:
-        print(self.content)
+    @staticmethod
+    def display(book: Book) -> None:
+        print(book.content)
 
 
 class ReverseDisplayService(DisplayService):
-    def __init__(self, book: Book) -> None:
-        super().__init__(book)
-
-    def display(self) -> None:
-        print(self.content[::-1])
+    @staticmethod
+    def display(book: Book) -> None:
+        print(book.content[::-1])

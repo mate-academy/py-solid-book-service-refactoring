@@ -1,7 +1,7 @@
 class Book:
     def __init__(self, title: str, content: str) -> None:
-        self._title = title
-        self._content = content
+        self.title = title
+        self.content = content
 
     @property
     def title(self) -> str:

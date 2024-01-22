@@ -1,34 +1,30 @@
-from app.display import BookDisplay, BookPrinter
-from app.serializers import BookJsonSerializer, BookXmlSerializer
-from app.models import Book
+from .display import ConsoleDisplay, ReverseDisplay
+from .printer import ConsolePrinter, ReversePrinter
+from .serializer import JsonSerializer, XmlSerializer
+
+
+COMMANDS = {
+    ("display", "console"): lambda book: ConsoleDisplay().display(book),
+    ("display", "reverse"): lambda book: ReverseDisplay().display(book),
+    ("print", "console"): lambda book: ConsolePrinter().print(book),
+    ("print", "reverse"): lambda book: ReversePrinter().print(book),
+    ("serialize", "json"): lambda book: JsonSerializer().serialize(book),
+    ("serialize", "xml"): lambda book: XmlSerializer().serialize(book),
+}
+
+
+class Book:
+    def __init__(self, title: str, content: str) -> None:
+        self.title = title
+        self.content = content
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            display = BookDisplay(book)
-            if method_type == "console":
-                display.console_display()
-            elif method_type == "reverse":
-                display.reverse_display()
-            else:
-                raise ValueError(f"Unknown display type: {method_type}")
-        elif cmd == "print":
-            display = BookPrinter(book)
-            if method_type == "console":
-                display.console_print()
-            elif method_type == "reverse":
-                display.reverse_print()
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
-        elif cmd == "serialize":
-            if method_type == "json":
-                serializer = BookJsonSerializer(book)
-            elif method_type == "xml":
-                serializer = BookXmlSerializer(book)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
-            return serializer.serialize()
+    for cmd in commands:
+        helper = COMMANDS[cmd]
+        result = helper(book)
+        if cmd[0] == "serialize":
+            return result
 
 
 if __name__ == "__main__":

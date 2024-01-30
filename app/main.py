@@ -30,30 +30,52 @@ class BookDisplay:
 
 
 class BookPrinter:
+    def __init__(self) -> None:
+        self.print_strategies = {
+            "console": self.print_console,
+            "reverse": self.print_reverse,
+        }
+
     def print_book(self, book: Book, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {book.title}...")
-            print(book.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {book.title}...")
-            print(book.content[::-1])
+        print_strategy = self.print_strategies.get(print_type)
+        if print_strategy:
+            print_strategy(book)
         else:
             raise ValueError(f"Unknown print type: {print_type}")
 
+    def print_console(self, book: Book) -> None:
+        print(f"Printing the book: {book.title}...")
+        print(book.content)
+
+    def print_reverse(self, book: Book) -> None:
+        print(f"Printing the book in reverse: {book.title}...")
+        print(book.content[::-1])
+
 
 class BookSerializer:
+    def __init__(self) -> None:
+        self.serialize_strategies = {
+            "json": self.serialize_json,
+            "xml": self.serialize_xml,
+        }
+
     def serialize(self, book: Book, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": book.title, "content": book.content})
-        elif serialize_type == "xml":
-            root = xml.etree.ElementTree.Element("book")
-            title = xml.etree.ElementTree.SubElement(root, "title")
-            title.text = book.title
-            content = xml.etree.ElementTree.SubElement(root, "content")
-            content.text = book.content
-            return xml.etree.ElementTree.tostring(root, encoding="unicode")
+        serialize_strategy = self.serialize_strategies.get(serialize_type)
+        if serialize_strategy:
+            return serialize_strategy(book)
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
+
+    def serialize_json(self, book: Book) -> str:
+        return json.dumps({"title": book.title, "content": book.content})
+
+    def serialize_xml(self, book: Book) -> str:
+        root = xml.etree.ElementTree.Element("book")
+        title = xml.etree.ElementTree.SubElement(root, "title")
+        title.text = book.title
+        content = xml.etree.ElementTree.SubElement(root, "content")
+        content.text = book.content
+        return xml.etree.ElementTree.tostring(root, encoding="unicode")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

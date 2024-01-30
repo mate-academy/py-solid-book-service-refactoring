@@ -9,13 +9,24 @@ class Book:
 
 
 class BookDisplay:
+    def __init__(self) -> None:
+        self.display_strategies = {
+            "console": self.display_console,
+            "reverse": self.display_reverse,
+        }
+
     def display(self, book: Book, display_type: str) -> None:
-        if display_type == "console":
-            print(book.content)
-        elif display_type == "reverse":
-            print(book.content[::-1])
+        display_strategy = self.display_strategies.get(display_type)
+        if display_strategy:
+            display_strategy(book)
         else:
             raise ValueError(f"Unknown display type: {display_type}")
+
+    def display_console(self, book: Book) -> None:
+        print(book.content)
+
+    def display_reverse(self, book: Book) -> None:
+        print(book.content[::-1])
 
 
 class BookPrinter:

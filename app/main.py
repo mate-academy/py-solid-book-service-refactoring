@@ -60,31 +60,49 @@ class XmlBookSerializer(BookSerializer):
         return ElTree.tostring(root, encoding="unicode")
 
 
+class DisplayFactory:
+    @staticmethod
+    def create(method_type: str) -> BookDisplay:
+        if method_type == "console":
+            return ConsoleBookDisplay()
+        elif method_type == "reverse":
+            return ReverseBookDisplay()
+        else:
+            raise ValueError(f"Unknown display type: {method_type}")
+
+
+class PrintFactory:
+    @staticmethod
+    def create(method_type: str) -> BookPrinter:
+        if method_type == "console":
+            return ConsoleBookPrinter()
+        elif method_type == "reverse":
+            return ReverseBookPrinter()
+        else:
+            raise ValueError(f"Unknown print type: {method_type}")
+
+
+class SerializeFactory:
+    @staticmethod
+    def create(method_type: str) -> BookSerializer:
+        if method_type == "json":
+            return JsonBookSerializer()
+        elif method_type == "xml":
+            return XmlBookSerializer()
+        else:
+            raise ValueError(f"Unknown serialize type: {method_type}")
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            if method_type == "console":
-                display = ConsoleBookDisplay()
-            elif method_type == "reverse":
-                display = ReverseBookDisplay()
-            else:
-                raise ValueError(f"Unknown display type: {method_type}")
+            display = DisplayFactory.create(method_type)
             display.display(book)
         elif cmd == "print":
-            if method_type == "console":
-                printer = ConsoleBookPrinter()
-            elif method_type == "reverse":
-                printer = ReverseBookPrinter()
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
+            printer = PrintFactory.create(method_type)
             printer.print_book(book)
         elif cmd == "serialize":
-            if method_type == "json":
-                serializer = JsonBookSerializer()
-            elif method_type == "xml":
-                serializer = XmlBookSerializer()
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+            serializer = SerializeFactory.create(method_type)
             return serializer.serialize(book)
 
 

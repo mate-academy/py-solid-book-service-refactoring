@@ -1,9 +1,9 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElTree
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -52,12 +52,12 @@ class JsonBookSerializer(BookSerializer):
 
 class XmlBookSerializer(BookSerializer):
     def serialize(self, book: Book) -> str:
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+        root = ElTree.Element("book")
+        title = ElTree.SubElement(root, "title")
         title.text = book.title
-        content = ET.SubElement(root, "content")
+        content = ElTree.SubElement(root, "content")
         content.text = book.content
-        return ET.tostring(root, encoding="unicode")
+        return ElTree.tostring(root, encoding="unicode")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

@@ -22,24 +22,21 @@ interface = {
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        if interface.get(cmd):
-            if cmd == "display":
-                if method_type in interface[cmd].keys():
-                    interface[cmd][method_type]().display(book)
-                else:
-                    raise ValueError(f"Unknown display type: {method_type}")
+        interface_type = interface.get(cmd)
+
+        if interface_type is None:
+            print(f"Invalid command: {interface_type}")
+
+        handler = interface_type.get(method_type)
+        if method_type:
+            if cmd == "serialize":
+                return handler().serialize(book)
             elif cmd == "print":
-                if method_type in interface[cmd].keys():
-                    interface[cmd][method_type]().print(book)
-                else:
-                    raise ValueError(f"Unknown print type: {method_type}")
-            elif cmd == "serialize":
-                if method_type in interface[cmd].keys():
-                    return interface[cmd][method_type]().serialize(book)
-                else:
-                    raise ValueError(f"Unknown serialize type: {method_type}")
+                handler().print(book)
+            else:
+                handler().display(book)
         else:
-            raise ValueError(f"Invalid command: {cmd}")
+            print(f"Invalid method type: {method_type}")
 
 
 if __name__ == "__main__":

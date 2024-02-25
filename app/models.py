@@ -4,7 +4,7 @@ from app.serializers import Serializer
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -14,5 +14,5 @@ class Book:
     def print_book(self, printer: Printer) -> None:
         return printer.print_book(self.title, self.content)
 
-    def serialize(self, serializer: Serializer):
+    def serialize(self, serializer: Serializer) -> str:
         return serializer.serialize(self.title, self.content)

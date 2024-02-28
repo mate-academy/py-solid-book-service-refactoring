@@ -1,7 +1,9 @@
 import json
-from abc import ABC, abstractmethod
-from app.models import Book
 import xml.etree.ElementTree as ElementTree
+
+from abc import ABC, abstractmethod
+
+from app.models import Book
 
 
 class Serializer(ABC):

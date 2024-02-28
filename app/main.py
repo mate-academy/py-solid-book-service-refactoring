@@ -28,8 +28,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         elif cmd == "serialize":
             if method_type in serializer_map:
                 return book.serialize(serializer_map[method_type])
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+            raise ValueError(f"Unknown serialize type: {method_type}")
 
 
 if __name__ == "__main__":

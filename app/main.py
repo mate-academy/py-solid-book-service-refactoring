@@ -1,13 +1,10 @@
-import json
-import xml.etree.ElementTree as ET
-
 from app.displays import Display, ConsoleDisplay, ReverseDisplay
 from app.print_classes import AbstractPrint, ConsolePrint, ReversePrint
 from app.serializers import Serializer, JsonSerializer, XmlSerializer
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 

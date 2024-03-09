@@ -9,23 +9,29 @@ class Book:
         self.content = content
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def main(book: "Book", commands: list[tuple[str, str]]) -> None | str:
+    # Dictionary mapping commands to methods
+    command_methods = {
+        "display": {
+            "console": ConsoleBookDisplay(book).display,
+            "reverse": ReverseBookDisplay(book).display
+        },
+        "print": {
+            "console": ConsoleBookPrint(book).print,
+            "reverse": ReverseBookPrint(book).print
+        },
+        "serialize": {
+            "json": JsonBookSerializer(book).serialize,
+            "xml": XmlBookSerializer(book).serialize
+        }
+    }
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                ConsoleBookDisplay(book).display()
-            elif method_type == "reverse":
-                ReverseBookDisplay(book).display()
-        elif cmd == "print":
-            if method_type == "console":
-                ConsoleBookPrint(book).print()
-            elif method_type == "reverse":
-                ReverseBookPrint(book).print()
-        elif cmd == "serialize":
-            if method_type == "json":
-                return JsonBookSerializer(book).serialize()
-            elif method_type == "xml":
-                return XmlBookSerializer(book).serialize()
+        if cmd in command_methods and method_type in command_methods[cmd]:
+            method_to_call = command_methods[cmd][method_type]
+            if cmd == "serialize":
+                return method_to_call()
+            method_to_call()
 
 
 if __name__ == "__main__":

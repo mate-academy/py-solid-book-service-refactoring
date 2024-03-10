@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import abstractmethod, ABC
 
 from typing import TYPE_CHECKING
@@ -7,7 +8,7 @@ if TYPE_CHECKING:
 
 class BookPrint(ABC):
     @abstractmethod
-    def __init__(self, book: "Book") -> None:
+    def __init__(self, book: Book) -> None:
         self.book = book
 
     @abstractmethod
@@ -16,7 +17,7 @@ class BookPrint(ABC):
 
 
 class ConsoleBookPrint(BookPrint):
-    def __init__(self, book: "Book") -> None:
+    def __init__(self, book: Book) -> None:
         super().__init__(book)
 
     def print(self) -> None:
@@ -25,7 +26,7 @@ class ConsoleBookPrint(BookPrint):
 
 
 class ReverseBookPrint(BookPrint):
-    def __init__(self, book: "Book") -> None:
+    def __init__(self, book: Book) -> None:
         super().__init__(book)
 
     def print(self) -> None:

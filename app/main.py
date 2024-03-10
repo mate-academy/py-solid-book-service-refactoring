@@ -9,7 +9,7 @@ class Book:
         self.content = content
 
 
-def main(book: "Book", commands: list[tuple[str, str]]) -> None | str:
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     # Dictionary mapping commands to methods
     command_methods = {
         "display": {

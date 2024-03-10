@@ -1,3 +1,4 @@
+from __future__ import annotations
 import json
 import xml.etree.ElementTree as Et
 from abc import ABC, abstractmethod
@@ -9,7 +10,7 @@ if TYPE_CHECKING:
 
 class BookSerializer(ABC):
     @abstractmethod
-    def __init__(self, book: "Book") -> None:
+    def __init__(self, book: Book) -> None:
         self.book = book
 
     @abstractmethod
@@ -18,7 +19,7 @@ class BookSerializer(ABC):
 
 
 class JsonBookSerializer(BookSerializer):
-    def __init__(self, book: "Book") -> None:
+    def __init__(self, book: Book) -> None:
         super().__init__(book)
 
     def serialize(self) -> str:
@@ -31,7 +32,7 @@ class JsonBookSerializer(BookSerializer):
 
 
 class XmlBookSerializer(BookSerializer):
-    def __init__(self, book: "Book") -> None:
+    def __init__(self, book: Book) -> None:
         super().__init__(book)
 
     def serialize(self) -> str:

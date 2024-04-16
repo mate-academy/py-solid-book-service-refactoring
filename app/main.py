@@ -1,7 +1,7 @@
-from books import Book
-from display_service import DisplayService
-from print_service import PrintService
-from serialize_service import SerializeService
+from app.books import Book
+from app.display_service import DisplayService
+from app.print_service import PrintService
+from app.serialize_service import SerializeService
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

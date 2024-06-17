@@ -1,52 +1,53 @@
-import json
-import xml.etree.ElementTree as ET
+from app.book import Book
+from app.display import ConsoleDisplayStrategy, ReverseDisplayStrategy
+from app.print_book import ConsolePrintStrategy, ReversePrintStrategy
+from app.serialize import JSONSerializeStrategy, XMLSerializeStrategy
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
+class BookProcessor:
+    def __init__(self, book: Book) -> None:
+        self.book = book
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
+    def process(self, commands: list[tuple[str, str]]) -> None | str:
+        for cmd, method_type in commands:
+            if cmd == "display":
+                self._process_display(method_type)
+            elif cmd == "print":
+                self._process_print(method_type)
+            elif cmd == "serialize":
+                return self._process_serialize(method_type)
+
+    def _process_display(self, method_type: str) -> None:
+        if method_type == "console":
+            strategy = ConsoleDisplayStrategy()
+        elif method_type == "reverse":
+            strategy = ReverseDisplayStrategy()
         else:
-            raise ValueError(f"Unknown display type: {display_type}")
+            raise ValueError(f"Unknown display type: {method_type}")
+        strategy.display(self.book)
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
+    def _process_print(self, method_type: str) -> None:
+        if method_type == "console":
+            strategy = ConsolePrintStrategy()
+        elif method_type == "reverse":
+            strategy = ReversePrintStrategy()
         else:
-            raise ValueError(f"Unknown print type: {print_type}")
+            raise ValueError(f"Unknown print type: {method_type}")
+        strategy.print_book(self.book)
 
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
+    def _process_serialize(self, method_type: str) -> str:
+        if method_type == "json":
+            strategy = JSONSerializeStrategy()
+        elif method_type == "xml":
+            strategy = XMLSerializeStrategy()
         else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+            raise ValueError(f"Unknown serialize type: {method_type}")
+        return strategy.serialize(self.book)
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+    processor = BookProcessor(book)
+    return processor.process(commands)
 
 
 if __name__ == "__main__":

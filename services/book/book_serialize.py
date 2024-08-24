@@ -21,8 +21,8 @@ class BookSerializeJson(BookSerialize):
 class BookSerializeXML(BookSerialize):
     def serialize(self, title: str, content: str) -> any:
         root = ET.Element("book")
-        title = ET.SubElement(root, "title")
-        title.text = title
-        content = ET.SubElement(root, "content")
-        content.text = content
+        title_el = ET.SubElement(root, "title")
+        title_el.text = title
+        content_el = ET.SubElement(root, "content")
+        content_el.text = content
         return ET.tostring(root, encoding="unicode")

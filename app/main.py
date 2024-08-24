@@ -35,8 +35,8 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             elif method_type == "xml":
                 show_serialize = BookSerializeXML()
             else:
-                raise ValueError(f"Unknown serialization method:"
-                                 f" {method_type}")
+                raise ValueError(f"Unknown serialization method: "
+                                 f"{method_type}")
             return show_serialize.serialize(book.title, book.content)
 
 

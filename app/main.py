@@ -1,6 +1,6 @@
-import json
-import xml.etree.ElementTree as Et
-from abc import ABC, abstractmethod
+from service.display import DisplayOut, DisplayReverse
+from service.handler import DisplayOutput, PrintOutput
+from service.serialize import JsonSerializeOutput, XmlSerializeOutput
 
 
 class Book:
@@ -9,87 +9,35 @@ class Book:
         self.content = content
 
 
-class Display(ABC):
-    @abstractmethod
-    def display(self, content: str) -> None:
-        pass
-
-
-class DisplayOut(Display):
-    def display(self, content: str) -> None:
-        print(content)
-
-
-class DisplayReverse(Display):
-    def display(self, content: str) -> None:
-        print(content[::-1])
-
-
-class OutputBookHandler(ABC):
-    @abstractmethod
-    def output(self, book: Book, output_type: Display) -> None:
-        pass
-
-
-class DisplayOutput(OutputBookHandler):
-    def output(self, book: Book, output_type: Display) -> None:
-        print(f"Displaying the book: {book.title}...")
-        output_type.display(book.content)
-
-
-class PrintOutput(OutputBookHandler):
-    def output(self, book: Book, output_type: Display) -> None:
-        print(f"Printing the book: {book.title}...")
-        output_type.display(book.content)
-
-
-class Serialize(ABC):
-    @abstractmethod
-    def serialize(self, book: Book) -> str:
-        pass
-
-
-class JsonSerializeOutput(Serialize):
-    def serialize(self, book: Book) -> str:
-        return json.dumps({"title": book.title, "content": book.content})
-
-
-class XmlSerializeOutput(Serialize):
-    def serialize(self, book: Book) -> str:
-        root = Et.Element("book")
-        title = Et.SubElement(root, "title")
-        title.text = book.title
-        content = Et.SubElement(root, "content")
-        content.text = book.content
-        return Et.tostring(root, encoding="unicode")
-
-
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        if cmd == "display" or cmd == "print":
-            if method_type == "reverse":
-                output_content_type = DisplayReverse()
-            elif method_type == "console":
-                output_content_type = DisplayOut()
+        if cmd == "display":
+            if method_type == "console":
+                show_display = DisplayOut()
+            elif method_type == "reverse":
+                show_display = DisplayReverse()
             else:
-                raise ValueError(f"Unknown output type: {method_type}")
+                raise ValueError(f"Unknown display method: {method_type}")
+            show_display.display(book.content)
 
-            if cmd == "display":
-                output_book_handler = DisplayOutput()
-            elif cmd == "print":
-                output_book_handler = PrintOutput()
+        elif cmd == "print":
+            if method_type == "console":
+                show_print = DisplayOutput()
+            elif method_type == "reverse":
+                show_print = PrintOutput()
+            else:
+                raise ValueError(f"Unknown print method: {method_type}")
+            show_print.output(book.title, book.content)
 
-            output_book_handler.output(book, output_content_type)
         elif cmd == "serialize":
             if method_type == "json":
-                serializer = JsonSerializeOutput()
+                show_serialize = JsonSerializeOutput()
             elif method_type == "xml":
-                serializer = XmlSerializeOutput()
+                show_serialize = XmlSerializeOutput()
             else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
-            return serializer.serialize(book)
-        else:
-            raise ValueError(f"Unknown command: {cmd}")
+                raise ValueError(f"Unknown serialization method: "
+                                 f"{method_type}")
+            return show_serialize.serialize(book.title, book.content)
 
 
 if __name__ == "__main__":

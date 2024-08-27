@@ -7,11 +7,11 @@ class Display(ABC):
         pass
 
 
-class DisplayOut(Display):
+class DisplayConsole(Display):
     def display(self, content: str) -> None:
         print(content)
 
 
-class DisplayReverse(Display):
+class DisplayConsoleReverse(Display):
     def display(self, content: str) -> None:
         print(content[::-1])

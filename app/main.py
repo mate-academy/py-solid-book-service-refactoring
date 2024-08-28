@@ -22,5 +22,4 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             serializer_book = SerializeBook(book)
             if method_type == "json":
                 return serializer_book.serialize_json()
-            else:
-                return serializer_book.serialize_xml()
+            return serializer_book.serialize_xml()

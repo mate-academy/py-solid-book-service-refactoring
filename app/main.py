@@ -10,15 +10,15 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             display_book = DisplayBook(book)
             if method_type == "console":
                 display_book.display_console()
-            else:
+            elif method_type == "reverse":
                 display_book.display_reverse()
         elif cmd == "print":
             print_book = PrintBook(book)
             if method_type == "console":
                 print_book.print_console()
-            else:
+            elif method_type == "reverse":
                 print_book.print_reverse()
-        else:
+        elif cmd == "serialize":
             serializer_book = SerializeBook(book)
             if method_type == "json":
                 return serializer_book.serialize_json()

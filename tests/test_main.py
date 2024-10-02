@@ -46,10 +46,7 @@ def test_print_reverse(book) -> None:
 
 def test_serialize_json(book) -> None:
     serialized_book = main(book, [("serialize", "json")])
-    assert (
-        serialized_book
-        == '{"title": "Sample Book", "content": "This is some sample content."}'
-    )
+    assert (serialized_book == '{"title": "Sample Book", "content": "This is some sample content."}')
 
 
 def test_serialize_xml(book) -> None:

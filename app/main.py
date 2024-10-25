@@ -1,54 +1,46 @@
-import json
-import xml.etree.ElementTree as ET
+from app.book import Book
+from app.display_strategies import (
+    ConsoleDisplayStrategy,
+    ReverseDisplayStrategy
+)
+from app.print_strategies import ConsolePrintStrategy, ReversePrintStrategy
+from app.serializers import JSONSerializer, XMLSerializer
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
-
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
+def main(book: Book, actions: list[tuple[str, str]]) -> str | None:
+    for action, strategy in actions:
+        if action == "display":
+            if strategy == "console":
+                strategy_instance = ConsoleDisplayStrategy()
+            elif strategy == "reverse":
+                strategy_instance = ReverseDisplayStrategy()
+            else:
+                raise ValueError(f"Unknown display strategy: {strategy}")
+            book.display(strategy_instance)
+        elif action == "print":
+            if strategy == "console":
+                strategy_instance = ConsolePrintStrategy()
+            elif strategy == "reverse":
+                strategy_instance = ReversePrintStrategy()
+            else:
+                raise ValueError(f"Unknown print strategy: {strategy}")
+            book.print_book(strategy_instance)
+        elif action == "serialize":
+            if strategy == "json":
+                strategy_instance = JSONSerializer()
+            elif strategy == "xml":
+                strategy_instance = XMLSerializer()
+            else:
+                raise ValueError(f"Unknown serialization strategy: {strategy}")
+            return book.serialize(strategy_instance)
         else:
-            raise ValueError(f"Unknown display type: {display_type}")
-
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
-
-
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+            raise ValueError(f"Unknown action: {action}")
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    result = main(sample_book, [
+        ("display", ReverseDisplayStrategy()),
+        ("serialize", XMLSerializer())
+    ])
+    print(result)

@@ -1,52 +1,38 @@
-import json
-import xml.etree.ElementTree as ET
+from app.displayers import ConsoleDisplay, ReverseDisplay
+from app.printers import ConsolePrint, ReversePrint
+from app.serializers import JsonSerializer, XmlSerializer
+from app.book import Book
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
+DISPLAY_METHODS = {"reverse": ReverseDisplay(), "console": ConsoleDisplay()}
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
+PRINT_METHODS = {"console": ConsolePrint(), "reverse": ReversePrint()}
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+SERIALIZE_METHODS = {"xml": XmlSerializer(), "json": JsonSerializer()}
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            book.display(method_type)
+            strategy = DISPLAY_METHODS.get(method_type)
+            if strategy:
+                book.display(strategy)
+            else:
+                raise ValueError(f"Unknown display method: {method_type}")
+
         elif cmd == "print":
-            book.print_book(method_type)
+            strategy = PRINT_METHODS.get(method_type)
+            if strategy:
+                book.print_book(strategy)
+            else:
+                raise ValueError(f"Unknown print method: {method_type}")
+
         elif cmd == "serialize":
-            return book.serialize(method_type)
+            strategy = SERIALIZE_METHODS.get(method_type)
+            if strategy:
+                return book.serialize(strategy)
+            else:
+                raise ValueError(f"Unknown serialize method: {method_type}")
 
 
 if __name__ == "__main__":

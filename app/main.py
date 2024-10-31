@@ -1,52 +1,40 @@
-import json
-import xml.etree.ElementTree as ET
+from app.display_strategy import ConsoleDisplay, ReverseDisplay
+from app.print_strategy import ReversePrint, ConsolePrint
+from app.serialize_strategy import JsonSerializer, XmlSerializer
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
-
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
-
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+    output = ""
+
+    for action, action_type in commands:
+        if action == "display":
+
+            if action_type == "console":
+                ConsoleDisplay().display(book.content)
+            else:
+                ReverseDisplay().display(book.content)
+
+        elif action == "print":
+
+            if action_type == "console":
+                ConsolePrint().print_book(book. title, book.content)
+            else:
+                ReversePrint().print_book(book.title, book.content)
+
+        elif action == "serialize":
+
+            if action_type == "json":
+                output = JsonSerializer().serialize(book. title, book.content)
+            else:
+                output = XmlSerializer().serialize(book.title, book.content)
+
+    return output
 
 
 if __name__ == "__main__":

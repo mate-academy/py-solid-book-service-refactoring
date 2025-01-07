@@ -1,14 +1,15 @@
-from app.classes import Book, BookDisplay, PrintBook, BookSerializer
+from app.classes import Book
+from app.functions import display, print_book, serialize
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            BookDisplay.display(display_type=method_type, book=book)
+            display(display_type=method_type, book=book)
         elif cmd == "print":
-            PrintBook.print_book(print_type=method_type, book=book)
+            print_book(print_type=method_type, book=book)
         elif cmd == "serialize":
-            return BookSerializer.serialize(serialize_type=method_type, book=book)
+            return serialize(serialize_type=method_type, book=book)
 
 
 if __name__ == "__main__":

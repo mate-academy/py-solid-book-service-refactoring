@@ -5,7 +5,7 @@ from app.serializer import Serializer
 
 
 class BookService:
-    def __init__(self, book: Book):
+    def __init__(self, book: Book) -> None:
         self.book = book
 
     def execute_display(self, strategy: DisplayStrategy) -> None:

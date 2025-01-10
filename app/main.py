@@ -1,12 +1,13 @@
 import json
 import xml.etree.ElementTree as ET
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 
+@dataclass
 class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
+    title: str
+    content: str
 
 
 class Display(ABC):
@@ -46,6 +47,7 @@ class ConsolePrint(Print):
     def print(self, book: Book) -> None:
         print(f"Printing the book: {book.title}...")
         print(book.content)
+
 
 class ReversePrint(Print):
     def print(self, book: Book) -> None:

@@ -59,7 +59,7 @@ def printer(print_type: str, book: Book) -> None:
     elif print_type == "reverse":
         print_instance = ReversePrint()
     else:
-        raise ValueError(f"Unknown display type: {print_type}")
+        raise ValueError(f"Unknown print type: {print_type}")
 
     print_instance.print(book)
 

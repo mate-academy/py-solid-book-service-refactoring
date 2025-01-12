@@ -27,7 +27,9 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         elif cmd == "serialize" and method_type in serialize_methods:
             return serialize_methods[method_type].serialize(book)
         else:
-            raise ValueError(f"Invalid command or method type: {cmd}, {method_type}")
+            raise ValueError(
+                f"Invalid command or method type: {cmd}, {method_type}"
+            )
 
 
 if __name__ == "__main__":

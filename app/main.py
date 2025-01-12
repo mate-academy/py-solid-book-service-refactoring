@@ -1,61 +1,33 @@
-import json
-import xml.etree.ElementTree as ET
-
-
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
-
-
-class DisplayBook:
-    def display_console(book: Book) -> None:
-        print(book.content)
-
-    def display_reverse(book: Book) -> None:
-        print(book.content[::-1])
-
-
-class PrintBook:
-    def print_console(book: Book) -> None:
-        print(f"Printing the book: {book.title}...")
-        print(book.content)
-
-    def print_reverse(book: Book) -> None:
-        print(f"Printing the book in reverse: {book.title}...")
-        print(book.content[::-1])
-
-
-class SerializeBook:
-    def serialize_json(book: Book) -> str:
-        return json.dumps({"title": book.title, "content": book.content})
-
-    def serialize_xml(book: Book) -> str:
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
-        title.text = book.title
-        content = ET.SubElement(root, "content")
-        content.text = book.content
-        return ET.tostring(root, encoding="unicode")
+from app.book import Book
+from app.display_book import ConsoleDisplayBook, ReverseDisplayBook
+from app.print_book import ConsolePrintBook, ReversePrintBook
+from app.serialize_book import JsonSerializerBook, XmlSerializerBook
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    # Map commands and method types to classes
+    display_methods = {
+        "console": ConsoleDisplayBook(),
+        "reverse": ReverseDisplayBook(),
+    }
+    print_methods = {
+        "console": ConsolePrintBook(),
+        "reverse": ReversePrintBook(),
+    }
+    serialize_methods = {
+        "json": JsonSerializerBook(),
+        "xml": XmlSerializerBook(),
+    }
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                DisplayBook.display_console(book)
-            elif method_type == "reverse":
-                DisplayBook.display_reverse(book)
-        elif cmd == "print":
-            if method_type == "console":
-                PrintBook.print_console(book)
-            elif method_type == "reverse":
-                PrintBook.print_reverse(book)
-        elif cmd == "serialize":
-            if method_type == "json":
-                return SerializeBook.serialize_json(book)
-            elif method_type == "xml":
-                return SerializeBook.serialize_xml(book)
+        if cmd == "display" and method_type in display_methods:
+            display_methods[method_type].display(book)
+        elif cmd == "print" and method_type in print_methods:
+            print_methods[method_type].print(book)
+        elif cmd == "serialize" and method_type in serialize_methods:
+            return serialize_methods[method_type].serialize(book)
+        else:
+            raise ValueError(f"Invalid command or method type: {cmd}, {method_type}")
 
 
 if __name__ == "__main__":

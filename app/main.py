@@ -1,12 +1,8 @@
 import json
-import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
-
+class DislayInformationMixin:
     def display(self, display_type: str) -> None:
         if display_type == "console":
             print(self.content)
@@ -15,28 +11,44 @@ class Book:
         else:
             raise ValueError(f"Unknown display type: {display_type}")
 
-    def print_book(self, print_type: str) -> None:
+
+class PrintMixin:
+
+    def print_title(self, print_type: str) -> None:
         if print_type == "console":
             print(f"Printing the book: {self.title}...")
+        else:
+            print(f"Printing the book in {print_type}: {self.title}...")
+
+    def print_book(self, print_type: str) -> None:
+        self.print_title(print_type)
+        if print_type == "console":
             print(self.content)
         elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
             print(self.content[::-1])
         else:
             raise ValueError(f"Unknown print type: {print_type}")
 
+
+class SerializingMixin:
     def serialize(self, serialize_type: str) -> str:
         if serialize_type == "json":
             return json.dumps({"title": self.title, "content": self.content})
         elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
+            root = Element("book")
+            title = SubElement(root, "title")
             title.text = self.title
-            content = ET.SubElement(root, "content")
+            content = SubElement(root, "content")
             content.text = self.content
-            return ET.tostring(root, encoding="unicode")
+            return tostring(root, encoding="unicode")
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
+
+
+class Book(DislayInformationMixin, PrintMixin, SerializingMixin):
+    def __init__(self, title: str, content: str) -> None:
+        self.title = title
+        self.content = content
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

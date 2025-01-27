@@ -1,5 +1,6 @@
 import json
-import xml.etree.ElementTree as ET
+# import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 
 class DislayInformationMixin:
@@ -35,12 +36,12 @@ class SerializingMixin:
         if serialize_type == "json":
             return json.dumps({"title": self.title, "content": self.content})
         elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
+            root = Element("book")
+            title = SubElement(root, "title")
             title.text = self.title
-            content = ET.SubElement(root, "content")
+            content = SubElement(root, "content")
             content.text = self.content
-            return ET.tostring(root, encoding="unicode")
+            return tostring(root, encoding="unicode")
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
 

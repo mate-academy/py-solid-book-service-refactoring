@@ -1,6 +1,6 @@
 import json
 from typing import Dict, Callable
-from xml.etree.ElementTree import ElementTree
+from xml.etree import ElementTree
 
 
 class SerializeMixin:

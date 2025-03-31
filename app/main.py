@@ -1,5 +1,3 @@
-import cmd
-
 from app.models import Book
 from app.display import ConsoleDisplay, ReverseDisplay
 from app.printing import ConsolePrint, ReversePrint

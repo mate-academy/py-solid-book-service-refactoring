@@ -6,7 +6,7 @@ from app.printing import ConsolePrint, ReversePrint
 from app.serialization import JSONSerializer, XMLSerializer
 
 
-def main(book: Book, commands: list[tuple[str, str]], method_type=None) -> None:
+def main(book: Book, commands: list[tuple[str, str]]) -> None:
     display_processors = {
         "console": ConsoleDisplay(),
         "reverse": ReverseDisplay()
@@ -28,8 +28,9 @@ def main(book: Book, commands: list[tuple[str, str]], method_type=None) -> None:
         elif cmd == "serialize" and method_type in serializers:
             result = serializers[method_type].serialize(book)
 
-        return result
+    return result
 
-    if __name__ == "__main__":
-        sample_book = Book("Sample Book", "This is some sample content.")
-        print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+
+if __name__ == "__main__":
+    sample_book = Book("Sample Book", "This is some sample content.")
+    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))

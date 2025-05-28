@@ -36,9 +36,11 @@ def get_serialize_strategy(serialize_type: str) -> SerializeStrategy:
         raise ValueError(f"Unknown serialize type: {serialize_type}")
 
 
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
+
             strategy = get_display_strategy(method_type)
             strategy.display(book.content)
         elif cmd == "print":

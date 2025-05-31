@@ -9,13 +9,21 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
     for cmd, method_type in commands:
         if cmd == "display":
-            strategy = ConsoleDisplay() if method_type == "console" else ReverseDisplay()
+            if method_type == "console":
+                strategy = ConsoleDisplay()
+            else:
+                strategy = ReverseDisplay()
             strategy.display_book(book)
         elif cmd == "print":
-            strategy = ConsolePrint() if method_type == "console" else ReversePrint()
+            if method_type == "console":
+                strategy = ConsolePrint()
+            else:
+                strategy = ReversePrint()
             strategy.print_book(book)
         elif cmd == "serialize":
             return serializer.serialize(book, method_type)
+        else:
+            raise ValueError(f"Unknown command: {cmd}")
 
 
 if __name__ == "__main__":

@@ -1,58 +1,49 @@
-from io import StringIO
-import sys
-
-import pytest
-
-from app.main import main, Book
-
-
-def get_stdout(func, *args, **kwargs) -> str:
-    new_stdout = StringIO()
-    old_stdout = sys.stdout
-    sys.stdout = new_stdout
-
-    func(*args, **kwargs)
-
-    sys.stdout = old_stdout
-    return new_stdout.getvalue()
+import csv
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+from app.parse import Quote  # Assuming Quote has attributes: text, author, tags
 
 
-@pytest.fixture()
-def book() -> Book:
-    return Book("Sample Book", "This is some sample content.")
+BASE_URL = "https://quotes.toscrape.com"
 
 
-def test_display_console(book) -> None:
-    output = get_stdout(main, book, [("display", "console")])
-    assert "This is some sample content." in output
+def get_soup(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    return BeautifulSoup(response.text, "html.parser")
 
 
-def test_display_reverse(book) -> None:
-    output = get_stdout(main, book, [("display", "reverse")])
-    assert "tnetnoc elpmas emos si sihT" in output
+def parse_quotes_from_page(soup):
+    quotes = []
+    for quote_div in soup.select(".quote"):
+        text = quote_div.select_one(".text").get_text(strip=True)
+        author = quote_div.select_one(".author").get_text(strip=True)
+        tags = [tag.get_text(strip=True) for tag in quote_div.select(".tags .tag")]
+        quotes.append(Quote(text=text, author=author, tags=tags))
+    return quotes
 
 
-def test_print_console(book) -> None:
-    output = get_stdout(main, book, [("print", "console")])
-    assert book.title in output
-    assert "This is some sample content." in output
+def get_all_quotes():
+    quotes = []
+    next_page = "/"
+    while next_page:
+        url = urljoin(BASE_URL, next_page)
+        soup = get_soup(url)
+        quotes.extend(parse_quotes_from_page(soup))
+        next_button = soup.select_one(".pager .next a")
+        next_page = next_button['href'] if next_button else None
+    return quotes
 
 
-def test_print_reverse(book) -> None:
-    output = get_stdout(main, book, [("print", "reverse")])
-    assert book.title in output
-    assert "tnetnoc elpmas emos si sihT" in output
+def write_quotes_to_csv(quotes, output_csv_path):
+    with open(output_csv_path, mode="w", newline='', encoding="utf-8") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Text", "Author", "Tags"])
+        for quote in quotes:
+            writer.writerow([quote.text, quote.author, ", ".join(quote.tags)])
 
 
-def test_serialize_json(book) -> None:
-    serialized_book = main(book, [("serialize", "json")])
-    assert (
-        serialized_book
-        == '{"title": "Sample Book", "content": "This is some sample content."}'
-    )
-
-
-def test_serialize_xml(book) -> None:
-    serialized_book = main(book, [("serialize", "xml")])
-    assert "<title>Sample Book</title>" in serialized_book
-    assert "<content>This is some sample content.</content>" in serialized_book
+def main(output_csv_path):
+    quotes = get_all_quotes()
+    write_quotes_to_csv(quotes, output_csv_path)

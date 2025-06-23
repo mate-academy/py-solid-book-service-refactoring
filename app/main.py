@@ -4,21 +4,34 @@ from printer import ConsolePrinter, ReversePrinter
 from serializer import JsonSerializer, XmlSerializer
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def main(book: Book, commands: list[tuple[str, str]]) -> list[str] | None:
+    results = []
+
     for cmd, method_type in commands:
         if cmd == "display":
             strategy = ConsoleDisplay() if method_type == "console" else ReverseDisplay()
             strategy.display(book)
+
         elif cmd == "print":
             strategy = ConsolePrinter() if method_type == "console" else ReversePrinter()
             strategy.print_book(book)
+
         elif cmd == "serialize":
             strategy = JsonSerializer() if method_type == "json" else XmlSerializer()
-            return strategy.serialize(book)
+            serialized = strategy.serialize(book)
+            results.append(serialized)
+
         else:
             raise ValueError(f"Unknown command: {cmd}")
+
+    return results if results else None
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    print(main(sample_book, [
+        ("display", "reverse"),
+        ("serialize", "xml"),
+        ("print", "console"),
+        ("serialize", "json")
+    ]))

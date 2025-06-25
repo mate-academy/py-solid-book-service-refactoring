@@ -1,52 +1,109 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ETree
+from abc import ABC, abstractmethod
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+class DisplayBook(ABC):
+    @abstractmethod
+    def display(self, book: Book) -> None:
+        pass
 
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+
+class DisplayConsoleBook(DisplayBook):
+    def display(self, book: Book) -> None:
+        print(book.content)
+
+
+class DisplayReverseBook(DisplayBook):
+    def display(self, book: Book) -> None:
+        print(book.content[::-1])
+
+
+class PrintBook(ABC):
+    @abstractmethod
+    def print_book(self, book: Book) -> None:
+        pass
+
+
+class PrintConsoleBook(PrintBook):
+    def print_book(self, book: Book) -> None:
+        print(f"Printing the book: {book.title}...")
+        print(book.content)
+
+
+class PrintReverseBook(PrintBook):
+    def print_book(self, book: Book) -> None:
+        print(f"Printing the book in reverse: {book.title}...")
+        print(book.content[::-1])
+
+
+class SerializeBook(ABC):
+    @abstractmethod
+    def serialize(self, book: Book) -> str:
+        pass
+
+
+class SerializeJSONBook(SerializeBook):
+    def serialize(self, book: Book) -> str:
+        return json.dumps({"title": book.title, "content": book.content})
+
+
+class SerializeXMLBook(SerializeBook):
+    def serialize(self, book: Book) -> str:
+        root = ETree.Element("book")
+        title = ETree.SubElement(root, "title")
+        title.text = book.title
+        content = ETree.SubElement(root, "content")
+        content.text = book.content
+        return ETree.tostring(root, encoding="unicode")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    result = ""
+    display = {
+        "console": DisplayConsoleBook(),
+        "reverse": DisplayReverseBook()
+    }
+
+    print_book = {
+        "console": PrintConsoleBook(),
+        "reverse": PrintReverseBook()
+    }
+
+    serialize = {
+        "json": SerializeJSONBook(),
+        "xml": SerializeXMLBook()
+    }
+
     for cmd, method_type in commands:
         if cmd == "display":
-            book.display(method_type)
+            displayer = display.get(method_type)
+            if displayer:
+                displayer.display(book)
+            else:
+                raise ValueError(f"Unknown display type: {method_type}")
+
         elif cmd == "print":
-            book.print_book(method_type)
+            printer = print_book.get(method_type)
+            if printer:
+                printer.print_book(book)
+            else:
+                raise ValueError(f"Unknown print type: {method_type}")
+
         elif cmd == "serialize":
-            return book.serialize(method_type)
+            serializer = serialize.get(method_type)
+            if serializer:
+                result += serializer.serialize(book)
+            else:
+                raise ValueError(f"Unknown serialize type: {method_type}")
+
+    return result
 
 
 if __name__ == "__main__":

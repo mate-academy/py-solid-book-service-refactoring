@@ -65,6 +65,7 @@ class SerializeXMLBook(SerializeBook):
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    result = ""
     display = {
         "console": DisplayConsoleBook(),
         "reverse": DisplayReverseBook()
@@ -98,9 +99,11 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         elif cmd == "serialize":
             serializer = serialize.get(method_type)
             if serializer:
-                return serializer.serialize(book)
+                result += serializer.serialize(book)
             else:
                 raise ValueError(f"Unknown serialize type: {method_type}")
+
+    return result
 
 
 if __name__ == "__main__":

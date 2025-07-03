@@ -72,6 +72,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             Printer().print_book(book, method_type)
         elif cmd == "serialize":
             return Serializer().serialize(book, method_type)
+    return None
 
 
 if __name__ == "__main__":

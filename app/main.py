@@ -1,12 +1,7 @@
 from app.displayers import ConsoleDisplayer, ReverseDisplayer
+from app.models import Book
 from app.printers import ConsolePrinter, ReversePrinter
 from app.serializers import JSONSerializer, XMLSerializer
-
-
-class Book:
-    def __init__(self, title: str, content: str) -> None:
-        self.title = title
-        self.content = content
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
@@ -42,12 +37,3 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
         else:
             raise ValueError(f"Unknown command: {cmd}")
-
-
-if __name__ == "__main__":
-    sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "console"), ("display", "reverse")]))
-    print("-" * 30)
-    print(main(sample_book, [("print", "console"), ("print", "reverse")]))
-    print("-" * 30)
-    print(main(sample_book, [("serialize", "json"), ("serialize", "xml")]))

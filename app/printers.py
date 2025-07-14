@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.main import Book
+from app.models import Book
 
 
 class BookPrinter(ABC):

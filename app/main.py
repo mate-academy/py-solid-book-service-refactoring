@@ -7,46 +7,64 @@ class Book:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+class DisplayBook:
+    def display_console(self, book: Book):
+        print(book.content)
 
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+    def display_reverse(self, book: Book):
+        print(book.content[::-1])
+
+
+class PrintBook:
+    def print_console(self, book: Book):
+        print(f"Printing the book: {book.title}...")
+        print(book.content)
+
+    def print_reverse(self, book: Book):
+        print(f"Printing the book in reverse: {book.title}...")
+        print(book.content[::-1])
+
+
+class SerializeBook:
+    def serialize_json(self, book: Book):
+        return json.dumps({"title": book.title, "content": book.content})
+
+    def serialize_xml(self, book: Book):
+        root = ET.Element("book")
+        title = ET.SubElement(root, "title")
+        title.text = book.title
+        content = ET.SubElement(root, "content")
+        content.text = book.content
+        return ET.tostring(root, encoding="unicode")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            book.display(method_type)
+            displayer = DisplayBook()
+            if method_type == "console":
+                displayer.display_console(book)
+            elif method_type == "reverse":
+                displayer.display_reverse(book)
+            else:
+                raise ValueError(f"Unknown display type: {method_type}")
         elif cmd == "print":
-            book.print_book(method_type)
+            printer = PrintBook()
+            if method_type == "console":
+                printer.print_console(book)
+            elif method_type == "reverse":
+                printer.print_reverse(book)
+            else:
+                raise ValueError(f"Unknown print type: {method_type}")
         elif cmd == "serialize":
-            return book.serialize(method_type)
+            serializer = SerializeBook()
+            if method_type == "json":
+                return serializer.serialize_json(book)
+            elif method_type == "xml":
+                return serializer.serialize_xml(book)
+            else:
+                raise ValueError(f"Unknown serialize type: {method_type}")
 
 
 if __name__ == "__main__":

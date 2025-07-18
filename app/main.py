@@ -1,80 +1,5 @@
-import json
-import xml.etree.ElementTree as ElementTree
-from abc import ABC, abstractmethod
-
-
-# Abstract book interfaces
-class BookDisplayInterface(ABC):
-    @abstractmethod
-    def display(self, content: str) -> None:
-        pass
-
-
-class BookPrintInterface(ABC):
-    @abstractmethod
-    def print_book(self, title: str, content: str) -> None:
-        pass
-
-
-class BookSerializeInterface(ABC):
-    @abstractmethod
-    def serialize(self, title: str, content: str) -> str:
-        pass
-
-
-# Concrete implementations for different book-related actions
-class DisplayConsole(BookDisplayInterface):
-    def display(self, content: str) -> None:
-        print(content)
-
-
-class DisplayReverse(BookDisplayInterface):
-    def display(self, content: str) -> None:
-        print(content[::-1])
-
-
-class PrintConsole(BookPrintInterface):
-    def print_book(self, title: str, content: str) -> None:
-        print(f"Printing the book: {title}...")
-        print(content)
-
-
-class PrintReverse(BookPrintInterface):
-    def print_book(self, title: str, content: str) -> None:
-        print(f"Printing the book in reverse: {title}...")
-        print(content[::-1])
-
-
-class SerializeJson(BookSerializeInterface):
-    def serialize(self, title: str, content: str) -> str:
-        return json.dumps({"title": title, "content": content})
-
-
-class SerializeXml(BookSerializeInterface):
-    def serialize(self, title: str, content: str) -> str:
-        root = ElementTree.Element("book")
-        title_elem = ElementTree.SubElement(root, "title")
-        title_elem.text = title
-        content_elem = ElementTree.SubElement(root, "content")
-        content_elem.text = content
-        return ElementTree.tostring(root, encoding="unicode")
-
-
-# Dictionaries mapping strategy names to their respective classes
-DISPLAY_STRATEGIES: dict[str, type[BookDisplayInterface]] = {
-    "console": DisplayConsole,
-    "reverse": DisplayReverse
-}
-
-PRINT_STRATEGIES: dict[str, type[BookPrintInterface]] = {
-    "console": PrintConsole,
-    "reverse": PrintReverse
-}
-
-SERIALIZE_STRATEGIES: dict[str, type[BookSerializeInterface]] = {
-    "json": SerializeJson,
-    "xml": SerializeXml
-}
+from app.factories import get_display_strategy, get_print_strategy, get_serialize_strategy
+from app.interfaces import BookDisplayInterface, BookPrintInterface, BookSerializeInterface
 
 
 class Book:
@@ -90,28 +15,6 @@ class Book:
 
     def serialize(self, strategy: BookSerializeInterface) -> str:
         return strategy.serialize(self.title, self.content)
-
-
-# Functions for process book strategies
-def get_display_strategy(name: str) -> BookDisplayInterface:
-    try:
-        return DISPLAY_STRATEGIES[name]()
-    except KeyError:
-        raise ValueError(f"Unknown display strategy: {name}")
-
-
-def get_print_strategy(name: str) -> BookPrintInterface:
-    try:
-        return PRINT_STRATEGIES[name]()
-    except KeyError:
-        raise ValueError(f"Unknown print strategy: {name}")
-
-
-def get_serialize_strategy(name: str) -> BookSerializeInterface:
-    try:
-        return SERIALIZE_STRATEGIES[name]()
-    except KeyError:
-        raise ValueError(f"Unknown serialize strategy: {name}")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> str | None:

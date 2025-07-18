@@ -1,22 +1,25 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 from abc import ABC, abstractmethod
 
 
 # Abstract book interfaces
 class BookDisplayInterface(ABC):
     @abstractmethod
-    def display(self, content: str): pass
+    def display(self, content: str) -> None:
+        pass
 
 
 class BookPrintInterface(ABC):
     @abstractmethod
-    def print_book(self, title: str, content: str): pass
+    def print_book(self, title: str, content: str) -> None:
+        pass
 
 
 class BookSerializeInterface(ABC):
     @abstractmethod
-    def serialize(self, title: str, content: str) -> str: pass
+    def serialize(self, title: str, content: str) -> str:
+        pass
 
 
 # Concrete implementations for different book-related actions
@@ -49,15 +52,15 @@ class SerializeJson(BookSerializeInterface):
 
 class SerializeXml(BookSerializeInterface):
     def serialize(self, title: str, content: str) -> str:
-        root = ET.Element("book")
-        title_elem = ET.SubElement(root, "title")
+        root = ElementTree.Element("book")
+        title_elem = ElementTree.SubElement(root, "title")
         title_elem.text = title
-        content_elem = ET.SubElement(root, "content")
+        content_elem = ElementTree.SubElement(root, "content")
         content_elem.text = content
-        return ET.tostring(root, encoding="unicode")
+        return ElementTree.tostring(root, encoding="unicode")
 
 
-# Dictionaries mapping strategy names to their respective classes (used as factories)
+# Dictionaries mapping strategy names to their respective classes
 DISPLAY_STRATEGIES: dict[str, type[BookDisplayInterface]] = {
     "console": DisplayConsole,
     "reverse": DisplayReverse
@@ -75,7 +78,7 @@ SERIALIZE_STRATEGIES: dict[str, type[BookSerializeInterface]] = {
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 

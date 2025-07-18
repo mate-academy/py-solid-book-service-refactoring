@@ -1,5 +1,13 @@
-from app.interfaces import BookDisplayInterface, BookPrintInterface, BookSerializeInterface
-from app.strategies import DISPLAY_STRATEGIES, PRINT_STRATEGIES, SERIALIZE_STRATEGIES
+from app.interfaces import (
+    BookDisplayInterface,
+    BookPrintInterface,
+    BookSerializeInterface
+)
+from app.strategies import (
+    DISPLAY_STRATEGIES,
+    PRINT_STRATEGIES,
+    SERIALIZE_STRATEGIES
+)
 
 
 # Functions for process book strategies

@@ -1,5 +1,13 @@
-from app.factories import get_display_strategy, get_print_strategy, get_serialize_strategy
-from app.interfaces import BookDisplayInterface, BookPrintInterface, BookSerializeInterface
+from app.factories import (
+    get_display_strategy,
+    get_print_strategy,
+    get_serialize_strategy
+)
+from app.interfaces import (
+    BookDisplayInterface,
+    BookPrintInterface,
+    BookSerializeInterface
+)
 
 
 class Book:

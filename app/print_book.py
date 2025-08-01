@@ -5,18 +5,17 @@ from app.models import Book
 
 class PrintBook(ABC):
     @abstractmethod
-    def print_book(self, book: Book):
+    def print_book(self, book: Book) -> None:
         pass
 
 
 class PrintConsole(PrintBook):
-    def print_book(self, book: Book):
+    def print_book(self, book: Book) -> None:
         print(f"Printing the book: {book.title}...")
         print(book.content)
 
 
 class PrintReverse(PrintBook):
-    def print_book(self, book: Book):
+    def print_book(self, book: Book) -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])
-

@@ -5,6 +5,22 @@ from app.serializers import JsonSerializer, XmlSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    """
+    Execute a list of commands on a Book object.
+    Args:
+        book: The Book instance to operate on.
+        commands: A list of tuples (command, method_type), where
+                  command is 'display', 'print', or 'serialize',
+                  and method_type is the variant (
+                  e.g.,
+                  'console',
+                  'reverse',
+                  'json',
+                  'xml'
+                  ).
+    Returns:
+        Serialized string if 'serialize' command is executed, else None.
+    """
     mapping = {
         "display": {
             "console": ConsoleDisplayer(),

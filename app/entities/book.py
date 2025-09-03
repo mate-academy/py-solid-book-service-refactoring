@@ -9,7 +9,7 @@ class Book:
         self.content = content
 
     def __str__(self):
-        return ("Book name is: {self.title}")
+        return (f"Book name is: {self.title}")
 
     def display(self, display_type: str) -> None:
         display_content(self.content, display_type)

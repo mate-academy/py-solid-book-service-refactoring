@@ -12,9 +12,9 @@ from serializer.xml import SerializeXML
 def main(book: Book, commands: list[tuple[str, str]]) -> Optional[str]:
     for cmd, method_type in commands:
         if cmd == "display":
-            display = (DisplayConsole() if method_type == "console"
-                       else DisplayReverse())
-            display.display(book)
+            displayer = (DisplayConsole() if method_type == "console"
+                         else DisplayReverse())
+            displayer.display(book)
         elif cmd == "print":
             printer = (PrintConsole() if method_type == "console"
                        else PrintReverse())

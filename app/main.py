@@ -6,8 +6,8 @@ from .book_displayer import BookDisplayerConsole, BookDisplayerReverse
 
 BOOK_PROCESSORS = {
     "display": {
-        "console": BookDisplayerConsole.display_content,
-        "reverse": BookDisplayerReverse.display_content,
+        "console": BookDisplayerConsole.display,
+        "reverse": BookDisplayerReverse.display,
     },
     "print": {
         "console": BookPrinterConsole.print_book,

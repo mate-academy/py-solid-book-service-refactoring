@@ -6,9 +6,8 @@ from .book import Book
 class Printer(ABC):
     @staticmethod
     @abstractmethod
-    def print_book(print_type: str) -> None:
+    def print_book(book: Book) -> None:
         pass
-
 
 class BookPrinterConsole(Printer):
     @staticmethod

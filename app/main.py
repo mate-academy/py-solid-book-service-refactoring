@@ -35,8 +35,9 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             raise ValueError(f"Unknown command type: {cmd}")
         method_mapper = COMMAND_MAP[cmd]
         if method_type not in method_mapper:
-            raise ValueError(f"Unknown method type: {method_type} "
-                             "in commands: {cmd}")
+            raise ValueError(
+                f"Unknown method type: {method_type} in commands: {cmd}"
+            )
 
         command = getattr(service, cmd)
         result = command(method_mapper[method_type]())

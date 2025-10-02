@@ -1,57 +1,11 @@
-import json
-from xml.etree import ElementTree
-
-
-class Book:
-    def __init__(self, title: str, content: str) -> None:
-        self.title = title
-        self.content = content
-
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
-
-
-class BookService(Book):
-    def __init__(self, title: str, content: str) -> None:
-        super().__init__(title, content)
-
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-
-class BookSerialize(Book):
-    def __init__(self, title: str, content: str) -> None:
-        super().__init__(title, content)
-
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ElementTree.Element("book")
-            title = ElementTree.SubElement(root, "title")
-            title.text = self.title
-            content = ElementTree.SubElement(root, "content")
-            content.text = self.content
-            return ElementTree.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+from app.models.book import Book
+from app.services.printer import BookService
+from app.services.serializer import BookSerialize
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    service = BookService(book.title, book.content)
-    serializer = BookSerialize(book.title, book.content)
+    service = BookService(book)
+    serializer = BookSerialize(book)
 
     for cmd, method_type in commands:
         if cmd == "display":
@@ -63,5 +17,5 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
 
 if __name__ == "__main__":
-    sample_book = BookSerialize("Sample Book", "This is some sample content.")
+    sample_book = Book("Sample Book", "This is some sample content.")
     print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))

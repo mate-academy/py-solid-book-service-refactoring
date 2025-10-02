@@ -64,17 +64,47 @@ class XmlSerialize(BookSerialize):
         return xml.etree.ElementTree.tostring(root, encoding="unicode")
 
 
-def main(
-    book: Book, displayer: BookDisplay, printer: BookPrint, serializer: BookSerialize
-) -> str:
-    displayer.display(book)
-    printer.print_book(book)
-    return serializer.serialize(book)
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    displayers = {
+        "console": ConsoleDisplay,
+        "reverse": ReverseDisplay,
+    }
+    printers = {
+        "console": ConsolePrint,
+        "reverse": ReversePrint,
+    }
+    serializers = {
+        "json": JsonSerialize,
+        "xml": XmlSerialize,
+    }
+
+    result = None
+
+    for cmd, method_type in commands:
+        if cmd == "display":
+            displayer = displayers.get(method_type)
+            if displayer is None:
+                raise ValueError(f"Unknown display type: {method_type}")
+            displayer().display(book)
+
+        elif cmd == "print":
+            printer = printers.get(method_type)
+            if printer is None:
+                raise ValueError(f"Unknown print type: {method_type}")
+            printer().print_book(book)
+
+        elif cmd == "serialize":
+            serializer = serializers.get(method_type)
+            if serializer is None:
+                raise ValueError(f"Unknown serialize type: {method_type}")
+            result = serializer().serialize(book)
+
+        else:
+            raise ValueError(f"Unknown command: {cmd}")
+
+    return result
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    reverse_display = ReverseDisplay()
-    reverse_print = ReversePrint()
-    xml_serialize = XmlSerialize()
-    print(main(sample_book, reverse_display, reverse_print, xml_serialize))
+    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))

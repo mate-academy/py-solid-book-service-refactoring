@@ -1,52 +1,47 @@
-import json
-import xml.etree.ElementTree as ET
+from .book import Book
+from .book_service import BookService
+from .printers import IPrint, ConsolePrint, ReversePrint
+from .serializers import ISerializer, JsonSerializer, XmlSerializer
+from .displays import IDisplay, ConsoleDisplay, ReverseDisplay
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
+DISPLAY_MAP: dict[str, type[IDisplay]] = {
+    "console": ConsoleDisplay,
+    "reverse": ReverseDisplay,
+}
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
+PRINT_MAP: dict[str, type[IPrint]] = {
+    "console": ConsolePrint,
+    "reverse": ReversePrint,
+}
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+SERIALIZE_MAP: dict[str, type[ISerializer]] = {
+    "json": JsonSerializer,
+    "xml": XmlSerializer,
+}
 
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+COMMAND_MAP: dict[str, dict] = {
+    "display": DISPLAY_MAP,
+    "print": PRINT_MAP,
+    "serialize": SERIALIZE_MAP
+}
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    service = BookService(book)
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+        if cmd not in COMMAND_MAP:
+            raise ValueError(f"Unknown command type: {cmd}")
+        method_mapper = COMMAND_MAP[cmd]
+        if method_type not in method_mapper:
+            raise ValueError(f"Unknown method type: {method_type} "
+                             "in commands: {cmd}")
+
+        command = getattr(service, cmd)
+        result = command(method_mapper[method_type]())
+        if result:
+            return result
 
 
 if __name__ == "__main__":

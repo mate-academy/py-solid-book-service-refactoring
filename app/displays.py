@@ -1,0 +1,19 @@
+from abc import ABC, abstractmethod
+
+from .book import Book
+
+
+class IDisplay(ABC):
+    @abstractmethod
+    def display(self, book: Book) -> None:
+        pass
+
+
+class ConsoleDisplay(IDisplay):
+    def display(self, book: Book) -> None:
+        print(book.content)
+
+
+class ReverseDisplay(IDisplay):
+    def display(self, book: Book) -> None:
+        print(book.content[::-1])

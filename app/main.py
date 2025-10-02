@@ -1,4 +1,4 @@
-from app.book import Book
+from app.book import Book, IBook
 from app.display import DisplayConsole, DisplayReverse
 from app.printer import ConsolePrinter, ConsoleReversePrinter
 from app.serializer import JSONSerializer, XMLSerializer
@@ -19,7 +19,7 @@ _SERIALIZERS = {
 }
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def main(book: IBook, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         try:
             if cmd == "display":

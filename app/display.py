@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.book import Book, IBook
+from app.book import IBook
 
 
 class IDisplay(ABC):
@@ -10,7 +10,7 @@ class IDisplay(ABC):
 
 
 class DisplayConsole(IDisplay):
-    def display(self, book: Book) -> None:
+    def display(self, book: IBook) -> None:
         print(book.content)
 
 

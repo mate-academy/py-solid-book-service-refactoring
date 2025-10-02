@@ -1,0 +1,14 @@
+from xml.etree import ElementTree
+
+from app.models.models import Book
+from app.serializers.base import SerializerStrategy
+
+
+class XmlSerializer(SerializerStrategy):
+    def serialize(self, book: Book) -> str:
+        root = ElementTree.Element("book")
+        title = ElementTree.SubElement(root, "title")
+        title.text = book.title
+        content = ElementTree.SubElement(root, "content")
+        content.text = book.content
+        return ElementTree.tostring(root, encoding="unicode")

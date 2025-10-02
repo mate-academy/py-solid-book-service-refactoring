@@ -15,6 +15,11 @@ class Book:
         else:
             raise ValueError(f"Unknown display type: {display_type}")
 
+
+class BookService(Book):
+    def __init__(self, title: str, content: str):
+        super().__init__(title, content)
+
     def print_book(self, print_type: str) -> None:
         if print_type == "console":
             print(f"Printing the book: {self.title}...")
@@ -24,6 +29,11 @@ class Book:
             print(self.content[::-1])
         else:
             raise ValueError(f"Unknown print type: {print_type}")
+
+
+class BookSerialize(Book):
+    def __init__(self, title: str, content: str):
+        super().__init__(title, content)
 
     def serialize(self, serialize_type: str) -> str:
         if serialize_type == "json":
@@ -40,15 +50,18 @@ class Book:
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    service = BookService(book.title, book.content)
+    serializer = BookSerialize(book.title, book.content)
+
     for cmd, method_type in commands:
         if cmd == "display":
             book.display(method_type)
         elif cmd == "print":
-            book.print_book(method_type)
+            service.print_book(method_type)
         elif cmd == "serialize":
-            return book.serialize(method_type)
+            return serializer.serialize(method_type)
 
 
 if __name__ == "__main__":
-    sample_book = Book("Sample Book", "This is some sample content.")
+    sample_book = BookSerialize("Sample Book", "This is some sample content.")
     print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))

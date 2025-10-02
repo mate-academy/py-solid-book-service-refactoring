@@ -1,9 +1,9 @@
 import json
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -17,7 +17,7 @@ class Book:
 
 
 class BookService(Book):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         super().__init__(title, content)
 
     def print_book(self, print_type: str) -> None:
@@ -32,19 +32,19 @@ class BookService(Book):
 
 
 class BookSerialize(Book):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         super().__init__(title, content)
 
     def serialize(self, serialize_type: str) -> str:
         if serialize_type == "json":
             return json.dumps({"title": self.title, "content": self.content})
         elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
+            root = ElementTree.Element("book")
+            title = ElementTree.SubElement(root, "title")
             title.text = self.title
-            content = ET.SubElement(root, "content")
+            content = ElementTree.SubElement(root, "content")
             content.text = self.content
-            return ET.tostring(root, encoding="unicode")
+            return ElementTree.tostring(root, encoding="unicode")
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
 

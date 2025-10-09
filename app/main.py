@@ -1,44 +1,44 @@
 import json
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 from abc import ABC, abstractmethod
 
 
 class Serializer(ABC):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
     @abstractmethod
-    def serialize(self):
+    def serialize(self) -> None:
         pass
 
 
 class Json(Serializer):
-    def serialize(self):
+    def serialize(self) -> str:
         return json.dumps({"title": self.title, "content": self.content})
 
 
 class Xml(Serializer):
-    def serialize(self):
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+    def serialize(self) -> str:
+        root = ElementTree.Element("book")
+        title = ElementTree.SubElement(root, "title")
         title.text = self.title
-        content = ET.SubElement(root, "content")
+        content = ElementTree.SubElement(root, "content")
         content.text = self.content
-        return ET.tostring(root, encoding="unicode")
+        return ElementTree.tostring(root, encoding="unicode")
 
 
 class Book(ABC):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
-    
+
     @abstractmethod
-    def display(self):
+    def display(self) -> None:
         pass
 
     @abstractmethod
-    def print_book(self):
+    def print_book(self) -> None:
         pass
 
     def serialize(self, serializer: Serializer) -> str:
@@ -46,24 +46,26 @@ class Book(ABC):
 
 
 class ConsoleBook(Book):
-    def display(self):
+    def display(self) -> None:
         print(self.content)
-    
-    def print_book(self):
+
+    def print_book(self) -> None:
         print(f"Printing the book: {self.title}...")
         print(self.content)
 
 
 class ReverseBook(Book):
-    def display(self):
+    def display(self) -> None:
         print(self.content[::-1])
-    
-    def print_book(self):
+
+    def print_book(self) -> None:
         print(f"Printing the book in reverse: {self.title}...")
         print(self.content[::-1])
 
 
-def main(title: str, content: str, commands: list[tuple[str, str]]) -> None | str:
+def main(title: str,
+         content: str,
+         commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if method_type == "console":
             book = ConsoleBook(title, content)

@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
-from serializers import Serializer, Json, Xml
 
 
-class Book(ABC):
+class Book:
     def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
+
+class DisplayPrintBook(ABC, Book):
     @abstractmethod
     def display(self) -> None:
         pass
@@ -15,11 +16,8 @@ class Book(ABC):
     def print_book(self) -> None:
         pass
 
-    def serialize(self, serializer: Serializer) -> str:
-        return serializer.serialize()
 
-
-class ConsoleBook(Book):
+class ConsoleBook(DisplayPrintBook):
     def display(self) -> None:
         print(self.content)
 
@@ -28,7 +26,7 @@ class ConsoleBook(Book):
         print(self.content)
 
 
-class ReverseBook(Book):
+class ReverseBook(DisplayPrintBook):
     def display(self) -> None:
         print(self.content[::-1])
 

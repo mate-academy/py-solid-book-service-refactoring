@@ -1,27 +1,24 @@
-from models import ConsoleBook, ReverseBook
-from serializers import Json, Xml
+from app.models import Book, ConsoleBook, ReverseBook
+from app.serializers import Json, Xml
 
 
-def main(title: str,
-         content: str,
-         commands: list[tuple[str, str]]) -> None | str:
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if method_type == "console":
-            book = ConsoleBook(title, content)
-        else:
-            book = ReverseBook(title, content)
+            book = ConsoleBook(book.title, book.content)
+        elif method_type == "reverse":
+            book = ReverseBook(book.title, book.content)
         if cmd == "display":
             book.display()
         elif cmd == "print":
             book.print_book()
         elif cmd == "serialize":
             if method_type == "json":
-                return book.serialize(Json(title, content))
+                return Json.serialize(book)
             elif method_type == "xml":
-                return book.serialize(Xml(title, content))
+                return Xml.serialize(book)
 
 
 if __name__ == "__main__":
-    title = "Sample Book"
-    content = "This is some sample content."
-    print(main(title, content, [("display", "reverse"), ("serialize", "xml")]))
+    sample_book = Book("Sample Book", "This is some sample content.")
+    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))

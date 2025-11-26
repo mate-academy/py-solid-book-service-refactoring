@@ -25,48 +25,36 @@ class Book(BookInterface):
         return self.content
 
 
-class DisplayService(ABC):
+class Command(ABC):
     @abstractmethod
-    def display(self, book: BookInterface) -> None:
+    def execute(self, book: BookInterface) -> None:
         pass
 
 
-class DisplayConsole(DisplayService):
-    def display(self, book: BookInterface) -> None:
+class DisplayConsoleCommand(Command):
+    def execute(self, book: BookInterface) -> None:
         print(book.get_content())
 
 
-class DisplayReverse(DisplayService):
-    def display(self, book: BookInterface) -> None:
+class DisplayReverseCommand(Command):
+    def execute(self, book: BookInterface) -> None:
         print(book.get_content()[::-1])
 
 
-class PrintService(ABC):
-    @abstractmethod
-    def print(self, book: BookInterface) -> None:
-        pass
-
-
-class PrintConsole(PrintService):
-    def print(self, book: BookInterface) -> None:
+class PrintConsoleCommand(Command):
+    def execute(self, book: BookInterface) -> None:
         print(f"Printing the book: {book.get_title()}...")
         print(book.get_content())
 
 
-class PrintReverse(PrintService):
-    def print(self, book: BookInterface) -> None:
+class PrintReverseCommand(Command):
+    def execute(self, book: BookInterface) -> None:
         print(f"Printing the book in reverse: {book.get_title()}...")
         print(book.get_content()[::-1])
 
 
-class SerializerService(ABC):
-    @abstractmethod
-    def serialize(self, book: BookInterface) -> None:
-        pass
-
-
-class SerializerJSON(SerializerService):
-    def serialize(self, book: BookInterface) -> str:
+class SerializerJSONCommand(Command):
+    def execute(self, book: BookInterface) -> str:
         return json.dumps(
             {
                 "title": book.get_title(), "content": book.get_content()
@@ -74,8 +62,8 @@ class SerializerJSON(SerializerService):
         )
 
 
-class SerializerXML(SerializerService):
-    def serialize(self, book: BookInterface) -> str:
+class SerializerXMLCommand(Command):
+    def execute(self, book: BookInterface) -> str:
         root = ET.Element("book")
         title = ET.SubElement(root, "title")
         title.text = book.get_title()
@@ -85,49 +73,54 @@ class SerializerXML(SerializerService):
 
 
 class BookService:
-    def __init__(
-            self,
-            book: BookInterface,
-            displays: list[DisplayService],
-            printers: list[PrintService],
-            serializers: list[SerializerService],
-    ) -> None:
+    def __init__(self, book: BookInterface, commands: list[Command]) -> None:
         self.book = book
-        self.displays = displays
-        self.printers = printers
-        self.serializers = serializers
+        self.commands = commands
 
-    def execute_command(self, cmd: str, method_type: str = None) -> None | str:
+    def execute_all(self) -> list[str | None]:
+        results = []
+        for command in self.commands:
+            result = command.execute(self.book)
+            results.append(result)
+        return results
+
+
+def main(
+        book: BookInterface,
+        commands: list[tuple[str, str | None]]
+) -> str | None:
+    command_objects: list[Command] = []
+
+    for cmd, method_type in commands:
         if cmd == "display":
-            for display in self.displays:
-                display.display(self.book)
+            if method_type == "console":
+                command_objects.append(DisplayConsoleCommand())
+            elif method_type == "reverse":
+                command_objects.append(DisplayReverseCommand())
         elif cmd == "print":
-            for printer in self.printers:
-                printer.print(self.book)
+            if method_type == "console":
+                command_objects.append(PrintConsoleCommand())
+            elif method_type == "reverse":
+                command_objects.append(PrintReverseCommand())
         elif cmd == "serialize":
             if method_type == "json":
-                for serializer in self.serializers:
-                    if isinstance(serializer, SerializerJSON):
-                        return serializer.serialize(self.book)
-            if method_type == "xml":
-                for serializer in self.serializers:
-                    if isinstance(serializer, SerializerXML):
-                        return serializer.serialize(self.book)
+                command_objects.append(SerializerJSONCommand())
+            elif method_type == "xml":
+                command_objects.append(SerializerXMLCommand())
 
-
-def main(book: BookInterface, commands: list[str]) -> str:
-    displays = [DisplayConsole(), DisplayReverse()]
-    printers = [PrintConsole(), PrintReverse()]
-    serializers = [SerializerJSON(), SerializerXML()]
-    service = BookService(book, displays, printers, serializers)
-    result = None
-    for cmd, method_type in commands:
-        output = service.execute_command(cmd, method_type)
-        if cmd == "serialize":
-            result = output
-    return result
+    service = BookService(book, command_objects)
+    results = service.execute_all()
+    for output in results:
+        if output is not None:
+            return output
+    return None
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", None), ("serialize", "json")]))
+    commands = [
+        DisplayReverseCommand(),
+        SerializerJSONCommand()
+    ]
+    result = main(sample_book, commands)
+    print("Serialize result:", result)

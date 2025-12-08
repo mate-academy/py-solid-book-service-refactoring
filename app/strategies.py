@@ -1,7 +1,7 @@
 import json
 import xml.etree.ElementTree as elementTree
 
-from .models import (
+from app.models import (
     Book,
     DisplayStrategy,
     PrintStrategy,

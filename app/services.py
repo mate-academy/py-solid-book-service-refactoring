@@ -1,12 +1,12 @@
 from __future__ import annotations
-from .models import (
+from app.models import (
     Book,
     Command,
     DisplayStrategy,
     PrintStrategy,
     SerializationStrategy, CommandFactory
 )
-from .strategies import (
+from app.strategies import (
     ConsoleDisplayStrategy,
     ReverseDisplayStrategy,
     ConsolePrintStrategy,

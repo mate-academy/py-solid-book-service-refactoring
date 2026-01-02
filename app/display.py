@@ -1,8 +1,18 @@
-def main():
-    pass
-    
-    
-    
+from abc import ABC, abstractmethod
+from .models import Book
 
-if __name__ == "__main__":
-    main()
+
+class DisplayStrategy(ABC):
+    @abstractmethod
+    def display(self, book: Book) -> None:
+        pass
+
+
+class ConsoleDisplay(DisplayStrategy):
+    def display(self, book: Book) -> None:
+        print(book.content)
+
+
+class ReverseDisplay(DisplayStrategy):
+    def display(self, book: Book) -> None:
+        print(book.content[::-1])

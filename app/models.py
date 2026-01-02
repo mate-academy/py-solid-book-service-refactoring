@@ -1,8 +1,4 @@
-def main():
-    pass
-    
-    
-    
-
-if __name__ == "__main__":
-    main()
+class Book:
+    def __init__(self, title: str, content: str) -> None:
+        self.title = title
+        self.content = content

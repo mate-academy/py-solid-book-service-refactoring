@@ -1,17 +1,17 @@
 from app.display import ConsoleDisplay, ReverseDisplay
 from app.printer import ConsolePrinter, ReversePrinter
 from app.serializer import JsonSerializer, XmlSerializer
+from typing import Union
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def main(book: Book, commands: list[tuple[str, str]]) -> Union[None, str]:
     for cmd, method_type in commands:
-        # --- Display ---
         if cmd == "display":
             if method_type == "console":
                 ConsoleDisplay().display(book)
@@ -20,7 +20,6 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             else:
                 raise ValueError(f"Unknown display type: {method_type}")
 
-        # --- Print ---
         elif cmd == "print":
             if method_type == "console":
                 ConsolePrinter().print_book(book)
@@ -29,7 +28,6 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             else:
                 raise ValueError(f"Unknown print type: {method_type}")
 
-        # --- Serialize ---
         elif cmd == "serialize":
             if method_type == "json":
                 return JsonSerializer().serialize(book)
@@ -37,6 +35,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
                 return XmlSerializer().serialize(book)
             else:
                 raise ValueError(f"Unknown serialize type: {method_type}")
+    return None
 
 
 if __name__ == "__main__":

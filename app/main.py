@@ -1,7 +1,7 @@
+from typing import Union
 from app.display import ConsoleDisplay, ReverseDisplay
 from app.printer import ConsolePrinter, ReversePrinter
 from app.serializer import JsonSerializer, XmlSerializer
-from typing import Union
 
 
 class Book:
@@ -10,31 +10,46 @@ class Book:
         self.content = content
 
 
+# --- Strategy mappings (OCP-friendly) ---
+DISPLAY_STRATEGIES = {
+    "console": ConsoleDisplay,
+    "reverse": ReverseDisplay,
+}
+
+PRINTER_STRATEGIES = {
+    "console": ConsolePrinter,
+    "reverse": ReversePrinter,
+}
+
+SERIALIZER_STRATEGIES = {
+    "json": JsonSerializer,
+    "xml": XmlSerializer,
+}
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> Union[None, str]:
     for cmd, method_type in commands:
+        # --- Display ---
         if cmd == "display":
-            if method_type == "console":
-                ConsoleDisplay().display(book)
-            elif method_type == "reverse":
-                ReverseDisplay().display(book)
-            else:
+            strategy_class = DISPLAY_STRATEGIES.get(method_type)
+            if not strategy_class:
                 raise ValueError(f"Unknown display type: {method_type}")
+            strategy_class().display(book)
 
+        # --- Print ---
         elif cmd == "print":
-            if method_type == "console":
-                ConsolePrinter().print_book(book)
-            elif method_type == "reverse":
-                ReversePrinter().print_book(book)
-            else:
+            strategy_class = PRINTER_STRATEGIES.get(method_type)
+            if not strategy_class:
                 raise ValueError(f"Unknown print type: {method_type}")
+            strategy_class().print_book(book)
 
+        # --- Serialize ---
         elif cmd == "serialize":
-            if method_type == "json":
-                return JsonSerializer().serialize(book)
-            elif method_type == "xml":
-                return XmlSerializer().serialize(book)
-            else:
+            strategy_class = SERIALIZER_STRATEGIES.get(method_type)
+            if not strategy_class:
                 raise ValueError(f"Unknown serialize type: {method_type}")
+            return strategy_class().serialize(book)
+
     return None
 
 

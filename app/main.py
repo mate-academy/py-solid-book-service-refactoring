@@ -40,7 +40,7 @@ from abc import ABC, abstractmethod
 #             raise ValueError(f"Unknown serialize type: {serialize_type}")
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -67,6 +67,7 @@ class AbstractPrinter(ABC):
     @abstractmethod
     def print_book(self, book: Book) -> None:
         pass
+
 
 class ConsolePrinter(AbstractPrinter):
 
@@ -110,8 +111,9 @@ class Action(ABC):
     def execute(self, book: Book, mode: str) -> None:
         pass
 
+
 class DisplayAction(Action):
-    def __init__(self, displayers: dict[str, Display]):
+    def __init__(self, displayers: dict[str, Display]) -> None:
         self.displayers = displayers
 
     def execute(self, book: Book, mode: str) -> None:
@@ -119,7 +121,7 @@ class DisplayAction(Action):
 
 
 class PrintAction(Action):
-    def __init__(self, printers: dict[str, AbstractPrinter]):
+    def __init__(self, printers: dict[str, AbstractPrinter]) -> None:
         self.printers = printers
 
     def execute(self, book: Book, mode: str) -> None:
@@ -127,10 +129,10 @@ class PrintAction(Action):
 
 
 class SerializerAction(Action):
-    def __init__(self, serializers: dict[str, AbstractSerializer]):
+    def __init__(self, serializers: dict[str, AbstractSerializer]) -> None:
         self.serializers = serializers
 
-    def execute(self, book: Book, mode: str) -> None:
+    def execute(self, book: Book, mode: str) -> str:
         return self.serializers[mode].serialize(book)
 
 
@@ -154,7 +156,6 @@ ACTIONS = {
         }
     ),
 }
-
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

@@ -108,7 +108,7 @@ class XMLSerializer(AbstractSerializer):
 
 class Action(ABC):
     @abstractmethod
-    def execute(self, book: Book, mode: str) -> None:
+    def execute(self, book: Book, mode: str) -> None | str:
         pass
 
 

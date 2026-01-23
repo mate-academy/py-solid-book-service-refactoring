@@ -1,5 +1,5 @@
 from app.actions import ACTIONS
-from models import Book
+from app.models import Book
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

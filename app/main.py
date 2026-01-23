@@ -42,4 +42,3 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             return result
 
     return None
-

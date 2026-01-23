@@ -1,9 +1,7 @@
-from app.models import (
-    Book,
-    ConsoleDisplay, ReversedDisplay,
-    ConsolePrint, ReversedPrint,
-    JsonSerializer, XMLSerializer
-)
+from app.data_models import Book
+from app.displays import ConsoleDisplay, ReversedDisplay
+from app.printers import ConsolePrint, ReversedPrint
+from app.serializers import JsonSerializer, XMLSerializer
 
 DISPLAYS = {
     "console": ConsoleDisplay(),
@@ -20,22 +18,27 @@ SERIALIZERS = {
     "xml": XMLSerializer(),
 }
 
+COMMANDS = {
+    "display": DISPLAYS,
+    "print": PRINTS,
+    "serialize": SERIALIZERS,
+}
+
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
+        current_command = COMMANDS.get(cmd)
+        if not COMMANDS.get(cmd):
+            raise ValueError(f"Unknown command {cmd}")
+        current_command_type = current_command.get(method_type)
+        if not current_command_type :
+            raise ValueError(f"Unknown {cmd} type: {method_type}")
+
         if cmd == "display":
-            if not DISPLAYS.get(method_type):
-                raise ValueError(f"Unknown display type: {method_type}")
-            return DISPLAYS[method_type].display(book)
-
+            current_command_type.display(book)
         elif cmd == "print":
-            if not PRINTS.get(method_type):
-                raise ValueError(f"Unknown print type: {method_type}")
-            return PRINTS[method_type].print(book)
-
+            current_command_type.print(book)
         elif cmd == "serialize":
-            if not SERIALIZERS.get(method_type):
-                raise ValueError(f"Unknown serialize type: {method_type}")
-            return SERIALIZERS[method_type].serialize(method_type, book)
+            return current_command_type.serialize(book)
 
     return None

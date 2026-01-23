@@ -10,11 +10,11 @@ class Display(ABC):
 
 class Print(ABC):
     @abstractmethod
-    def print(self, content: Any) -> None:
+    def print(self, book: Any) -> None:
         pass
 
 
 class Serializer(ABC):
     @abstractmethod
-    def serialize(self, file_type: str, book: Any) -> str:
+    def serialize(self, book: Any) -> str:
         pass

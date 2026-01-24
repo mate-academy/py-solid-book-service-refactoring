@@ -1,38 +1,41 @@
+from collections.abc import Callable
 from app.book import Book
-from app.display import ConsoleDisplay, ReverseDisplay
-from app.printer import ConsolePrinter, ReversePrinter
-from app.serializer import JsonSerializer, XmlSerializer
 
 
 class CommandExecutor:
-    def __init__(self, book: Book) -> None:
+    def __init__(
+        self,
+        book: Book,
+        display_strategies: dict[str, Callable[[Book], None]],
+        print_strategies: dict[str, Callable[[Book], None]],
+        serializer_strategies: dict[str, Callable[[Book], str]],
+    ) -> None:
         self.book = book
+        self.display_strategies = display_strategies
+        self.print_strategies = print_strategies
+        self.serializer_strategies = serializer_strategies
 
-        self.display_strategies = {
-            "console": ConsoleDisplay(),
-            "reverse": ReverseDisplay(),
-        }
-
-        self.print_strategies = {
-            "console": ConsolePrinter(),
-            "reverse": ReversePrinter(),
-        }
-
-        self.serializer_strategies = {
-            "json": JsonSerializer(),
-            "xml": XmlSerializer(),
+        self.command_map = {
+            "display": self._display,
+            "print": self._print,
+            "serialize": self._serialize,
         }
 
     def execute(self, command: str, method_type: str) -> str | None:
-        if command == "display":
-            self.display_strategies[method_type].display(self.book)
-            return None
+        try:
+            handler = self.command_map[command]
+        except KeyError as exc:
+            raise ValueError(f"Unknown command: {command}") from exc
 
-        if command == "print":
-            self.print_strategies[method_type].print_book(self.book)
-            return None
+        return handler(method_type)
 
-        if command == "serialize":
-            return self.serializer_strategies[method_type].serialize(self.book)
+    def _display(self, method_type: str) -> None:
+        self.display_strategies[method_type](self.book)
+        return None
 
-        raise ValueError(f"Unknown command: {command}")
+    def _print(self, method_type: str) -> None:
+        self.print_strategies[method_type](self.book)
+        return None
+
+    def _serialize(self, method_type: str) -> str:
+        return self.serializer_strategies[method_type](self.book)

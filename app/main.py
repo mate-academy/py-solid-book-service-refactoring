@@ -7,16 +7,6 @@ class Book:
         self.title = title
         self.content = content
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
     def serialize(self, serialize_type: str) -> str:
         if serialize_type == "json":
             return json.dumps({"title": self.title, "content": self.content})
@@ -30,18 +20,19 @@ class Book:
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
 
+
 class Displayer:
     def __init__(self, book):
         self.book = book
 
-    def console_display(self):
+    def display_console(self):
         print(self.book.content)
 
-    def console_reverse(self):
+    def display_reverse(self):
         print(self.book.content[::-1])
 
     def display(self, method_type: str):
-        method_name = f"console_{method_type}"
+        method_name = f"display_{method_type}"
         method = getattr(self, method_name, None)
 
         if not callable(method):
@@ -50,6 +41,26 @@ class Displayer:
         method()
 
 
+class Printer:
+    def __init__(self, book):
+        self.book = book
+
+    def print_console(self):
+        print(f"Printing the book: {self.book.title}...")
+        print(self.book.content)
+
+    def print_reverse(self):
+        print(f"Printing the book in reverse: {self.book.title}...")
+        print(self.book.content[::-1])
+
+    def print_content(self, method_type: str):
+        method_name = f"print_{method_type}"
+        method = getattr(self, method_name, None)
+
+        if not callable(method):
+            raise ValueError(f"Unknown print type: {method_type}")
+
+        method()
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
@@ -58,11 +69,12 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             display = Displayer(book)
             display.display(method_type)
         elif cmd == "print":
-            book.print_book(method_type)
+            to_print = Printer(book)
+            to_print.print_content(method_type)
         elif cmd == "serialize":
             return book.serialize(method_type)
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "display"), ("serialize", "xml")]))
+    print(main(sample_book, [("print", "reverse"), ("serialize", "xml")]))

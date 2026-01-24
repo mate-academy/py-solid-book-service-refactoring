@@ -7,14 +7,6 @@ class Book:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
-
     def print_book(self, print_type: str) -> None:
         if print_type == "console":
             print(f"Printing the book: {self.title}...")
@@ -38,11 +30,33 @@ class Book:
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
 
+class Displayer:
+    def __init__(self, book):
+        self.book = book
+
+    def console_display(self):
+        print(self.book.content)
+
+    def console_reverse(self):
+        print(self.book.content[::-1])
+
+    def display(self, method_type: str):
+        method_name = f"console_{method_type}"
+        method = getattr(self, method_name, None)
+
+        if not callable(method):
+            raise ValueError(f"Unknown display method: {method_type}")
+
+        method()
+
+
+
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            book.display(method_type)
+            display = Displayer(book)
+            display.display(method_type)
         elif cmd == "print":
             book.print_book(method_type)
         elif cmd == "serialize":
@@ -51,4 +65,4 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    print(main(sample_book, [("display", "display"), ("serialize", "xml")]))

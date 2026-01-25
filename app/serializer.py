@@ -1,22 +1,20 @@
-from __future__ import annotations
-
 import json
-import xml.etree.ElementTree as element_tree
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Dict
-
-if TYPE_CHECKING:
-    from app.main import Book
+import xml.etree.ElementTree as ElementTree
 
 
-class SerializeStrategy(ABC):
-    @abstractmethod
-    def serialize(self, book: "Book") -> str:
-        ...
+class BookSerializer:
+    """Handles book serialization into different formats."""
 
+    def serialize(self, book, serialize_type: str) -> str:
+        if serialize_type == "json":
+            return self._serialize_to_json(book)
 
-class JsonSerializeStrategy(SerializeStrategy):
-    def serialize(self, book: "Book") -> str:
+        if serialize_type == "xml":
+            return self._serialize_to_xml(book)
+
+        raise ValueError(f"Unknown serialization type: {serialize_type}")
+
+    def _serialize_to_json(self, book) -> str:
         return json.dumps(
             {
                 "title": book.title,
@@ -24,28 +22,13 @@ class JsonSerializeStrategy(SerializeStrategy):
             }
         )
 
+    def _serialize_to_xml(self, book) -> str:
+        root = ElementTree.Element("book")
 
-class XmlSerializeStrategy(SerializeStrategy):
-    def serialize(self, book: "Book") -> str:
-        root = element_tree.Element("book")
-        title_el = element_tree.SubElement(root, "title")
-        title_el.text = book.title
-        content_el = element_tree.SubElement(root, "content")
-        content_el.text = book.content
-        return element_tree.tostring(root, encoding="unicode")
+        title_element = ElementTree.SubElement(root, "title")
+        title_element.text = book.title
 
+        content_element = ElementTree.SubElement(root, "content")
+        content_element.text = book.content
 
-class BookSerializer:
-    """Service responsible only for serialization of the book."""
-
-    def __init__(self) -> None:
-        self._strategies: Dict[str, SerializeStrategy] = {
-            "json": JsonSerializeStrategy(),
-            "xml": XmlSerializeStrategy(),
-        }
-
-    def serialize(self, book: "Book", serialize_type: str) -> str:
-        strategy = self._strategies.get(serialize_type)
-        if strategy is None:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
-        return strategy.serialize(book)
+        return ElementTree.tostring(root, encoding="unicode")

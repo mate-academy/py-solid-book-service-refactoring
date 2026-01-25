@@ -12,21 +12,21 @@ class Book:
         self,
         title: str,
         content: str,
-        displayer: BookDisplayer | None = None,
-        printer: BookPrinter | None = None,
-        serializer: BookSerializer | None = None,
-    ) -> None:  # ← исправлено (ANN204)
+        displayer: BookDisplayer,
+        printer: BookPrinter,
+        serializer: BookSerializer,
+    ):
         self.title = title
         self.content = content
-        self._displayer = displayer or BookDisplayer()
-        self._printer = printer or BookPrinter()
-        self._serializer = serializer or BookSerializer()
+        self._displayer = displayer
+        self._printer = printer
+        self._serializer = serializer
 
     def display(self, display_type: str) -> None:
         self._displayer.display(self, display_type)
 
     def print_book(self, print_type: str) -> None:
-        self._printer.print(self, print_type)
+        self._printer.print_book(self, print_type)
 
     def serialize(self, serialize_type: str) -> str:
         return self._serializer.serialize(self, serialize_type)
@@ -44,5 +44,9 @@ def main(book: Book, commands: list[tuple[str, str]]) -> str | None:
 
 
 if __name__ == "__main__":
-    sample = Book("Sample", "Content")
+    displayer = BookDisplayer()
+    printer = BookPrinter()
+    serializer = BookSerializer()
+
+    sample = Book("Sample", "Content", displayer, printer, serializer)
     print(main(sample, [("display", "reverse"), ("serialize", "xml")]))

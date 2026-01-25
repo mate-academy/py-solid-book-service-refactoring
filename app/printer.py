@@ -1,42 +1,31 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Dict
-
-if TYPE_CHECKING:  # only for type hints, no runtime import
-    from app.main import Book
+from typing import Protocol
 
 
-class PrintStrategy(ABC):
-    @abstractmethod
-    def print_book(self, book: "Book") -> None:
-        ...
-
-
-class ConsolePrintStrategy(PrintStrategy):
-    def print_book(self, book: "Book") -> None:
-        print(f"Printing the book: {book.title}...")
-        print(book.content)
-
-
-class ReversePrintStrategy(PrintStrategy):
-    def print_book(self, book: "Book") -> None:
-        print(f"Printing the book in reverse: {book.title}...")
-        print(book.content[::-1])
+class BookProtocol(Protocol):
+    title: str
+    content: str
 
 
 class BookPrinter:
-    """Service responsible only for printing the book."""
+    """Handles printing book content."""
 
-    def __init__(self) -> None:
-        self._strategies: Dict[str, PrintStrategy] = {
-            "console": ConsolePrintStrategy(),
-            "reverse": ReversePrintStrategy(),
-        }
+    def print_book(self, book: BookProtocol, print_type: str) -> None:
+        if print_type == "console":
+            self._print_console(book)
+            return
 
-    def print(self, book: "Book", print_type: str) -> None:
-        strategy = self._strategies.get(print_type)
-        if strategy is None:
-            # Keep the same error message format
-            raise ValueError(f"Unknown print type: {print_type}")
-        strategy.print_book(book)
+        if print_type == "reverse":
+            self._print_reverse(book)
+            return
+
+        raise ValueError(f"Unknown print type: {print_type}")
+
+    def _print_console(self, book: BookProtocol) -> None:
+        print(book.title)
+        print(book.content)
+
+    def _print_reverse(self, book: BookProtocol) -> None:
+        print(book.title)
+        print(book.content[::-1])

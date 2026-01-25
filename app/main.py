@@ -8,7 +8,8 @@ from app.serializer import BookSerializer
 
 
 class Book:
-    """Book entity that stores data and delegates actions to injected services."""
+    """Book entity that stores data and
+    delegates actions to injected services."""
 
     def __init__(
         self,

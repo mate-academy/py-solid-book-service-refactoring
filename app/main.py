@@ -63,7 +63,8 @@ def run_example() -> None:
         serializer=serializer,
     )
 
-    result = main(sample_book, [("display", "reverse"), ("serialize", "xml")])
+    result = main(sample_book, [("display", "reverse"),
+                                ("serialize", "xml")])
     print(result)
 
 

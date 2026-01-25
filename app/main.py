@@ -4,7 +4,7 @@ from app.printers import ConsolePrinter, ReversePrinter
 from app.serializers import JsonSerializer, XmlSerializer
 
 
-def main(book: Book, commands: list[tuple[str, str]]):
+def main(book: Book, commands: list[tuple[str, str]]) -> str | None:
     displays = {
         "console": ConsoleDisplay(),
         "reverse": ReverseDisplay(),

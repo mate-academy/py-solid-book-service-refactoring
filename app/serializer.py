@@ -1,11 +1,17 @@
 import json
 import xml.etree.ElementTree as ElementTree
+from typing import Protocol
+
+
+class BookProtocol(Protocol):
+    title: str
+    content: str
 
 
 class BookSerializer:
     """Handles book serialization into different formats."""
 
-    def serialize(self, book, serialize_type: str) -> str:
+    def serialize(self, book: BookProtocol, serialize_type: str) -> str:
         if serialize_type == "json":
             return self._serialize_to_json(book)
 
@@ -14,7 +20,7 @@ class BookSerializer:
 
         raise ValueError(f"Unknown serialization type: {serialize_type}")
 
-    def _serialize_to_json(self, book) -> str:
+    def _serialize_to_json(self, book: BookProtocol) -> str:
         return json.dumps(
             {
                 "title": book.title,
@@ -22,7 +28,7 @@ class BookSerializer:
             }
         )
 
-    def _serialize_to_xml(self, book) -> str:
+    def _serialize_to_xml(self, book: BookProtocol) -> str:
         root = ElementTree.Element("book")
 
         title_element = ElementTree.SubElement(root, "title")

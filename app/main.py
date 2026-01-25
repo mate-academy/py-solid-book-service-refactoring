@@ -6,18 +6,25 @@ from app.display import BookDisplayer
 from app.printer import BookPrinter
 from app.serializer import BookSerializer
 
+# Default dependencies are created OUTSIDE the Book class.
+# Book does not create dependencies itself (DIP friendly),
+# but tests can still instantiate Book with only title/content.
+DEFAULT_DISPLAYER = BookDisplayer()
+DEFAULT_PRINTER = BookPrinter()
+DEFAULT_SERIALIZER = BookSerializer()
+
 
 class Book:
-    """Book entity that stores data and
+    """Entity that stores book data and
     delegates actions to injected services."""
 
     def __init__(
         self,
         title: str,
         content: str,
-        displayer: BookDisplayer,
-        printer: BookPrinter,
-        serializer: BookSerializer,
+        displayer: BookDisplayer = DEFAULT_DISPLAYER,
+        printer: BookPrinter = DEFAULT_PRINTER,
+        serializer: BookSerializer = DEFAULT_SERIALIZER,
     ) -> None:
         self.title = title
         self.content = content
@@ -39,34 +46,16 @@ def main(book: Book, commands: list[tuple[str, str]]) -> Optional[str]:
     for command, method_type in commands:
         if command == "display":
             book.display(method_type)
-            continue
-
-        if command == "print":
+        elif command == "print":
             book.print_book(method_type)
-            continue
-
-        if command == "serialize":
+        elif command == "serialize":
             return book.serialize(method_type)
-
     return None
 
 
 def run_example() -> None:
-    displayer = BookDisplayer()
-    printer = BookPrinter()
-    serializer = BookSerializer()
-
-    sample_book = Book(
-        title="Sample",
-        content="Content",
-        displayer=displayer,
-        printer=printer,
-        serializer=serializer,
-    )
-
-    result = main(sample_book, [("display", "reverse"),
-                                ("serialize", "xml")])
-    print(result)
+    sample = Book("Sample", "Content")  # works for tests too
+    print(main(sample, [("display", "reverse"), ("serialize", "xml")]))
 
 
 if __name__ == "__main__":

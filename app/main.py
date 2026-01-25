@@ -47,7 +47,10 @@ def main(
 
 
 if __name__ == "__main__":
-    sample_book = Book(title="Sample Book", content="This is some sample content.")
+    sample_book = Book(
+        title="Sample Book",
+        content="This is some sample content."
+    )
 
     displays = DEFAULT_DISPLAYS
     printers = DEFAULT_PRINTERS

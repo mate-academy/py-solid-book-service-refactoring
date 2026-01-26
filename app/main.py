@@ -3,41 +3,62 @@ from app.formatters import ConsoleFormatter, ReverseFormatter
 from app.serializers import JsonSerializer, XmlSerializer
 
 
+FORMATTERS = {
+    "console": ConsoleFormatter,
+    "reverse": ReverseFormatter,
+}
+
+SERIALIZERS = {
+    "json": JsonSerializer,
+    "xml": XmlSerializer,
+}
+
+
 class Book:
     def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
 
+def _handle_display(book: Book, method_type: str) -> None:
+    formatter_class = FORMATTERS.get(method_type)
+    if not formatter_class:
+        raise ValueError(f"Unknown display type: {method_type}")
+    displayer = Displayer(formatter_class())
+    displayer.display(book.content)
+
+
+def _handle_print(book: Book, method_type: str) -> None:
+    formatter_class = FORMATTERS.get(method_type)
+    if not formatter_class:
+        raise ValueError(f"Unknown print type: {method_type}")
+    printer = Printer(formatter_class())
+    printer.print(book.title, book.content)
+
+
+def _handle_serialize(book: Book, method_type: str) -> str:
+    serializer_class = SERIALIZERS.get(method_type)
+    if not serializer_class:
+        raise ValueError(f"Unknown serialize type: {method_type}")
+    serializer = serializer_class()
+    return serializer.serialize(book.title, book.content)
+
+
+COMMANDS = {
+    "display": _handle_display,
+    "print": _handle_print,
+    "serialize": _handle_serialize,
+}
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                displayer = Displayer(ConsoleFormatter())
-                displayer.display(book.content)
-            elif method_type == "reverse":
-                displayer = Displayer(ReverseFormatter())
-                displayer.display(book.content)
-            else:
-                raise ValueError(f"Unknown display type: {method_type}")
-        elif cmd == "print":
-            if method_type == "console":
-                printer = Printer(ConsoleFormatter())
-                printer.print(book.title, book.content)
-            elif method_type == "reverse":
-                printer = Printer(ReverseFormatter())
-                printer.print(book.title, book.content)
-            else:
-                raise ValueError(f"Unknown print type: {method_type}")
-        elif cmd == "serialize":
-            if method_type == "json":
-                serializer = JsonSerializer()
-                return serializer.serialize(book.title, book.content)
-            elif method_type == "xml":
-                serializer = XmlSerializer()
-                return serializer.serialize(book.title, book.content)
-            else:
-                raise ValueError(f"Unknown serialize type: {method_type}")
+        handler = COMMANDS.get(cmd)
+        if not handler:
+            raise ValueError(f"Unknown command: {cmd}")
+        result = handler(book, method_type)
+        if cmd == "serialize":
+            return result
 
 
 if __name__ == "__main__":

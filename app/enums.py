@@ -1,68 +1,32 @@
 from __future__ import annotations
-
 from enum import Enum
 
 
-class Command(Enum):
+class StringEnum(Enum):
+    @classmethod
+    def from_str(cls, value: str) -> StringEnum:
+        for member in cls:
+            if member.value == value:
+                return member
+        raise ValueError(f"Invalid {cls.__name__}: {value}")
+
+
+class Command(StringEnum):
     DISPLAY = "display"
     PRINT = "print"
     SERIALIZE = "serialize"
 
-    @classmethod
-    def from_str(cls, value: str) -> Command:
-        try:
-            normalized = value.lower()
-        except AttributeError:
-            raise ValueError(f"Unknown command: {value}")
-        for member in cls:
-            if member.value == normalized:
-                return member
-        raise ValueError(f"Unknown command: {value}")
 
-
-class DisplayType(Enum):
+class DisplayType(StringEnum):
     CONSOLE = "console"
     REVERSE = "reverse"
 
-    @classmethod
-    def from_str(cls, value: str) -> DisplayType:
-        try:
-            normalized = value.lower()
-        except AttributeError:
-            raise ValueError(f"Unknown display type: {value}")
-        for member in cls:
-            if member.value == normalized:
-                return member
-        raise ValueError(f"Unknown display type: {value}")
 
-
-class PrintType(Enum):
+class PrintType(StringEnum):
     CONSOLE = "console"
     REVERSE = "reverse"
 
-    @classmethod
-    def from_str(cls, value: str) -> PrintType:
-        try:
-            normalized = value.lower()
-        except AttributeError:
-            raise ValueError(f"Unknown print type: {value}")
-        for member in cls:
-            if member.value == normalized:
-                return member
-        raise ValueError(f"Unknown print type: {value}")
 
-
-class SerializeType(Enum):
+class SerializeType(StringEnum):
     JSON = "json"
     XML = "xml"
-
-    @classmethod
-    def from_str(cls, value: str) -> SerializeType:
-        try:
-            normalized = value.lower()
-        except AttributeError:
-            raise ValueError(f"Unknown serialize type: {value}")
-        for member in cls:
-            if member.value == normalized:
-                return member
-        raise ValueError(f"Unknown serialize type: {value}")

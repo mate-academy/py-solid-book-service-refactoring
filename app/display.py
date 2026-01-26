@@ -1,9 +1,11 @@
+from abc import ABC, abstractmethod
 from app.interfaces import HasContent
 
 
-class DisplayStrategy:
+class DisplayStrategy(ABC):
+    @abstractmethod
     def display(self, book: HasContent) -> None:
-        raise NotImplementedError
+        pass
 
 
 class ConsoleDisplay(DisplayStrategy):

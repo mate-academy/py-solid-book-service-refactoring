@@ -1,12 +1,13 @@
 import xml.etree.ElementTree as eT
 import json
-
+from abc import ABC, abstractmethod
 from app.interfaces import HasTitleContent
 
 
-class SerializeStrategy:
+class SerializeStrategy(ABC):
+    @abstractmethod
     def serialize(self, book: HasTitleContent) -> str:
-        raise NotImplementedError
+        pass
 
 
 class JsonSerializer(SerializeStrategy):

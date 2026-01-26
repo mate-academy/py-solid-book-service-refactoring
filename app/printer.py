@@ -1,9 +1,11 @@
+from abc import ABC, abstractmethod
 from app.interfaces import HasTitleContent
 
 
-class PrintStrategy:
+class PrintStrategy(ABC):
+    @abstractmethod
     def print_book(self, book: HasTitleContent) -> None:
-        raise NotImplementedError
+        pass
 
 
 class ConsolePrinter(PrintStrategy):

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as element_tree
 
 from .book import Book
 
@@ -19,15 +19,15 @@ class JsonSerializer(Serializer):
 
 class XmlSerializer(Serializer):
     def serialize(self, book: Book) -> str:
-        root = ET.Element("book")
+        root = element_tree.Element("book")
 
-        title = ET.SubElement(root, "title")
+        title = element_tree.SubElement(root, "title")
         title.text = book.title
 
-        content = ET.SubElement(root, "content")
+        content = element_tree.SubElement(root, "content")
         content.text = book.content
 
-        return ET.tostring(root, encoding="unicode")
+        return element_tree.tostring(root, encoding="unicode")
 
 
 def get_serializer(serialize_type: str) -> Serializer:

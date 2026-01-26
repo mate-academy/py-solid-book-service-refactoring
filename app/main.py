@@ -1,5 +1,6 @@
 import json
 import xml.etree.ElementTree as ET
+from typing import Callable
 
 
 class Book:
@@ -7,18 +8,29 @@ class Book:
         self.title = title
         self.content = content
 
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+class Serializer:
+    def __init__(self, book):
+        self.book = book
+
+    def json_serialize(self):
+        return json.dumps({"title": self.book.title, "content": self.book.content})
+
+    def xml_serialize(self):
+        root = ET.Element("book")
+        title = ET.SubElement(root, "title")
+        title.text = self.book.title
+        content = ET.SubElement(root, "content")
+        content.text = self.book.content
+        return ET.tostring(root, encoding="unicode")
+
+    def serialize(self, method_type: str):
+        method_name = f"{method_type}_serialize"
+        method = getattr(self, method_name, None)
+
+        if not callable(method):
+            raise ValueError(f"Unknown display method: {method_type}")
+
+        return method()
 
 
 class Displayer:
@@ -63,7 +75,7 @@ class Printer:
         method()
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str | Callable:
     for cmd, method_type in commands:
         if cmd == "display":
             display = Displayer(book)
@@ -72,7 +84,8 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             to_print = Printer(book)
             to_print.print_content(method_type)
         elif cmd == "serialize":
-            return book.serialize(method_type)
+            to_serialize = Serializer(book)
+            return to_serialize.serialize(method_type)
 
 
 if __name__ == "__main__":

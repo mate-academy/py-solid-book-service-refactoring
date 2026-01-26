@@ -21,7 +21,7 @@ class Serializer:
         content.text = self.book.content
         return ElemTree.tostring(root, encoding="unicode")
 
-    def serialize(self, method_type: str) -> Callable:
+    def serialize(self, method_type: str) -> str:
         method_name = f"{method_type}_serialize"
         method = getattr(self, method_name, None)
 

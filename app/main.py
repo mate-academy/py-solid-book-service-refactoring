@@ -1,54 +1,66 @@
-import json
-import xml.etree.ElementTree as ET
+from app.services import BookCommandService
+from app.display_service import DisplayService
+from app.print_service import PrintService
+from app.serialize_service import SerializeService
+from app.enums import Command, DisplayType, PrintType, SerializeType
+from app.models import Book
+from app.display import ConsoleDisplay, ReverseDisplay
+from app.printer import ConsolePrinter, ReversePrinter
+from app.serializer import JsonSerializer, XmlSerializer
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
+def create_book_command_service() -> BookCommandService:
+    """Composition root - wire up all dependencies"""
+    # Create strategy instances
+    displays = {
+        DisplayType.CONSOLE: ConsoleDisplay(),
+        DisplayType.REVERSE: ReverseDisplay(),
+    }
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
+    printers = {
+        PrintType.CONSOLE: ConsolePrinter(),
+        PrintType.REVERSE: ReversePrinter(),
+    }
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+    serializers = {
+        SerializeType.JSON: JsonSerializer(),
+        SerializeType.XML: XmlSerializer(),
+    }
 
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+    display_service = DisplayService(displays)
+    print_service = PrintService(printers)
+    serialize_service = SerializeService(serializers)
+
+    return BookCommandService(
+        display_service,
+        print_service,
+        serialize_service
+    )
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def main(
+        book: Book,
+        commands: list[tuple[str, str]],
+        service: BookCommandService = None
+) -> None | str:
+    if service is None:
+        service = create_book_command_service()
+
     for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+        cmd_enum = Command.from_str(cmd)
+        match cmd_enum:
+            case Command.DISPLAY:
+                service.display(book, method_type)
+            case Command.PRINT:
+                service.print(book, method_type)
+            case Command.SERIALIZE:
+                return service.serialize(book, method_type)
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    print(
+        main(
+            sample_book, [("display", "reverse"), ("serialize", "xml")]
+        )
+    )

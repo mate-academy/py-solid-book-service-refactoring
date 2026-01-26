@@ -22,6 +22,6 @@ class Serializer:
         method = getattr(self, method_name, None)
 
         if not callable(method):
-            raise ValueError(f"Unknown display method: {method_type}")
+            raise ValueError(f"Unknown serialize method: {method_type}")
 
         return method()

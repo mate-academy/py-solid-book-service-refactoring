@@ -1,29 +1,18 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 from app.book import Book
-from app.io_handlers import ConsoleWriter
-from app.strategies import (
-    ConsoleDisplay, ReverseDisplay,
-    ConsolePrinter, ReversePrinter,
-    JsonSerializer, XmlSerializer
-)
+from app.interfaces import (IDisplayStrategy,
+                            IPrintStrategy,
+                            ISerializerStrategy)
 
 
 class BookService:
-    def __init__(self) -> None:
-        writer = ConsoleWriter()
-
-        self.display_strategies = {
-            "console": ConsoleDisplay(writer),
-            "reverse": ReverseDisplay(writer)
-        }
-        self.print_strategies = {
-            "console": ConsolePrinter(writer),
-            "reverse": ReversePrinter(writer)
-        }
-        self.serialize_strategies = {
-            "json": JsonSerializer(),
-            "xml": XmlSerializer()
-        }
+    def __init__(self,
+                 display_strategies: Dict[str, IDisplayStrategy],
+                 print_strategies: Dict[str, IPrintStrategy],
+                 serialize_strategies: Dict[str, ISerializerStrategy]) -> None:
+        self.display_strategies = display_strategies
+        self.print_strategies = print_strategies
+        self.serialize_strategies = serialize_strategies
 
     def process(self,
                 book: Book,
@@ -31,9 +20,24 @@ class BookService:
                 ) -> Optional[str]:
         for cmd, method_type in commands:
             if cmd == "display":
-                self.display_strategies[method_type].display(book)
+                strategy = self.display_strategies.get(method_type)
+                if strategy:
+                    strategy.display(book)
+                else:
+                    raise ValueError(f"Unknown display strategy: {method_type}")
+
             elif cmd == "print":
-                self.print_strategies[method_type].print_book(book)
+                strategy = self.print_strategies.get(method_type)
+                if strategy:
+                    strategy.print_book(book)
+                else:
+                    raise ValueError(f"Unknown print strategy: {method_type}")
+
             elif cmd == "serialize":
-                return self.serialize_strategies[method_type].serialize(book)
+                strategy = self.serialize_strategies.get(method_type)
+                if strategy:
+                    return strategy.serialize(book)
+                else:
+                    raise ValueError(f"Unknown serialize strategy: {method_type}")
+
         return None

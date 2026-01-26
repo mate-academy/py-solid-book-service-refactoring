@@ -1,5 +1,5 @@
 import json
-import xml.etree.ElementTree as element_tree
+import xml.etree.ElementTree as ElementTree
 from app.book import Book
 from app.interfaces import (
     IDisplayStrategy,
@@ -49,9 +49,9 @@ class JsonSerializer(ISerializerStrategy):
 
 class XmlSerializer(ISerializerStrategy):
     def serialize(self, book: Book) -> str:
-        root = element_tree.Element("book")
-        title = element_tree.SubElement(root, "title")
+        root = ElementTree.Element("book")
+        title = ElementTree.SubElement(root, "title")
         title.text = book.title
-        content = element_tree.SubElement(root, "content")
+        content = ElementTree.SubElement(root, "content")
         content.text = book.content
-        return element_tree.tostring(root, encoding="unicode")
+        return ElementTree.tostring(root, encoding="unicode")

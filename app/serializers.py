@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import json
-import xml.etree.ElementTree as Element
-import xml.etree.ElementTree as SubElement
-import xml.etree.ElementTree as tostring  # noqa: N813
+from xml.etree.ElementTree import Element
+from xml.etree.ElementTree import SubElement
+from xml.etree.ElementTree import tostring  # noqa: N813
 
 from abc import ABC, abstractmethod
 from typing import Dict, TYPE_CHECKING

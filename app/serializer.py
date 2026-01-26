@@ -1,6 +1,5 @@
 import json
 import xml.etree.ElementTree as ElemTree
-from typing import Callable
 
 from app.book import Book
 

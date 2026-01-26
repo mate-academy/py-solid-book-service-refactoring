@@ -1,14 +1,9 @@
 from typing import Callable
 
+from app.book import Book
 from app.displayer import Displayer
 from app.printer import Printer
 from app.serializer import Serializer
-
-
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str | Callable:

@@ -25,17 +25,22 @@ COMMAND_DISPATCHER = {
     "serialize": SERIALIZER_FACTORY,
 }
 
+COMMAND_METHOD = {
+    "display": "show",
+    "print": "print",
+    "serialize": "serialize",
+}
+
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for command, method_type in commands:
-        factory = COMMAND_DISPATCHER[command]
-        handler = factory[method_type]()
+        handler = COMMAND_DISPATCHER[command][method_type]()
+        method_name = COMMAND_METHOD[command]
+        method = getattr(handler, method_name)
+        result = method(book)
 
-        if command == "serialize":
-            return handler.serialize(book)
-
-        handler_method = getattr(handler, command)
-        handler_method(book)
+        if result is not None:
+            return result
 
 
 if __name__ == "__main__":

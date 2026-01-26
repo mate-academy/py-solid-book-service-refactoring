@@ -18,7 +18,6 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str | Callable:
         if not handler_class:
             raise ValueError(f"Unknown command: {cmd}")
 
-
         handler = handler_class(book)
 
         if cmd == "display":
@@ -27,6 +26,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str | Callable:
             handler.print_content(method_type)
         elif cmd == "serialize":
             return handler.serialize(method_type)
+
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")

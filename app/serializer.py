@@ -1,23 +1,27 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElemTree
+from typing import Callable
+
+from app.book import Book
 
 
 class Serializer:
-    def __init__(self, book):
+    def __init__(self, book: Book) -> None:
         self.book = book
 
-    def json_serialize(self):
-        return json.dumps({"title": self.book.title, "content": self.book.content})
+    def json_serialize(self) -> str:
+        return json.dumps(
+            {"title": self.book.title, "content": self.book.content})
 
-    def xml_serialize(self):
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+    def xml_serialize(self) -> str:
+        root = ElemTree.Element("book")
+        title = ElemTree.SubElement(root, "title")
         title.text = self.book.title
-        content = ET.SubElement(root, "content")
+        content = ElemTree.SubElement(root, "content")
         content.text = self.book.content
-        return ET.tostring(root, encoding="unicode")
+        return ElemTree.tostring(root, encoding="unicode")
 
-    def serialize(self, method_type: str):
+    def serialize(self, method_type: str) -> Callable:
         method_name = f"{method_type}_serialize"
         method = getattr(self, method_name, None)
 

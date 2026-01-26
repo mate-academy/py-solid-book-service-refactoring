@@ -1,5 +1,5 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # noqa: N817
 from abc import ABC, abstractmethod
 
 from app.book import Book

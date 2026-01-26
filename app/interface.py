@@ -3,7 +3,13 @@ from abc import ABC, abstractmethod
 from app.models import Book
 
 
-class DefaultInterface(ABC):
+class DisplayInterface(ABC):
     @abstractmethod
-    def run(self, book: Book) -> None | str:
+    def display(self, book: Book) -> None:
+        pass
+
+
+class SerializeInterface(ABC):
+    @abstractmethod
+    def serialize(self, book: Book) -> str:
         pass

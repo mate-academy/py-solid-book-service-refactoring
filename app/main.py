@@ -2,29 +2,34 @@ from app.models import Book
 from app.display import ConsoleDisplay, ReverseDisplay
 from app.print import PrintConsole, PrintReverse
 from app.serializers import JsonSerializer, XmlSerializer
+from app.registry import registry
 
 
-def main(book: Book, commands: list[str]) -> None | str:
-    my_registry = {
-        ("display", "console"): ConsoleDisplay(),
-        ("display", "reverse"): ReverseDisplay(),
-        ("print", "console"): PrintConsole(),
-        ("print", "reverse"): PrintReverse(),
-        ("serialize", "json"): JsonSerializer(),
-        ("serialize", "xml"): XmlSerializer(),
-    }
+registry.register("display", "console", ConsoleDisplay())
+registry.register("display", "reverse", ReverseDisplay())
+registry.register("print", "console", PrintConsole())
+registry.register("print", "reverse", PrintReverse())
+registry.register("serialize", "json", JsonSerializer())
+registry.register("serialize", "xml", XmlSerializer())
 
+
+def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     last_result = None
 
-    for method_type in commands:
-        executor = my_registry.get(method_type)
+    for cmd_type, method_type in commands:
+        executor = registry.get_executor(cmd_type, method_type)
+
         if executor is None:
-            raise ValueError(f"Unknown operation: {method_type}.")
-        last_result = executor.run(book)
+            raise ValueError(f"Unknown operation: {cmd_type} {method_type}")
+
+        if hasattr(executor, "display"):
+            executor.display(book)
+        elif hasattr(executor, "serialize"):
+            last_result = executor.serialize(book)
 
     return last_result
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, ["reverse_display", "xml_serialize"]))
+    print(main(sample_book, [("print", "reverse")]))

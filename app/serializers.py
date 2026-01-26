@@ -2,16 +2,16 @@ import json
 import xml.etree.ElementTree as ElementTree
 
 from app.models import Book
-from app.interface import DefaultInterface
+from app.interface import SerializeInterface
 
 
-class JsonSerializer(DefaultInterface):
-    def run(self, book: Book) -> str:
+class JsonSerializer(SerializeInterface):
+    def serialize(self, book: Book) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
 
-class XmlSerializer(DefaultInterface):
-    def run(self, book: Book) -> str:
+class XmlSerializer(SerializeInterface):
+    def serialize(self, book: Book) -> str:
         root = ElementTree.Element("book")
         title = ElementTree.SubElement(root, "title")
         title.text = book.title

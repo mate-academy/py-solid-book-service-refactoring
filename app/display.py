@@ -1,12 +1,12 @@
 from app.models import Book
-from app.interface import DefaultInterface
+from app.interface import DisplayInterface
 
 
-class ConsoleDisplay(DefaultInterface):
-    def run(self, book: Book) -> None:
+class ConsoleDisplay(DisplayInterface):
+    def display(self, book: Book) -> None:
         print(book.content)
 
 
-class ReverseDisplay(DefaultInterface):
-    def run(self, book: Book) -> None:
+class ReverseDisplay(DisplayInterface):
+    def display(self, book: Book) -> None:
         print(book.content[::-1])

@@ -26,16 +26,19 @@ class BookCommandExecutor:
         }
 
     def execute(self, book: Book, commands: list[Command]) -> Optional[str]:
+        serialized_result: Optional[str] = None
+
         for command in commands:
             handler = self._handlers.get(command.cmd)
             if handler is None:
                 raise ValueError(f"Unknown command: {command.cmd}")
 
             result = handler(book, command)
-            if result is not None:
-                return result
 
-        return None
+            if command.cmd == "serialize":
+                serialized_result = result
+
+        return serialized_result
 
     @staticmethod
     def _handle_display(book: Book, command: Command) -> None:

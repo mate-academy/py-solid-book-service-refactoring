@@ -24,20 +24,23 @@ class BookService:
                 if strategy:
                     strategy.display(book)
                 else:
-                    raise ValueError(f"Unknown display strategy: {method_type}")
+                    raise ValueError(f"Unknown display strategy: "
+                                     f"{method_type}")
 
             elif cmd == "print":
                 strategy = self.print_strategies.get(method_type)
                 if strategy:
                     strategy.print_book(book)
                 else:
-                    raise ValueError(f"Unknown print strategy: {method_type}")
+                    raise ValueError(f"Unknown print strategy: "
+                                     f"{method_type}")
 
             elif cmd == "serialize":
                 strategy = self.serialize_strategies.get(method_type)
                 if strategy:
                     return strategy.serialize(book)
                 else:
-                    raise ValueError(f"Unknown serialize strategy: {method_type}")
+                    raise ValueError(f"Unknown serialize strategy: "
+                                     f"{method_type}")
 
         return None

@@ -9,7 +9,7 @@ from app.strategies import (
 
 
 class BookService:
-    def __init__(self):
+    def __init__(self) -> None:
         writer = ConsoleWriter()
 
         self.display_strategies = {
@@ -25,7 +25,10 @@ class BookService:
             "xml": XmlSerializer()
         }
 
-    def process(self, book: Book, commands: List[Tuple[str, str]]) -> Optional[str]:
+    def process(self,
+                book: Book,
+                commands: List[Tuple[str, str]]
+                ) -> Optional[str]:
         for cmd, method_type in commands:
             if cmd == "display":
                 self.display_strategies[method_type].display(book)

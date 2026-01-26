@@ -1,5 +1,5 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as element_tree
 from app.book import Book
 from app.interfaces import (
     IDisplayStrategy,
@@ -10,7 +10,7 @@ from app.interfaces import (
 
 
 class GenericDisplayStrategy(IDisplayStrategy):
-    def __init__(self, writer: IWriter):
+    def __init__(self, writer: IWriter) -> None:
         self.writer = writer
 
 
@@ -25,7 +25,7 @@ class ReverseDisplay(GenericDisplayStrategy):
 
 
 class ConsolePrinter(IPrintStrategy):
-    def __init__(self, writer: IWriter):
+    def __init__(self, writer: IWriter) -> None:
         self.writer = writer
 
     def print_book(self, book: Book) -> None:
@@ -34,7 +34,7 @@ class ConsolePrinter(IPrintStrategy):
 
 
 class ReversePrinter(IPrintStrategy):
-    def __init__(self, writer: IWriter):
+    def __init__(self, writer: IWriter) -> None:
         self.writer = writer
 
     def print_book(self, book: Book) -> None:
@@ -49,9 +49,9 @@ class JsonSerializer(ISerializerStrategy):
 
 class XmlSerializer(ISerializerStrategy):
     def serialize(self, book: Book) -> str:
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+        root = element_tree.Element("book")
+        title = element_tree.SubElement(root, "title")
         title.text = book.title
-        content = ET.SubElement(root, "content")
+        content = element_tree.SubElement(root, "content")
         content.text = book.content
-        return ET.tostring(root, encoding="unicode")
+        return element_tree.tostring(root, encoding="unicode")

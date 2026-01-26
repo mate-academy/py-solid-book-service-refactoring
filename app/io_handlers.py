@@ -7,7 +7,7 @@ class ConsoleWriter(IWriter):
 
 
 class FileWriter(IWriter):
-    def __init__(self, filename: str):
+    def __init__(self, filename: str) -> None:
         self.filename = filename
 
     def write(self, text: str) -> None:

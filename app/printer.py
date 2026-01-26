@@ -15,8 +15,8 @@ class Printer(ABC):
 
 
 class ConsolePrinter(Printer):
-    def __init__(self, formatter: Formatter) -> None:
-        self.formatter = formatter
+    def __init__(self, FormatterClass: Formatter) -> None:
+        self.formatter = FormatterClass()
 
     def print(self, book: Book) -> None:
         print(f"Printing the book: {book.title}...")

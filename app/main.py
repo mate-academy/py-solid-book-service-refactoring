@@ -18,9 +18,9 @@ serializers = {
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            printers[method_type]().display(book)
+            printers[method_type].display(book)
         elif cmd == "print":
-            printers[method_type]().print(book)
+            printers[method_type].print(book)
         elif cmd == "serialize":
             return serializers[method_type]().serialize(book)
 

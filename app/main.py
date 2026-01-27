@@ -1,52 +1,58 @@
-import json
-import xml.etree.ElementTree as ET
+from app.models import Book
+from app.displayers import ConsoleDisplayer, ReverseDisplayer
+from app.printers import ConsolePrinter, ReversePrinter
+from app.serializers import JsonSerializer, XmlSerializer
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
+DISPLAYERS = {
+    "console": ConsoleDisplayer,
+    "reverse": ReverseDisplayer,
+}
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
+PRINTERS = {
+    "console": ConsolePrinter,
+    "reverse": ReversePrinter,
+}
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+SERIALIZERS = {
+    "json": JsonSerializer,
+    "xml": XmlSerializer,
+}
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+def handle_display(book: Book, method_type: str) -> None:
+    if method_type not in DISPLAYERS:
+        raise ValueError(f"Unknown display type: {method_type}")
+    DISPLAYERS[method_type]().display(book.content)
+
+
+def handle_print(book: Book, method_type: str) -> None:
+    if method_type not in PRINTERS:
+        raise ValueError(f"Unknown print type: {method_type}")
+    PRINTERS[method_type]().print_book(book.title, book.content)
+
+
+def handle_serialize(book: Book, method_type: str) -> str:
+    if method_type not in SERIALIZERS:
+        raise ValueError(f"Unknown serialize type: {method_type}")
+    return SERIALIZERS[method_type]().serialize(book.title, book.content)
+
+
+COMMAND_HANDLERS = {
+    "display": handle_display,
+    "print": handle_print,
+    "serialize": handle_serialize,
+}
+
+
+def main(book: Book, commands: list[tuple[str, str]]) -> str | None:
     for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+        handler = COMMAND_HANDLERS.get(cmd)
+        if handler:
+            result = handler(book, method_type)
+            if result is not None:
+                return result
+    return None
 
 
 if __name__ == "__main__":

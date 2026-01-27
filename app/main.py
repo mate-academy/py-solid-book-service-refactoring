@@ -1,10 +1,5 @@
 from commands import COMMANDS
-
-
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
+from models import Book
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

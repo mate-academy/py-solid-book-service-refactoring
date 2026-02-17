@@ -1,54 +1,97 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
+from abc import ABC, abstractmethod
+from typing import Optional, List, Tuple, Dict
 
 
+# 1. Модель залишається простою
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
 
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+# --- СТРАТЕГІЇ ФОРМАТУВАННЯ (Open/Closed Principle) ---
 
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+class Formatter(ABC):
+    @abstractmethod
+    def format(self, book: Book) -> str:
+        pass
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
+class ConsoleFormatter(Formatter):
+    def format(self, book: Book) -> str:
+        return book.content
+
+
+class ReverseFormatter(Formatter):
+    def format(self, book: Book) -> str:
+        return book.content[::-1]
+
+
+# --- СТРАТЕГІЇ СЕРІАЛІЗАЦІЇ (Open/Closed Principle) ---
+
+class Serializer(ABC):
+    @abstractmethod
+    def serialize(self, book: Book) -> str:
+        pass
+
+
+class JsonSerializer(Serializer):
+    def serialize(self, book: Book) -> str:
+        return json.dumps(
+            {"title": book.title,
+             "content": book.content},
+            ensure_ascii=False
+        )
+
+
+class XmlSerializer(Serializer):
+    def serialize(self, book: Book) -> str:
+        root = ElementTree.Element("book")
+        ElementTree.SubElement(root, "title").text = book.title
+        ElementTree.SubElement(root, "content").text = book.content
+        return ElementTree.tostring(root, encoding="unicode")
+
+
+# --- ПРИНТЕР (Dependency Inversion Principle) ---
+
+class BookPrinter:
+    # Тепер він залежить від абстракції Formatter, а не від конкретного класу
+    def print_book(self, book: Book, formatter: Formatter) -> None:
+        formatted_content = formatter.format(book)
+        print(f"--- Printing Book: {book.title} ---")
+        print(formatted_content)
+
+
+# --- ГОЛОВНА ФУНКЦІЯ ---
+
+def main(book: Book, commands: List[Tuple[str, str]]) -> Optional[str]:
+    # Реєстри стратегій (дозволяють легко додавати нові формати)
+    formatters: Dict[str, Formatter] = {
+        "console": ConsoleFormatter(),
+        "reverse": ReverseFormatter()
+    }
+
+    serializers: Dict[str, Serializer] = {
+        "json": JsonSerializer(),
+        "xml": XmlSerializer()
+    }
+
+    printer = BookPrinter()
+    last_result = None
+
+    for cmd, arg in commands:
+        if cmd in ("display", "print"):
+            if arg in formatters:
+                printer.print_book(book, formatters[arg])
+            else:
+                raise ValueError(f"Unknown format: {arg}")
+
         elif cmd == "serialize":
-            return book.serialize(method_type)
+            if arg in serializers:
+                last_result = serializers[arg].serialize(book)
+            else:
+                raise ValueError(f"Unknown serialize type: {arg}")
 
-
-if __name__ == "__main__":
-    sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    return last_result

@@ -1,52 +1,57 @@
-import json
-import xml.etree.ElementTree as ET
+from enum import Enum
+from typing import Union, Callable, Dict
+
+from app.display import ConsoleDisplay, ReverseDisplay
+from app.print import ConsolePrinter, ReversePrinter
+from app.serializer import XMLSerializer, JSONSerializer
+
+from app.solid import Book, ConsoleFormatter, ReverseFormatter
 
 
-class Book:
-    def __init__(self, title: str, content: str):
-        self.title = title
-        self.content = content
-
-    def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
-
-    def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-    def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+class CommandType(Enum):
+    DISPLAY = "display"
+    PRINT = "print"
+    SERIALIZE = "serialize"
 
 
-def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            book.display(method_type)
-        elif cmd == "print":
-            book.print_book(method_type)
-        elif cmd == "serialize":
-            return book.serialize(method_type)
+class MethodType(Enum):
+    CONSOLE = "console"
+    REVERSE = "reverse"
+    JSON = "json"
+    XML = "xml"
+
+
+STRATEGIES: Dict[tuple[CommandType, MethodType], Callable] = {
+    (CommandType.DISPLAY, MethodType.CONSOLE):
+        lambda b: ConsoleDisplay(b, ConsoleFormatter()).display(),
+    (CommandType.DISPLAY, MethodType.REVERSE):
+        lambda b: ReverseDisplay(b, ReverseFormatter()).display(),
+    (CommandType.PRINT, MethodType.CONSOLE):
+        lambda b: ConsolePrinter(b, ConsoleFormatter()).print(),
+    (CommandType.PRINT, MethodType.REVERSE):
+        lambda b: ReversePrinter(b, ReverseFormatter()).print(),
+    (CommandType.SERIALIZE, MethodType.JSON):
+        lambda b: JSONSerializer().serialize(b.title, b.content),
+    (CommandType.SERIALIZE, MethodType.XML):
+        lambda b: XMLSerializer().serialize(b.title, b.content),
+}
+
+
+def main(book: Book, commands: list[tuple[str, str]]) -> Union[None | str]:
+    result = None
+    for cmd_str, method_str in commands:
+        try:
+            cmd_type = CommandType(cmd_str)
+            method_type = MethodType(method_str)
+        except ValueError:
+            continue
+        action = STRATEGIES.get((cmd_type, method_type))
+        if action:
+            res = action(book)
+            if res is not None:
+                result = res
+
+    return result
 
 
 if __name__ == "__main__":

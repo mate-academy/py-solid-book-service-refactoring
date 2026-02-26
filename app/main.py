@@ -1,39 +1,24 @@
 from app.book import Book
-from app.display import ConsoleDisplay
-from app.formater import NormalFormat, ReverseFormat
-from app.serialize import JsonSerializer, XmlSerializer
+from app.command import DisplayCommand, PrintCommand, SerializeCommand
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    for cmd, method_type in commands:
-        if cmd == "display":
-            if method_type == "console":
-                formatter = NormalFormat()
-            elif method_type == "reverse":
-                formatter = ReverseFormat()
-            else:
-                raise ValueError(f"Unknown display type: {method_type}")
+    command_map = {
+        "display": DisplayCommand,
+        "print": PrintCommand,
+        "serialize": SerializeCommand,
+    }
 
-            display = ConsoleDisplay(formatter)
-            display.display(book)
+    for cmd_name, method_type in commands:
+        try:
+            command = command_map[cmd_name](method_type)
+        except KeyError:
+            raise ValueError(f"Unknown command: {cmd_name}")
 
-        elif cmd == "print":
-            if method_type == "console":
-                formatter = NormalFormat()
-                print(f"Printing the book: {book.title}...")
-            elif method_type == "reverse":
-                formatter = ReverseFormat()
-                print(f"Printing the book in reverse: {book.title}...")
-            print(formatter.format(book))
+        result = command.execute(book)
 
-        elif cmd == "serialize":
-            if method_type == "json":
-                serializer = JsonSerializer()
-            elif method_type == "xml":
-                serializer = XmlSerializer()
-            else:
-                raise ValueError(f"Unknown serialize method: {method_type}")
-            return serializer.serialize(book)
+        if cmd_name == "serialize":
+            return result
 
 
 if __name__ == "__main__":

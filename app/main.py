@@ -1,44 +1,17 @@
 from app.models import Book
-from app.services import (
-    ConsoleFormatter,
-    ReverseFormatter,
-    JSONSerializer,
-    XMLSerializer
-)
-
-FORMATTERS = {
-    "console": ConsoleFormatter(),
-    "reverse": ReverseFormatter()
-}
-SERIALIZERS = {
-    "json": JSONSerializer(),
-    "xml": XMLSerializer()
-}
+from app.commands import COMMANDS
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    result = None
     for cmd, method_type in commands:
-        if cmd == "display":
-            formatter = FORMATTERS.get(method_type)
-            if not formatter:
-                raise ValueError(f"Unknown display type: {method_type}")
-            print(formatter.format(book))
-
-        elif cmd == "print":
-            formatter = FORMATTERS.get(method_type)
-            if not formatter:
-                raise ValueError(f"Unknown print type: {method_type}")
-            if method_type == "console":
-                print(f"Printing the book: {book.title}...")
-            elif method_type == "reverse":
-                print(f"Printing the book in reverse: {book.title}...")
-            print(formatter.format(book))
-
-        elif cmd == "serialize":
-            serializer = SERIALIZERS.get(method_type)
-            if not serializer:
-                raise ValueError(f"Unknown serialize type: {method_type}")
-            return serializer.serialize(book)
+        command = COMMANDS.get(cmd)
+        if not command:
+            raise ValueError(f"Unknown command: {cmd}")
+        serialize = command.command(book, method_type)
+        if serialize is not None:
+            result = serialize
+    return result
 
 
 if __name__ == "__main__":

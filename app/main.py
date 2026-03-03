@@ -1,6 +1,6 @@
 from app.models import Book
-from app.repository import *
-from app.serializers import *
+from app.repository import display, print_book
+from app.serializers import serialize
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

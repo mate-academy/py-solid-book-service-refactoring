@@ -1,5 +1,5 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as elementtree
 
 
 class Book:
@@ -40,18 +40,19 @@ class SerializeService:
                 "title": book.title,
                 "content": book.content,
             })
-        elif serialize_type == "xml":
-            root = ET.Element("book")
 
-            title = ET.SubElement(root, "title")
+        if serialize_type == "xml":
+            root = elementtree.Element("book")
+
+            title = elementtree.SubElement(root, "title")
             title.text = book.title
 
-            content = ET.SubElement(root, "content")
+            content = elementtree.SubElement(root, "content")
             content.text = book.content
 
-            return ET.tostring(root, encoding="unicode")
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+            return elementtree.tostring(root, encoding="unicode")
+
+        raise ValueError(f"Unknown serialize type: {serialize_type}")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
@@ -62,3 +63,10 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             PrintService.print_book(book, method_type)
         elif cmd == "serialize":
             return SerializeService.serialize(book, method_type)
+
+    return None
+
+
+if __name__ == "__main__":
+    sample_book = Book("Sample Book", "This is some sample content.")
+    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))

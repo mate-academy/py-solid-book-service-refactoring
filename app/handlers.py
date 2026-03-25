@@ -1,8 +1,14 @@
+from app.displayers import DisplayServiceProtocol, PrintServiceProtocol
 from app.models import Book
 
 
 class CommandHandler:
-    def __init__(self, display_service, print_service, serializers: dict):
+    def __init__(
+            self,
+            display_service: DisplayServiceProtocol,
+            print_service: PrintServiceProtocol,
+            serializers: dict
+    ) -> None:
         self.display_service = display_service
         self.print_service = print_service
         self.serializer_methods = serializers
@@ -17,7 +23,11 @@ class CommandHandler:
             "reverse": self.print_service.reverse,
         }
 
-    def handle(self, book: Book, commands: list[tuple[str, str]]) -> None | str:
+    def handle(
+            self,
+            book: Book,
+            commands: list[tuple[str, str]]
+    ) -> None | str:
 
         for cmd, mode in commands:
 
@@ -31,7 +41,7 @@ class CommandHandler:
                 self.print_methods[mode](book)
             elif cmd == "serialize":
                 if mode not in self.serializer_methods:
-                    raise ValueError(f"Unknown serialize type:: {mode}")
+                    raise ValueError(f"Unknown serialize type: {mode}")
                 return self.serializer_methods[mode].serialize(book)
             else:
                 raise ValueError(f"Unknown command: {cmd}")

@@ -6,7 +6,11 @@ from app.serializers import JsonSerializer, XmlSerializer
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     serializers = {"json": JsonSerializer(), "xml": XmlSerializer()}
-    handler = CommandHandler(DisplayService(), PrintService(), serializers)
+    handler = CommandHandler(
+        DisplayService(),
+        PrintService(DisplayService()),
+        serializers
+    )
     return handler.handle(book, commands)
 
 

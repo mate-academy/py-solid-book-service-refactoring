@@ -6,6 +6,5 @@
 venv/
 .pytest_cache/
 **__pycache__/
-main_old.py
-main_new.py
-my_refactoring.py
+*.py
+my_refactoring.md

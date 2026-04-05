@@ -1,78 +1,116 @@
 import json
 import xml.etree.ElementTree as ET  # noqa: N817
-from enum import Enum
-from typing import Optional
+from abc import ABC, abstractmethod
 
 
-class DisplayType(Enum):
-    CONSOLE = "console"
-    REVERSE = "reverse"
-
-
-class SerializeType(Enum):
-    JSON = "json"
-    XML = "xml"
-
-
+# 1. Класс только для хранения данных
 class Book:
     def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
-    def _get_formatted_content(self, display_type: DisplayType) -> str:
-        if display_type == DisplayType.REVERSE:
-            return self.content[::-1]
-        return self.content
 
-    def display(
-        self, display_type: DisplayType
-    ) -> None:
-        """Выводит содержимое книги в указанный поток."""
-        print(self._get_formatted_content(display_type))
-
-    def print_book(
-        self, display_type: DisplayType
-    ) -> None:
-        """Печатает служебное сообщение и содержимое книги."""
-        prefix = " in reverse" if display_type == DisplayType.REVERSE else ""
-        print(f"Printing the book{prefix}: {self.title}...")
-        self.display(display_type)
-
-    def serialize(self, serialize_type: SerializeType) -> str:
-        if serialize_type == SerializeType.JSON:
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == SerializeType.XML:
-            root = ET.Element("book")
-            ET.SubElement(root, "title").text = self.title
-            ET.SubElement(root, "content").text = self.content
-            # Добавляем XML-декларацию
-            # tree = ET.ElementTree(root)
-            return (
-                '<?xml version="1.0" encoding="UTF-8"?>\n'
-                + ET.tostring(root, encoding="unicode")
-            )
-        else:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
+# 2. Стратегии форматирования (Open/Closed Principle)
+class ContentFormatter(ABC):
+    @abstractmethod
+    def format(self, content: str) -> str:
+        pass
 
 
-def main(
-    book: Book, commands: list[tuple[str, str]]
-) -> Optional[str]:
-    """
-    Выполняет последовательность команд над книгой.
-    Возвращает результат последней команды serialize или None.
-    """
-    last_serialize = None
+class ConsoleFormatter(ContentFormatter):
+    def format(self, content: str) -> str:
+        return content
+
+
+class ReverseFormatter(ContentFormatter):
+    def format(self, content: str) -> str:
+        return content[::-1]
+
+
+# 3. Класс для отображения (SRP: только вывод)
+class BookDisplay:
+    def __init__(self, formatter: ContentFormatter) -> None:
+        self.formatter = formatter
+
+    def display(self, book: Book) -> None:
+        formatted_content = self.formatter.format(book.content)
+        print(formatted_content)
+
+
+# 4. Класс для печати с заголовком
+class BookPrinter:
+    def __init__(self) -> None:
+        pass
+
+    def print_book(self, book: Book, formatter: ContentFormatter) -> None:
+        formatted_content = formatter.format(book.content)
+        prefix = (
+            " in reverse"
+            if isinstance(formatter, ReverseFormatter)
+            else ""
+        )
+        print(f"Printing the book{prefix}: {book.title}...")
+        print(formatted_content)
+
+
+# 5. Стратегии сериализации
+class BookSerializer(ABC):
+    @abstractmethod
+    def serialize(self, book: Book) -> str:
+        pass
+
+
+class JSONSerializer(BookSerializer):
+    def serialize(self, book: Book) -> str:
+        return json.dumps({"title": book.title, "content": book.content})
+
+
+class XMLSerializer(BookSerializer):
+    def serialize(self, book: Book) -> str:
+        root = ET.Element("book")
+        ET.SubElement(root, "title").text = book.title
+        ET.SubElement(root, "content").text = book.content
+        return (
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            + ET.tostring(root, encoding="unicode")
+        )
+
+
+# 6. Функция main теперь только координирует
+def main(book: Book, commands: list[tuple[str, str]]) -> str | None:
+    result = None
+
     for cmd, method_type in commands:
         if cmd == "display":
-            book.display(DisplayType(method_type))
+            # Выбираем форматтер по типу
+            formatter = (
+                ConsoleFormatter()
+                if method_type == "console"
+                else ReverseFormatter()
+            )
+            display = BookDisplay(formatter)
+            display.display(book)
+            # Возвращаем для теста
+            result = formatter.format(book.content)
+
         elif cmd == "print":
-            book.print_book(DisplayType(method_type))
+            formatter = (
+                ConsoleFormatter()
+                if method_type == "console"
+                else ReverseFormatter()
+            )
+            printer = BookPrinter()
+            printer.print_book(book, formatter)
+
         elif cmd == "serialize":
-            last_serialize = book.serialize(SerializeType(method_type))
-        else:
-            raise ValueError(f"Unknown command: {cmd}")
-    return last_serialize
+            serializer = (
+                JSONSerializer()
+                if method_type == "json"
+                else XMLSerializer()
+            )
+            result = serializer.serialize(book)
+
+    return result
 
 
 if __name__ == "__main__":

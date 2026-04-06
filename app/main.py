@@ -1,6 +1,7 @@
 import json
 import xml.etree.ElementTree as ET  # noqa: N817
 from abc import ABC, abstractmethod
+from typing import Any
 
 
 # 1. Класс только для хранения данных
@@ -10,105 +11,68 @@ class Book:
         self.content = content
 
 
-# 2. Стратегии форматирования (Open/Closed Principle)
-class ContentFormatter(ABC):
+# Абстрактная команда
+class Command(ABC):
     @abstractmethod
-    def format(self, content: str) -> str:
+    def execute(self, book: Book, method_type: str) -> Any:
         pass
 
 
-class ConsoleFormatter(ContentFormatter):
-    def format(self, content: str) -> str:
-        return content
+class DisplayCommand(Command):
+    def execute(self, book: Book, method_type: str) -> str:
+        if method_type == "console":
+            return book.content
+        elif method_type == "reverse":
+            return book.content[::-1]
+        raise ValueError(f"Unknown display type: {method_type}")
 
 
-class ReverseFormatter(ContentFormatter):
-    def format(self, content: str) -> str:
-        return content[::-1]
+class PrintCommand(Command):
+    def execute(self, book: Book, method_type: str) -> None:
+        if method_type == "console":
+            print(f"Printing the book: {book.title}...")
+            print(book.content)
+        elif method_type == "reverse":
+            print(f"Printing the book in reverse: {book.title}...")
+            print(book.content[::-1])
+        else:
+            raise ValueError(f"Unknown print type: {method_type}")
 
 
-# 3. Класс для отображения (SRP: только вывод)
-class BookDisplay:
-    def __init__(self, formatter: ContentFormatter) -> None:
-        self.formatter = formatter
-
-    def display(self, book: Book) -> None:
-        formatted_content = self.formatter.format(book.content)
-        print(formatted_content)
-
-
-# 4. Класс для печати с заголовком
-class BookPrinter:
-    def __init__(self) -> None:
-        pass
-
-    def print_book(self, book: Book, formatter: ContentFormatter) -> None:
-        formatted_content = formatter.format(book.content)
-        prefix = (
-            " in reverse"
-            if isinstance(formatter, ReverseFormatter)
-            else ""
-        )
-        print(f"Printing the book{prefix}: {book.title}...")
-        print(formatted_content)
+class SerializeCommand(Command):
+    def execute(self, book: Book, method_type: str) -> str:
+        if method_type == "json":
+            return json.dumps({"title": book.title, "content": book.content})
+        elif method_type == "xml":
+            root = ET.Element("book")
+            ET.SubElement(root, "title").text = book.title
+            ET.SubElement(root, "content").text = book.content
+            return ET.tostring(root, encoding="unicode")
+        raise ValueError(f"Unknown serialize type: {method_type}")
 
 
-# 5. Стратегии сериализации
-class BookSerializer(ABC):
-    @abstractmethod
-    def serialize(self, book: Book) -> str:
-        pass
-
-
-class JSONSerializer(BookSerializer):
-    def serialize(self, book: Book) -> str:
-        return json.dumps({"title": book.title, "content": book.content})
-
-
-class XMLSerializer(BookSerializer):
-    def serialize(self, book: Book) -> str:
-        root = ET.Element("book")
-        ET.SubElement(root, "title").text = book.title
-        ET.SubElement(root, "content").text = book.content
-        return (
-            '<?xml version="1.0" encoding="UTF-8"?>\n'
-            + ET.tostring(root, encoding="unicode")
-        )
-
-
-# 6. Функция main теперь только координирует
 def main(book: Book, commands: list[tuple[str, str]]) -> str | None:
+    # Словарь команд - легко расширяемый
+    command_map = {
+        "display": DisplayCommand(),
+        "print": PrintCommand(),
+        "serialize": SerializeCommand(),
+    }
+
     result = None
-
     for cmd, method_type in commands:
+        if cmd not in command_map:
+            raise ValueError(f"Unknown command: {cmd}")
+
+        output = command_map[cmd].execute(book, method_type)
+
+        # Команда display должна выводить результат в консоль
         if cmd == "display":
-            # Выбираем форматтер по типу
-            formatter = (
-                ConsoleFormatter()
-                if method_type == "console"
-                else ReverseFormatter()
-            )
-            display = BookDisplay(formatter)
-            display.display(book)
-            # Возвращаем для теста
-            result = formatter.format(book.content)
+            print(output)
 
-        elif cmd == "print":
-            formatter = (
-                ConsoleFormatter()
-                if method_type == "console"
-                else ReverseFormatter()
-            )
-            printer = BookPrinter()
-            printer.print_book(book, formatter)
-
+        # Команда serialize сохраняет результат для возврата
         elif cmd == "serialize":
-            serializer = (
-                JSONSerializer()
-                if method_type == "json"
-                else XMLSerializer()
-            )
-            result = serializer.serialize(book)
+            result = output
 
     return result
 

@@ -8,4 +8,5 @@ venv/
 **__pycache__/
 main_base.py
 main_new.py
+main_new2.py
 my_refactoring.md

@@ -22,3 +22,14 @@ class XmlSerializer(Serializer):
         content = ET.SubElement(root, "content")
         content.text = book.content
         return ET.tostring(root, encoding="unicode")
+
+
+class SerializerFactory:
+    @staticmethod
+    def get_serializer(serializer_type: str):
+        if serializer_type == "json":
+            return JsonSerializer()
+        elif serializer_type == "xml":
+            return XmlSerializer()
+        else:
+            raise ValueError(f"Unknown serialize type: {serializer_type}")

@@ -1,6 +1,6 @@
-from app.serializer import JsonSerializer, XmlSerializer
-from app.printer import ConsolePrinter, ReversePrinter
-from app.display import Console, Reverse
+from app.serializer import SerializerFactory
+from app.printer import PrinterFactory
+from app.display import DisplayFactory
 
 
 class Book:
@@ -9,36 +9,16 @@ class Book:
         self.content = content
 
     def display(self, display_type: str) -> None:
-        displays = {
-            "console": Console(),
-            "reverse": Reverse(),
-        }
-
-        if display_type not in displays:
-            raise ValueError(f"Unknown print type: {display_type}")
-
-        displays[display_type].display(self)
+        displays = DisplayFactory.get_display(display_type)
+        displays.display(self)
 
     def print_book(self, print_type: str) -> None:
-        printers = {
-            "console": ConsolePrinter(),
-            "reverse": ReversePrinter(),
-        }
-        if print_type not in printers:
-            raise ValueError(f"Unknown print type: {print_type}")
-
-        printers[print_type].print_book(self)
+        printer = PrinterFactory.get_printer(print_type)
+        printer.print_book(self)
 
     def serialize(self, serialize_type: str) -> str:
-        serializers = {
-            "json": JsonSerializer(),
-            "xml": XmlSerializer(),
-        }
-
-        if serialize_type not in serializers:
-            raise ValueError(f"Unknown serialize type: {serialize_type}")
-
-        return serializers[serialize_type].serialize(self)
+        serializer = SerializerFactory.get_serializer(serialize_type)
+        return serializer.serialize(self)
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

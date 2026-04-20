@@ -1,42 +1,86 @@
-import json
-import xml.etree.ElementTree as ET
+from typing import Dict
+
+from app.interfaces import (
+    DisplayStrategy,
+    PrintStrategy,
+    SerializeStrategy
+)
+from app.strategies import (
+    ConsoleDisplay,
+    ReverseDisplay,
+    ConsolePrint,
+    ReversePrint,
+    JsonSerialize,
+    XmlSerialize
+)
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(
+        self,
+        title: str,
+        content: str,
+        display_strategies: Dict[str, DisplayStrategy] | None = None,
+        print_strategies: Dict[str, PrintStrategy] | None = None,
+        serialize_strategies: Dict[str, SerializeStrategy] | None = None,
+    ) -> None:
         self.title = title
         self.content = content
 
+        self._display_strategies = display_strategies or {
+            "console": ConsoleDisplay(),
+            "reverse": ReverseDisplay(),
+        }
+        self._print_strategies = print_strategies or {
+            "console": ConsolePrint(),
+            "reverse": ReversePrint(),
+        }
+        self._serialize_strategies = serialize_strategies or {
+            "json": JsonSerialize(),
+            "xml": XmlSerialize(),
+        }
+
     def display(self, display_type: str) -> None:
-        if display_type == "console":
-            print(self.content)
-        elif display_type == "reverse":
-            print(self.content[::-1])
-        else:
+        """Display the book content using the specified strategy.
+
+        :param display_type: The type of display strategy to use
+            (e.g., "console", "reverse").
+        :raises ValueError: If the specified display type is unknown.
+        :return: None
+        """
+        try:
+            strategy = self._display_strategies[display_type]
+        except KeyError:
             raise ValueError(f"Unknown display type: {display_type}")
+        strategy.display(self)
 
     def print_book(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
+        """Print the book content using the specified strategy.
+
+        :param print_type: The type of print strategy to use
+            (e.g., "console", "reverse").
+        :raises ValueError: If the specified print type is unknown.
+        :return: None
+        """
+        try:
+            strategy = self._print_strategies[print_type]
+        except KeyError:
             raise ValueError(f"Unknown print type: {print_type}")
+        strategy.print_book(self)
 
     def serialize(self, serialize_type: str) -> str:
-        if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
-        elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
-            title.text = self.title
-            content = ET.SubElement(root, "content")
-            content.text = self.content
-            return ET.tostring(root, encoding="unicode")
-        else:
+        """Serialize the book content using the specified strategy.
+
+        :param serialize_type: The type of serialize strategy to use
+            (e.g., "json", "xml").
+        :raises ValueError: If the specified serialize type is unknown.
+        :return: The serialized book content as a string.
+        """
+        try:
+            strategy = self._serialize_strategies[serialize_type]
+        except KeyError:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
+        return strategy.serialize(self)
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

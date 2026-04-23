@@ -2,7 +2,7 @@ from app.book import Book
 from app.bookdisplayer import BookDisplayer
 from app.bookprinter import BookPrinter
 from app.formatter import ReverseFormatter, ConsolFormatter
-from app.serialzers import XmlSerializer, JsonSerializer
+from app.serializers import XmlSerializer, JsonSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:

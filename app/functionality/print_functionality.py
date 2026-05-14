@@ -24,9 +24,12 @@ class PrintReverseBook(PrintBook):
 
 
 def print_book_func(print_type: str, title: str, content: str) -> None:
-    if print_type == "console":
-        PrintConsoleBook(title, content).print_book()
-    elif print_type == "reverse":
-        PrintReverseBook(title, content).print_book()
+    print_types = {
+        "console": PrintConsoleBook,
+        "reverse": PrintReverseBook,
+    }
+    if print_type in print_types:
+        display_class = print_types.get(print_type)
+        display_class(title=title, content=content).print_book()
     else:
         raise ValueError(f"Unknown print type: {print_type}")

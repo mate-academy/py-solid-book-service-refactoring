@@ -29,9 +29,13 @@ class SerializeXmlBook(SerializeBook):
 
 
 def serialize_book_func(serialize_type: str, title: str, content: str) -> str:
-    if serialize_type == "json":
-        return SerializeJsonBook(title, content).serialize_book()
-    elif serialize_type == "xml":
-        return SerializeXmlBook(title, content).serialize_book()
+    serialize_types = {
+        "json": SerializeJsonBook,
+        "xml": SerializeXmlBook,
+    }
+    if serialize_type in serialize_types:
+        serialize_class = serialize_types.get(serialize_type)
+        return serialize_class(title=title, content=content).serialize_book()
     else:
         raise ValueError(f"Unknown serialize type: {serialize_type}")
+

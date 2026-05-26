@@ -1,8 +1,8 @@
 from enum import Enum, auto
 
-from app.display import BaseDisplay, ConsoleDisplay, ReverseDisplay, Viewer
-from app.printer import BasePrint, ConsolePrint, ReversePrint, Printer
-from app.serializer import (
+from app.displays import BaseDisplay, ConsoleDisplay, ReverseDisplay, Viewer
+from app.printers import BasePrint, ConsolePrint, ReversePrint, Printer
+from app.serializers import (
     BaseSerializer,
     JsonSerializer,
     XmlSerializer,

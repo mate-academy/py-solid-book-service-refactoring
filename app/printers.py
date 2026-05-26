@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.book import Book
+from app.books import Book
 
 
 class BasePrint(ABC):

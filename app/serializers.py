@@ -3,7 +3,7 @@ import xml.etree.ElementTree as xml_ET
 from dataclasses import asdict
 from abc import ABC, abstractmethod
 
-from app.book import Book
+from app.books import Book
 
 
 class BaseSerializer(ABC):

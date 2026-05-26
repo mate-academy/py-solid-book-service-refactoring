@@ -1,4 +1,4 @@
-from app.book import Book
+from app.books import Book
 from app.console_commands import COMMAND_MAP
 
 

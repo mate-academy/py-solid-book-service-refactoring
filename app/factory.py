@@ -29,4 +29,3 @@ class CommandFactory:
             }
             return SerializeCommand(serialize[method_type])
         raise ValueError(f"Unknown command: {cmd}")
-

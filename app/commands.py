@@ -37,4 +37,3 @@ class SerializeCommand(Command):
 
     def execute(self, book: "Book") -> str:
         return self.serialize.serialize(book)
-

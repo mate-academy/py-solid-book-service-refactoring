@@ -4,32 +4,26 @@ from app.book_print import PrintConsole, PrintReverse
 from app.book_serialize import SerializerJSON, SerializerXML
 
 
+commands_class = {
+    ("display", "console"): DisplayConsole,
+    ("display", "reverse"): DisplayReverse,
+    ("print", "console"): PrintConsole,
+    ("print", "reverse"): PrintReverse,
+    ("serialize", "json"): SerializerJSON,
+    ("serialize", "xml"): SerializerXML
+}
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
+        method_class = commands_class[(cmd, method_type)]
+        method_object = method_class()
         if cmd == "display":
-            display_class = {
-                "console": DisplayConsole,
-                "reverse": DisplayReverse
-            }
-            display_class = display_class[method_type]
-            display_object = display_class(title=book.title, content=book.content)
-            display_object.display()
+            method_object.display(book=book)
         elif cmd == "print":
-            print_class = {
-                "console": PrintConsole,
-                "reverse": PrintReverse
-            }
-            print_class = print_class[method_type]
-            print_object = print_class(title=book.title, content=book.content)
-            print_object.print()
+            method_object.print(book=book)
         elif cmd == "serialize":
-            serializer_class = {
-                "json": SerializerJSON,
-                "xml": SerializerXML
-            }
-            serializer_class = serializer_class[method_type]
-            serializer_object = serializer_class(title=book.title, content=book.content)
-            return serializer_object.serialize()
+            method_object.serialize(book=book)
 
 
 if __name__ == "__main__":

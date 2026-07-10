@@ -3,17 +3,17 @@ from abc import ABC, abstractmethod
 from app.book import Book
 
 
-class DisplayType(ABC, Book):
+class DisplayType(ABC):
     @abstractmethod
-    def display(self):
+    def display(self, book: Book):
         pass
 
 
 class DisplayConsole(DisplayType):
-    def display(self):
-        print(self.content)
+    def display(self, book: Book):
+        print(book.content)
 
 
 class DisplayReverse(DisplayType):
-    def display(self):
-        print(self.content[::-1])
+    def display(self, book: Book):
+        print(book.content[::-1])

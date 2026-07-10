@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from app.book import Book
 
 
-class PrintType(ABC, Book):
+class PrintType(ABC):
     @abstractmethod
     def print(self, book: Book):
         pass

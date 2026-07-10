@@ -23,7 +23,7 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
         elif cmd == "print":
             method_object.print(book=book)
         elif cmd == "serialize":
-            method_object.serialize(book=book)
+            return method_object.serialize(book=book)
 
 
 if __name__ == "__main__":

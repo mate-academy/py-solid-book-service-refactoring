@@ -1,0 +1,27 @@
+import json
+from xml.etree import ElementTree
+
+from .book import Book
+
+
+class JsonSerializer:
+    def serialize(self, book: Book) -> str:
+        return json.dumps(
+            {
+                "title": book.title,
+                "content": book.content,
+            }
+        )
+
+
+class XmlSerializer:
+    def serialize(self, book: Book) -> str:
+        root = ElementTree.Element("book")
+
+        title = ElementTree.SubElement(root, "title")
+        title.text = book.title
+
+        content = ElementTree.SubElement(root, "content")
+        content.text = book.content
+
+        return ElementTree.tostring(root, encoding="unicode")

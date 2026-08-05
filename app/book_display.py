@@ -3,7 +3,6 @@ from app.book_base import BookInitialize
 
 class BookDisplay(BookInitialize):
     """Display content that depends on display type"""
-
     def display(self, display_type: str) -> None:
         if display_type == "console":
             print(self.content)

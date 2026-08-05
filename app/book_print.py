@@ -3,7 +3,6 @@ from app.book_base import BookInitialize
 
 class BookPrint(BookInitialize):
     """Print content book depends on print type"""
-
     def print_book(self, print_type: str) -> None:
         if print_type == "console":
             print(f"Printing the book: {self.title}...")

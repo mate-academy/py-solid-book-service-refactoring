@@ -3,37 +3,53 @@ import xml.etree.ElementTree as ET
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
     def display(self, display_type: str) -> None:
+        BookPrinter.display(self, display_type)
+
+    def print_book(self, print_type: str) -> None:
+        BookPrinter.print_book(self, print_type)
+
+    def serialize(self, serialize_type: str) -> str:
+        return BookSerializer.serialize(self, serialize_type)
+
+
+class BookPrinter:
+    @staticmethod
+    def display(book: Book, display_type: str) -> None:
         if display_type == "console":
-            print(self.content)
+            print(book.content)
         elif display_type == "reverse":
-            print(self.content[::-1])
+            print(book.content[::-1])
         else:
             raise ValueError(f"Unknown display type: {display_type}")
 
-    def print_book(self, print_type: str) -> None:
+    @staticmethod
+    def print_book(book: Book, print_type: str) -> None:
         if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
+            print(f"Printing the book: {book.title}...")
+            print(book.content)
         elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
+            print(f"Printing the book in reverse: {book.title}...")
+            print(book.content[::-1])
         else:
             raise ValueError(f"Unknown print type: {print_type}")
 
-    def serialize(self, serialize_type: str) -> str:
+
+class BookSerializer:
+    @staticmethod
+    def serialize(book: Book, serialize_type: str) -> str:
         if serialize_type == "json":
-            return json.dumps({"title": self.title, "content": self.content})
+            return json.dumps({"title": book.title, "content": book.content})
         elif serialize_type == "xml":
             root = ET.Element("book")
             title = ET.SubElement(root, "title")
-            title.text = self.title
+            title.text = book.title
             content = ET.SubElement(root, "content")
-            content.text = self.content
+            content.text = book.content
             return ET.tostring(root, encoding="unicode")
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")

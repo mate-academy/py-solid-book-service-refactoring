@@ -12,5 +12,6 @@ class BookConsoleDisplayer:
 class BookPrinter:
     @staticmethod
     def print_book(book: Book, method_type: str) -> None:
+        print(book.title)
         book.print_book(method_type)
 

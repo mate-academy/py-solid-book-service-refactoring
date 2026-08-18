@@ -1,25 +1,16 @@
-from app.models.book import Book
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.book import Book
 
 class BookConsoleDisplayer:
     @staticmethod
-    def display(book: Book, display_type: str) -> None:
-        if display_type == "console":
-            print(book.content)
-        elif display_type == "reverse":
-            print(book.content[::-1])
-        else:
-            raise ValueError(f"Unknown display type: {display_type}")
-
+    def display(book: Book, method_type: str) -> None:
+        print(f"Displaying book {book.title} using {method_type}")
 
 class BookPrinter:
     @staticmethod
-    def print_book(book: Book, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {book.title}...")
-            print(book.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {book.title}...")
-            print(book.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
+    def print_book(book: Book, method_type: str) -> None:
+        print(f"Printing book {book.title} using {method_type}")
+

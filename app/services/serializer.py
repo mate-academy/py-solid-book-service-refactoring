@@ -1,20 +1,23 @@
+from __future__ import annotations
 import json
-from xml.etree import ElementTree as ElementTree  # noqa: N817
-from app.models.book import Book
+import xml.etree.ElementTree as ET
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.book import Book
 
 class JsonSerializer:
     @staticmethod
     def serialize(book: Book) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
-
 class XmlSerializer:
     @staticmethod
     def serialize(book: Book) -> str:
-        root = ElementTree.Element("book")
-        title = ElementTree.SubElement(root, "title")
+        root = ET.Element("book")
+        title = ET.SubElement(root, "title")
         title.text = book.title
-        content = ElementTree.SubElement(root, "content")
+        content = ET.SubElement(root, "content")
         content.text = book.content
-        return ElementTree.tostring(root, encoding="unicode")
+        return ET.tostring(root, encoding="utf-8").decode("utf-8")
+

@@ -8,7 +8,7 @@ from app.book import Book
 
 class SerializerBase(ABC):
     @abstractmethod
-    def serialize(self, book: Book) -> None:
+    def serialize(self, book: Book) -> str:
         pass
 
 

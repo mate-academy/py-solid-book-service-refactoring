@@ -1,3 +1,4 @@
+from __future__ import annotations
 from app.models.book import Book
 from app.services.printer import BookConsoleDisplayer, BookPrinter
 from app.services.serializer import JsonSerializer, XmlSerializer
@@ -20,7 +21,4 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
             else:
                 raise ValueError(f"Unknown serialize type: {method_type}")
 
-
-if __name__ == "__main__":
-    sample_book = Book("Sample Book", "This is some sample content.")
-    print(main(sample_book, [("display", "reverse"), ("serialize", "xml")]))
+    return None

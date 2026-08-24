@@ -9,19 +9,19 @@ class DisplayStrategy(ABC):
         pass
 
 
-class ConsoleDisplay(DisplayStrategy):
+class ConsoleDisplayer(DisplayStrategy):
     def display(self, book: Book) -> None:
         print(book.content)
 
 
-class ReverseDisplay(DisplayStrategy):
+class ReverseDisplayer(DisplayStrategy):
     def display(self, book: Book) -> None:
         print(book.content[::-1])
 
 
 DISPLAY_STRATEGIES: dict[str, DisplayStrategy] = {
-    "console": ConsoleDisplay(),
-    "reverse": ReverseDisplay(),
+    "console": ConsoleDisplayer(),
+    "reverse": ReverseDisplayer(),
 }
 
 

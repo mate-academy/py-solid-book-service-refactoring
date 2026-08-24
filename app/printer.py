@@ -9,21 +9,21 @@ class PrintStrategy(ABC):
         pass
 
 
-class ConsolePrint(PrintStrategy):
+class ConsolePrinter(PrintStrategy):
     def print_book(self, book: Book) -> None:
         print(f"Printing the book: {book.title}...")
         print(book.content)
 
 
-class ReversePrint(PrintStrategy):
+class ReversePrinter(PrintStrategy):
     def print_book(self, book: Book) -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])
 
 
 PRINT_STRATEGIES: dict[str, PrintStrategy] = {
-    "console": ConsolePrint(),
-    "reverse": ReversePrint(),
+    "console": ConsolePrinter(),
+    "reverse": ReversePrinter(),
 }
 
 

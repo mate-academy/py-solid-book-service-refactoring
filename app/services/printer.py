@@ -1,24 +1,36 @@
-from __future__ import annotations
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from app.models.book import Book
+﻿from abc import ABC, abstractmethod
+from app.models.book import Book
 
 
-class BookConsoleDisplayer:
-    @staticmethod
-    def display(book: Book, method_type: str) -> None:
-        if method_type == "reverse":
-            print(book.content[::-1])
-        else:
-            print(book.content)
+class Display(ABC):
+    @abstractmethod
+    def display(self, book: Book) -> None:
+        pass
 
 
-class BookPrinter:
-    @staticmethod
-    def print_book(book: Book, method_type: str) -> None:
+class ConsoleDisplay(Display):
+    def display(self, book: Book) -> None:
+        print(book.content)
+
+
+class ReverseDisplay(Display):
+    def display(self, book: Book) -> None:
+        print(book.content[::-1])
+
+
+class Printer(ABC):
+    @abstractmethod
+    def print_book(self, book: Book) -> None:
+        pass
+
+
+class ConsolePrinter(Printer):
+    def print_book(self, book: Book) -> None:
         print(book.title)
-        if method_type == "reverse":
-            print(book.content[::-1])
-        else:
-            print(book.content)
+        print(book.content)
+
+
+class ReversePrinter(Printer):
+    def print_book(self, book: Book) -> None:
+        print(book.title)
+        print(book.content[::-1])

@@ -1,3 +1,5 @@
+"""Application service responsible for dispatching book commands."""
+
 from collections.abc import Callable
 
 from app.displayers import BookDisplayer
@@ -10,6 +12,8 @@ CommandHandler = Callable[[str], str | None]
 
 
 class BookService:
+    """Execute book commands using injected tools."""
+
     def __init__(
         self,
         book: Book,

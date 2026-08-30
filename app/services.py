@@ -8,6 +8,9 @@ from app.printers import BookPrinter
 from app.serializers import BookSerializer
 
 
+__all__ = ["BookService"]
+
+
 CommandHandler = Callable[[str], str | None]
 
 

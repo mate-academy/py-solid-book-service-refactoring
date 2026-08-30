@@ -5,6 +5,9 @@ from app.serializers import JsonBookSerializer, XmlBookSerializer
 from app.services import BookService
 
 
+__all__ = ["Book", "main"]
+
+
 DISPLAYERS = {
     "console": ConsoleBookDisplayer(),
     "reverse": ReverseBookDisplayer(),

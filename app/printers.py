@@ -5,6 +5,13 @@ from abc import ABC, abstractmethod
 from app.models import Book
 
 
+__all__ = [
+    "BookPrinter",
+    "ConsoleBookPrinter",
+    "ReverseBookPrinter",
+]
+
+
 class BookPrinter(ABC):
     """Define the interface implemented by every book printer."""
 

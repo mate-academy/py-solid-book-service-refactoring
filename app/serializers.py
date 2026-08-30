@@ -5,6 +5,13 @@ from xml.etree import ElementTree
 from app.models import Book
 
 
+__all__ = [
+    "BookSerializer",
+    "JsonBookSerializer",
+    "XmlBookSerializer",
+]
+
+
 class BookSerializer(ABC):
     @abstractmethod
     def serialize(self, book: Book) -> str:

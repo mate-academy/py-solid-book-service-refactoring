@@ -5,7 +5,7 @@ from app.book import Book
 
 
 class BookSerializer:
-    def serialize(self, book, serialize_type: str) -> str:
+    def serialize(self, book: Book, serialize_type: str) -> str:
         if serialize_type == "json":
             return json.dumps({"title": book.title, "content": book.content})
         elif serialize_type == "xml":

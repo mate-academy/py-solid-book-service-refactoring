@@ -9,4 +9,3 @@ class BookDisplay:
             print(book.content[::-1])
         else:
             raise ValueError(f"Unknown display type: {display_type}")
-

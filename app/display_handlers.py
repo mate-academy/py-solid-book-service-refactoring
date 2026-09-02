@@ -7,9 +7,11 @@ class DisplayStrategy(ABC):
     def display(self, book: Book) -> None:
         pass
 
+
 class ConsoleDisplay(DisplayStrategy):
     def display(self, book: Book) -> None:
         print(book.content)
+
 
 class ReverseDisplay(DisplayStrategy):
     def display(self, book: Book) -> None:

@@ -1,6 +1,10 @@
 from app.displays import BookDisplay, ConsoleDisplay, ReverseDisplay
 from app.printers import BookPrinter, ConsolePrinter, ReversePrinter
-from app.serializers import BookSerializer, JsonBookSerializer, XmlBookSerializer
+from app.serializers import (
+    BookSerializer,
+    JsonBookSerializer,
+    XmlBookSerializer
+    )
 
 
 def display_factory(display_type: str) -> BookDisplay:

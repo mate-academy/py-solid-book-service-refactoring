@@ -27,4 +27,6 @@ def serializer_factory(serialize_type: str) -> BookSerializer:
     elif serialize_type == "xml":
         return XmlBookSerializer()
     else:
-        raise ValueError(f"Unknown serialize type: {serialize_type}")
+        raise ValueError(
+            f"Unknown serialize type: {serialize_type}"
+        )

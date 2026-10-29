@@ -4,7 +4,7 @@ from app.serializers import (
     BookSerializer,
     JsonBookSerializer,
     XmlBookSerializer
-    )
+)
 
 
 def display_factory(display_type: str) -> BookDisplay:

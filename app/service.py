@@ -1,6 +1,7 @@
 from app.strategies import DisplayStrategy, PrintStrategy, SerializeStrategy
 import xml.etree.ElementTree as ET
 import json
+from app.models import Book
 
 class ConsoleDisplay(DisplayStrategy):
     def display(self, book: Book) -> None:

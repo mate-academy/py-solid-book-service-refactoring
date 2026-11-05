@@ -1,6 +1,3 @@
-from abc import ABC, abstractmethod
-
-
 from app.models import Book
 from app.service import (
     ConsoleDisplay,

@@ -20,19 +20,19 @@ class ReverseDisplay(DisplayInterface):
 
 
 class ConsolePrint(PrintInterface):
-    def print_book(self, book: Book) -> None:
+    def print_book(self, book: "Book") -> None:
         print(f"Printing the book: {book.title}...")
         print(book.content)
 
 
 class ReversePrint(PrintInterface):
-    def print_book(self, book: Book) -> None:
+    def print_book(self, book: "Book") -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])
 
 
 class JsonSerialize(SerializeInterface):
-    def serialize(self, book: Book) -> str:
+    def serialize(self, book: "Book") -> str:
         return json.dumps({
             "title": book.title,
             "content": book.content
@@ -40,7 +40,7 @@ class JsonSerialize(SerializeInterface):
 
 
 class XmlSerialize(SerializeInterface):
-    def serialize(self, book: Book) -> str:
+    def serialize(self, book: "Book") -> str:
         book_element = Et.Element("book")
         title_element = Et.SubElement(book_element, "title")
         title_element.text = book.title

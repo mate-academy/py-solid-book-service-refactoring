@@ -1,10 +1,10 @@
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # noqa: N817
 from abc import ABC, abstractmethod
 
 
 class Book:
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -66,7 +66,7 @@ class XmlSerializer(Serializer):
 
 
 class BookManager:
-    def __init__(self, book: Book):
+    def __init__(self, book: Book) -> None:
         self.book = book
         self._display_strategies = {
             "console": ConsoleDisplay(),

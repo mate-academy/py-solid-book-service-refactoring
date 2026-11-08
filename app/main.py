@@ -25,7 +25,6 @@ class ReverseDisplay(DisplayStrategy):
         print(book.content[::-1])
 
 
-# --- Print Strategies ---
 class PrintStrategy(ABC):
     @abstractmethod
     def print_book(self, book: Book) -> None:

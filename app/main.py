@@ -58,21 +58,6 @@ class XmlSerialize(SerializeStrategy):
         return ElementTree.tostring(root, encoding="unicode")
 
 
-class Book:
-    def __init__(self, title: str, content: str) -> None:
-        self.title = title
-        self.content = content
-
-    def display(self, strategy: DisplayStrategy) -> None:
-        strategy.display(self.content)
-
-    def print_book(self, strategy: PrintStrategy) -> None:
-        strategy.print_book(self.title, self.content)
-
-    def serialize(self, strategy: SerializeStrategy) -> str:
-        return strategy.serialize(self.title, self.content)
-
-
 DISPLAY_STRATEGIES: dict[str, DisplayStrategy] = {
     "console": ConsoleDisplay(),
     "reverse": ReverseDisplay(),
@@ -89,23 +74,38 @@ SERIALIZE_STRATEGIES: dict[str, SerializeStrategy] = {
 }
 
 
+class Book:
+    def __init__(self, title: str, content: str) -> None:
+        self.title = title
+        self.content = content
+
+    def display(self, display_type: str) -> None:
+        strategy = DISPLAY_STRATEGIES.get(display_type)
+        if strategy is None:
+            raise ValueError(f"Unknown display type: {display_type}")
+        strategy.display(self.content)
+
+    def print_book(self, print_type: str) -> None:
+        strategy = PRINT_STRATEGIES.get(print_type)
+        if strategy is None:
+            raise ValueError(f"Unknown print type: {print_type}")
+        strategy.print_book(self.title, self.content)
+
+    def serialize(self, serialize_type: str) -> str:
+        strategy = SERIALIZE_STRATEGIES.get(serialize_type)
+        if strategy is None:
+            raise ValueError(f"Unknown serialize type: {serialize_type}")
+        return strategy.serialize(self.title, self.content)
+
+
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
         if cmd == "display":
-            strategy = DISPLAY_STRATEGIES.get(method_type)
-            if strategy is None:
-                raise ValueError(f"Unknown display type: {method_type}")
-            book.display(strategy)
+            book.display(method_type)
         elif cmd == "print":
-            strategy = PRINT_STRATEGIES.get(method_type)
-            if strategy is None:
-                raise ValueError(f"Unknown print type: {method_type}")
-            book.print_book(strategy)
+            book.print_book(method_type)
         elif cmd == "serialize":
-            strategy = SERIALIZE_STRATEGIES.get(method_type)
-            if strategy is None:
-                raise ValueError(f"Unknown serialize type: {method_type}")
-            return book.serialize(strategy)
+            return book.serialize(method_type)
     return None
 
 

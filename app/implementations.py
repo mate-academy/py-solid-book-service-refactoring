@@ -1,63 +1,68 @@
 import json
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
+
 from app.interfaces import (
     BookDisplayInterface,
     DetailBookInterface,
-    SerializeBookInterface
+    SerializeBookInterface,
 )
 from app.models import Book
 
 
 class DisplayBookConsole(BookDisplayInterface):
-    def display(self, book: Book) -> str:
+    def display(self, book: Book) -> None:
         print(book.content)
 
 
 class DisplayBookReverse(BookDisplayInterface):
-    def display(self, book: Book) -> str:
+    def display(self, book: Book) -> None:
         print(book.content[::-1])
 
 
 class DetailTypeBook(DetailBookInterface):
-    def print_book(self, book: Book) -> str:
+    def print_book(self, book: Book) -> None:
         print(f"Printing the book: {book.title}...")
         print(book.content)
 
 
 class DetailTypeBookReverse(DetailBookInterface):
-    def print_book(self, book: Book) -> str:
+    def print_book(self, book: Book) -> None:
         print(f"Printing the book in reverse: {book.title}...")
         print(book.content[::-1])
 
 
 class SerializeBookJSON(SerializeBookInterface):
     def serialize(self, book: Book) -> str:
-        return json.dumps({"title": book.title, "content": book.content})
+        return json.dumps({
+            "title": book.title,
+            "content": book.content,
+        })
 
 
 class SerializeBookXML(SerializeBookInterface):
     def serialize(self, book: Book) -> str:
-        root = ET.Element("book")
-        title = ET.SubElement(root, "title")
+        root = ElementTree.Element("book")
+
+        title = ElementTree.SubElement(root, "title")
         title.text = book.title
-        content = ET.SubElement(root, "content")
+
+        content = ElementTree.SubElement(root, "content")
         content.text = book.content
-        return ET.tostring(root, encoding="unicode")
+
+        return ElementTree.tostring(root, encoding="unicode")
 
 
 displays = {
     "console": DisplayBookConsole,
-    "reverse": DisplayBookReverse
+    "reverse": DisplayBookReverse,
 }
-
 
 printers = {
     "console": DetailTypeBook,
-    "reverse": DetailTypeBookReverse
+    "reverse": DetailTypeBookReverse,
 }
-
 
 serializers = {
     "json": SerializeBookJSON,
-    "xml": SerializeBookXML
+    "xml": SerializeBookXML,
 }
